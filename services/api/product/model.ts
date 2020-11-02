@@ -40,6 +40,8 @@ export interface ProductResponse {
   DEFAULT_PICTURE: {
     SRC: string
   }
+  DETAIL_TEXT: string
+  PREVIEW_TEXT: string
   PROPERTIES: {
     CML2_ARTICLE: ProductProperty
     CHARACTERISTICS: ProductProperty

@@ -56,7 +56,7 @@ export class ProductItem extends BaseStoredEntity {
     this.slug = response.CODE
     this.article = response.PROPERTIES.CML2_ARTICLE.VALUE
     this.title = response.NAME
-    this.description = '' // response.PROPERTIES.DESCRIPTION['~VALUE'].TEXT
+    this.description = response.DETAIL_TEXT || response.PREVIEW_TEXT
     this.configuration = '' // response.PROPERTIES.EQUIPMENT['~VALUE'].TEXT
     this.breadcrumbs = response?.SECTION?.PATH?.map((item) => {
       return {
@@ -100,11 +100,11 @@ export class ProductItem extends BaseStoredEntity {
       ]
     }
 
-    response?.MORE_PHOTO?.forEach((photo) => {
+    response.PROPERTIES.MORE_PHOTO.SRC?.forEach((src) => {
       this.images.push({
-        default: API_BASE_URL + photo.SRC,
-        small: API_BASE_URL + photo.SRC,
-        large: API_BASE_URL + photo.SRC,
+        default: API_BASE_URL + src,
+        small: API_BASE_URL + src,
+        large: API_BASE_URL + src,
       })
     })
   }
