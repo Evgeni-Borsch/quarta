@@ -1,3 +1,5 @@
+const path = require('path')
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -27,6 +29,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    '@nuxtjs/composition-api/module',
+    '@nuxtjs/style-resources',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -41,11 +45,48 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extend(config) {
+      const svgRule = config.module.rules.find((rule) => rule.test.test('.svg'))
+
+      svgRule.test = /\.(png|jpe?g|gif|webp)$/
+
       config.module.rules.push({
         test: /\.mjs$/,
         include: /node_modules/,
         type: 'javascript/auto',
       })
+
+      config.module.rules.push({
+        test: /\.svg$/,
+        oneOf: [
+          {
+            resourceQuery: /inline/,
+            use: ['babel-loader', 'vue-svg-loader'],
+          },
+          {
+            resourceQuery: /icon/,
+            use: [
+              'babel-loader',
+              'vue-svg-loader',
+              {
+                loader: 'svgo-loader',
+                options: {
+                  configFile: path.resolve('./svgo.icons.config.js'),
+                },
+              },
+            ],
+          },
+          {
+            loader: 'file-loader',
+            query: {
+              name: 'assets/[name].[hash:8].[ext]',
+            },
+          },
+        ],
+      })
     },
+  },
+
+  styleResources: {
+    scss: ['./assets/styles/_base-imports.scss'],
   },
 }
