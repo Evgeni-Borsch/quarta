@@ -91,6 +91,8 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 
+import ProductAbout from './ProductAbout.vue'
+
 import HeartIcon from '@/assets/icons/heart.svg?icon'
 import CompareIcon from '@/assets/icons/compare.svg?icon'
 
@@ -102,8 +104,6 @@ import InfoVue from '@/components/Info.vue'
 import ProductPriceVue from '@/components/product/ProductPrice.vue'
 import ProductPhotosVue from '@/components/product/ProductPhotos.vue'
 import ProductComboVue from '@/components/product/ProductCombo.vue'
-import ReviewsSliderVue from '../ReviewsSlider.vue'
-import ProductAbout from './ProductAbout.vue'
 
 export default defineComponent({
   components: {
@@ -115,7 +115,6 @@ export default defineComponent({
     ProductPhotosVue,
     ProductComboVue,
     ProductAbout,
-    ReviewsSliderVue,
     HeartIcon,
     CompareIcon,
   },
@@ -179,6 +178,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .product {
+  background-color: $body-bg;
   &__article {
     line-height: 0.6875rem;
     margin-bottom: 0.75rem;

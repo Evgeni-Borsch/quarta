@@ -1,6 +1,7 @@
-const path = require('path')
+import path from 'path'
 
 export default {
+  // babelrc: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'quarta-nuxt',
@@ -20,7 +21,7 @@ export default {
   css: ['normalize.css/normalize.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/general.ts'],
+  plugins: ['~/plugins/general.client.ts'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

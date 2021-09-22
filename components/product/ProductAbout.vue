@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div class="container">
+    <div v-if="currentTab === 'description'" class="container">
       <div class="row">
         <div class="col-6 pe-5">
           <h3>Характеристики</h3>
@@ -69,13 +69,20 @@
         </div>
       </div>
     </div>
+
+    <ProductAvailabilityVue v-if="currentTab === 'availability'" />
+
+    <ProductReviewsVue v-if="currentTab === 'reviews'" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, unref } from '@nuxtjs/composition-api'
+import ProductAvailabilityVue from './ProductAvailability.vue'
+import ProductReviewsVue from './ProductReviews.vue'
 
 export default defineComponent({
+  components: { ProductAvailabilityVue, ProductReviewsVue },
   props: {
     product: {
       type: Object,

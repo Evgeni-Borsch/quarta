@@ -1,14 +1,22 @@
 <template>
-  <ul class="breadcrumbs container">
-    <li v-for="(page, index) of path" :key="index" class="breadcrumbs__item">
-      <span v-if="isLast(index)">
-        {{ page.title }}
-      </span>
-      <a v-else :href="page.slug">
-        {{ page.title }}
-      </a>
-    </li>
-  </ul>
+  <div class="breadcrumbs">
+    <div class="container">
+      <ul>
+        <li
+          v-for="(page, index) of path"
+          :key="index"
+          class="breadcrumbs__item"
+        >
+          <span v-if="isLast(index)">
+            {{ page.title }}
+          </span>
+          <a v-else :href="page.slug">
+            {{ page.title }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -36,6 +44,7 @@ export default defineComponent({
 .breadcrumbs {
   padding-top: 40px;
   padding-bottom: 60px;
+  background-color: $body-bg;
 
   li.breadcrumbs__item {
     display: inline-block;

@@ -11,26 +11,29 @@ import Star from '@/assets/icons/star.svg?icon'
 import StarHalf from '@/assets/icons/star-half.svg?icon'
 import StarFill from '@/assets/icons/star-fill.svg?icon'
 
+export enum StarType {
+  outline = 'outline',
+  half = 'half',
+  fill = 'fill',
+}
+
+export interface StarProps {
+  type: typeof StarType.outline | typeof StarType.half | typeof StarType.fill
+}
+
 export default defineComponent({
   components: { Star, StarHalf, StarFill },
   props: {
-    grade: {
-      type: Number,
-      required: true,
-    },
-    current: {
-      type: Number,
+    type: {
+      type: String,
       required: true,
     },
   },
-  setup(props) {
-    const { grade, current } = props
-
+  setup(props: StarProps) {
     const icon = computed(() => {
-      const rounded = Math.round(current * 2) / 2
-
-      if (rounded >= grade) return 'StarFill'
-      if (rounded - 0.5 >= grade) return 'StarHalf'
+      if (props.type === StarType.outline) return 'Star'
+      if (props.type === StarType.half) return 'StarHalf'
+      if (props.type === StarType.fill) return 'StarFill'
       return 'Star'
     })
 

@@ -1,5 +1,11 @@
 <template>
-  <header class="header">
+  <header
+    ref="header"
+    class="header"
+    :class="{
+      'header--hidden': !isTop && !scrollUp,
+    }"
+  >
     <div class="container">
       <div class="row header__top-row">
         <div class="header__location col">
@@ -68,7 +74,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  Ref,
+  ref,
+} from '@nuxtjs/composition-api'
+import { useWindowScroll, throttledWatch, debouncedWatch } from '@vueuse/core'
+
+import BageVue from '../Bage.vue'
+import HeaderCategoriesVue from './HeaderCategories.vue'
+import HeaderSerachVue from './HeaderSerach.vue'
 
 import logo from '@/assets/images/logo.svg'
 import HeartIcon from '@/assets/icons/heart.svg?icon'
@@ -76,10 +93,6 @@ import CompareIcon from '@/assets/icons/compare.svg?icon'
 import CartIcon from '@/assets/icons/cart.svg?icon'
 import LocationIcon from '@/assets/icons/location.svg?icon'
 import PersonIcon from '@/assets/icons/person.svg?icon'
-
-import BageVue from '../Bage.vue'
-import HeaderCategoriesVue from './HeaderCategories.vue'
-import HeaderSerachVue from './HeaderSerach.vue'
 
 export default defineComponent({
   name: 'Header',
@@ -94,23 +107,59 @@ export default defineComponent({
     PersonIcon,
   },
   setup() {
-    return { logo }
+    const { y: scrollY } = useWindowScroll()
+    const direction: Ref<string> = ref('down')
+    const lastScrollY: Ref<number> = ref(0)
+    const prevDirection = ref('down')
+    const scrollUp = ref(false)
+    const isTop = computed(() => scrollY.value < globalThis.innerHeight ?? 200)
+
+    onMounted(() => {
+      debouncedWatch(
+        scrollY,
+        (scrollY: number) => {
+          prevDirection.value = direction.value
+          direction.value = lastScrollY.value < scrollY ? 'down' : 'up'
+          scrollUp.value =
+            direction.value === 'up' && lastScrollY.value - scrollY > 150
+          lastScrollY.value = scrollY
+        },
+        { debounce: 250 }
+      )
+    })
+
+    return { logo, direction, isTop, lastScrollY, scrollUp }
   },
 })
 </script>
 
 <style lang="scss" scoped>
-@import '~/assets/styles/base-imports';
-
 @mixin middle-column {
   min-width: 702px;
   max-width: 702px;
 }
 
+.btn {
+  svg {
+    transition: transform 0.1s ease-in-out;
+  }
+
+  &:hover,
+  &:focus {
+    & svg {
+      transform: scale(1.1);
+    }
+  }
+}
+
 .header {
+  position: sticky;
+  top: 0;
+
   padding-top: 14px;
-  padding-bottom: 18px;
-  background: $white;
+  background-color: $white;
+  z-index: $zindex-sticky;
+  transition: transform 0.3s;
 
   a {
     text-decoration: none;
@@ -204,6 +253,10 @@ export default defineComponent({
         color: $primary;
       }
     }
+  }
+
+  &--hidden {
+    transform: translateY(-100%);
   }
 }
 </style>

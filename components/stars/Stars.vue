@@ -1,30 +1,70 @@
 <template>
   <div class="stars">
-    <StarVue :grade="1" :current="rating" @mouseenter="() => (rating = 1)" />
-    <StarVue :grade="2" :current="rating" @mouseenter="() => (rating = 2)" />
-    <StarVue :grade="3" :current="rating" @mouseenter="() => (rating = 3)" />
-    <StarVue :grade="4" :current="rating" @mouseenter="() => (rating = 4)" />
-    <StarVue :grade="5" :current="rating" @mouseenter="() => (rating = 5)" />
+    <StarVue :type="getStarType(1, rating)" />
+    <StarVue :type="getStarType(2, rating)" />
+    <StarVue :type="getStarType(3, rating)" />
+    <StarVue :type="getStarType(4, rating)" />
+    <StarVue :type="getStarType(5, rating)" />
 
-    <div class="stars__reviews">
-      <a href="#">4 отзыва</a>
+    <div v-if="count" class="stars__count">{{ rating }}</div>
+
+    <div v-if="reviews" class="stars__reviews">
+      <a @click="onReviews">{{ reviews }} {{ decine(reviews) }}</a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
-import StarVue from './Star.vue'
+import { defineComponent } from '@nuxtjs/composition-api'
+import StarVue, { StarType } from './Star.vue'
+import useDecline from '~/utils/useDecline'
 
+export interface StarsProps {
+  rating: number
+  interactive: boolean
+  count: boolean
+  reviews: number | null
+}
+
+/**
+ * TODO: берет данные по продукту из стора
+ */
 export default defineComponent({
   components: {
     StarVue,
   },
-  setup() {
-    const rating = ref(4.6)
+  props: {
+    rating: {
+      type: Number,
+      default: 0,
+      // required: true,
+    },
+    interactive: {
+      type: Boolean,
+      default: false,
+    },
+    count: {
+      type: Boolean,
+      default: false,
+    },
+    reviews: {
+      type: Number,
+      default: null,
+    },
+  },
+  setup(_, { emit }) {
+    const onReviews = () => emit('reviews')
+    const decine = useDecline(['отзыв', 'отзыва', 'отзывов'])
+    const getStarType = (base: number, current: number) => {
+      if (base - current <= 0) return StarType.fill
+      if (base - current <= 0.5) return StarType.half
+      return StarType.outline
+    }
 
     return {
-      rating,
+      decine,
+      getStarType,
+      onReviews,
     }
   },
 })
@@ -32,15 +72,33 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .stars {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   color: $secondary;
   margin-bottom: 1rem;
 
+  &__count,
+  &__reviews {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: -0.125rem;
+    margin-left: 0.3125rem;
+  }
+
+  &__count {
+    font-size: 0.75rem;
+    color: $gray-800;
+    margin-right: 0.6875rem;
+  }
+
   &__reviews {
     color: $primary;
-    margin-left: 5px;
-    margin-bottom: -2px;
+
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
   }
 }
 </style>
