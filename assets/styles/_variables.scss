@@ -835,7 +835,7 @@ $form-text-color: $text-muted !default;
 // scss-docs-end form-text-variables
 
 // scss-docs-start form-label-variables
-$form-label-margin-bottom: 0.5rem !default;
+$form-label-margin-bottom: 0.625rem !default;
 $form-label-font-size: null !default;
 $form-label-font-style: null !default;
 $form-label-font-weight: null !default;
@@ -863,7 +863,7 @@ $input-disabled-bg: $gray-200 !default;
 $input-disabled-border-color: null !default;
 
 $input-color: $body-color !default;
-$input-border-color: $gray-400 !default;
+$input-border-color: $gray-200 !default;
 $input-border-width: $input-btn-border-width !default;
 $input-box-shadow: $box-shadow-inset !default;
 
@@ -1281,12 +1281,12 @@ $placeholder-opacity-min: 0.2 !default;
 // Cards
 
 // scss-docs-start card-variables
-$card-spacer-y: $spacer !default;
-$card-spacer-x: $spacer !default;
-$card-title-spacer-y: $spacer * 0.5 !default;
+$card-spacer-y: 1.875rem !default;
+$card-spacer-x: 1.875rem !default;
+$card-title-spacer-y: 1.875rem * 0.5 !default;
 $card-border-width: $border-width !default;
-$card-border-color: rgba($black, 0.125) !default;
-$card-border-radius: $border-radius !default;
+$card-border-color: $gray-200 !default;
+$card-border-radius: $border-radius-lg !default;
 $card-box-shadow: null !default;
 $card-inner-border-radius: subtract(
   $card-border-radius,

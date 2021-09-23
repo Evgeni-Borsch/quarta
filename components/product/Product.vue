@@ -179,6 +179,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .product {
   background-color: $body-bg;
+
   &__article {
     line-height: 0.6875rem;
     margin-bottom: 0.75rem;

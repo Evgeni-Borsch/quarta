@@ -46,8 +46,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .reviews-list {
   &__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     padding-top: 1rem;
-    text-align: right;
   }
 }
 </style>

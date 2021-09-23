@@ -1,15 +1,20 @@
 <template>
-  <div class="star">
+  <div
+    class="star"
+    :class="{
+      'star--small': size === StarSize.small,
+      'star--large': size === StarSize.large,
+    }"
+  >
     <component :is="icon" />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
-
-import Star from '@/assets/icons/star.svg?icon'
-import StarHalf from '@/assets/icons/star-half.svg?icon'
-import StarFill from '@/assets/icons/star-fill.svg?icon'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import StarIcon from '@/assets/icons/star.svg?icon'
+import StarHalfIcon from '@/assets/icons/star-half.svg?icon'
+import StarFillIcon from '@/assets/icons/star-fill.svg?icon'
 
 export enum StarType {
   outline = 'outline',
@@ -17,29 +22,39 @@ export enum StarType {
   fill = 'fill',
 }
 
-export interface StarProps {
-  type: typeof StarType.outline | typeof StarType.half | typeof StarType.fill
+export enum StarSize {
+  small = 'small',
+  medium = 'medium',
+  large = 'large',
 }
 
-export default defineComponent({
-  components: { Star, StarHalf, StarFill },
-  props: {
-    type: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props: StarProps) {
-    const icon = computed(() => {
-      if (props.type === StarType.outline) return 'Star'
-      if (props.type === StarType.half) return 'StarHalf'
-      if (props.type === StarType.fill) return 'StarFill'
-      return 'Star'
-    })
+export type TStarType =
+  | typeof StarType.outline
+  | typeof StarType.half
+  | typeof StarType.fill
 
-    return { icon }
+export type TStarSize =
+  | typeof StarSize.small
+  | typeof StarSize.medium
+  | typeof StarSize.large
+
+@Component({
+  components: { StarIcon, StarHalfIcon, StarFillIcon },
+  setup() {
+    return { StarSize }
   },
 })
+export default class Star extends Vue {
+  @Prop({ default: StarType.fill }) type!: TStarType
+  @Prop({ default: StarSize.small }) size!: TStarSize
+
+  get icon() {
+    if (this.type === StarType.outline) return 'StarIcon'
+    if (this.type === StarType.half) return 'StarHalfIcon'
+    if (this.type === StarType.fill) return 'StarFillIcon'
+    return 'Star'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -49,10 +64,22 @@ export default defineComponent({
   align-items: center;
   cursor: pointer;
 
-  svg {
-    transform: scale(0.75);
+  margin-right: 2px;
+
+  &--small {
+    margin-right: -1px;
+
+    svg {
+      transform: scale(0.75);
+    }
   }
 
-  margin-right: -1px;
+  &--large {
+    margin-right: 3px;
+
+    svg {
+      transform: scale(1.25);
+    }
+  }
 }
 </style>

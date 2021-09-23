@@ -71,18 +71,21 @@
     </div>
 
     <ProductAvailabilityVue v-if="currentTab === 'availability'" />
-
+    <ProductInstructionsVue v-if="currentTab === 'documents'"/>
+    <ProductAskVue v-if="currentTab === 'questions'" />
     <ProductReviewsVue v-if="currentTab === 'reviews'" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, unref } from '@nuxtjs/composition-api'
+import ProductAskVue from './ProductAsk.vue'
 import ProductAvailabilityVue from './ProductAvailability.vue'
 import ProductReviewsVue from './ProductReviews.vue'
+import ProductInstructionsVue from './ProductInstructions.vue'
 
 export default defineComponent({
-  components: { ProductAvailabilityVue, ProductReviewsVue },
+  components: { ProductAvailabilityVue, ProductReviewsVue, ProductAskVue,ProductInstructionsVue },
   props: {
     product: {
       type: Object,
@@ -108,6 +111,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .product-about {
   margin-top: 6.25rem;
+  padding-bottom: 5.625rem !important;
   background-color: $white;
   font-size: 1rem;
 
