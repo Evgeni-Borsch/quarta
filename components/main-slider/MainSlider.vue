@@ -26,8 +26,21 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- <div class="swiper-scrollbar"></div> -->
+    <MainSliderProgressVue />
+
+    <div class="main-slider__arrows">
+      <div class="container">
+        <div
+          class="main-slider__arrow-prev"
+          @click="() => _swiper.slidePrev()"
+        ></div>
+        <div
+          class="main-slider__arrow-next"
+          @click="() => _swiper.slideNext()"
+        ></div>
+      </div>
     </div>
 
     <div class="main-slider__dots">
@@ -36,9 +49,9 @@
           v-for="(slide, index) of slides"
           :key="index"
           class="main-slider__dot"
-          @click="() => swiper.slideTo(index)"
+          @click="() => _swiper.slideTo(index + 1)"
         >
-          <MainSliderDotCircle v-if="index === currentIndex" />
+          <MainSliderDotCircle :index="index" />
         </div>
       </div>
     </div>
@@ -50,6 +63,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 import { directive } from 'vue-awesome-swiper'
 import SwiperCore, { Scrollbar, Swiper, SwiperOptions } from 'swiper/core'
 import MainSliderDotCircle from './MainSliderDotCircle.vue'
+import MainSliderProgressVue from './MainSliderProgress.vue'
 
 import 'swiper/swiper.scss'
 import 'swiper/components/scrollbar/scrollbar.min.css'
@@ -71,16 +85,31 @@ export interface MainSliderSlide {
   },
   components: {
     MainSliderDotCircle,
+    MainSliderProgressVue,
   },
 })
 export default class MainSlider extends Vue {
   _swiper: Swiper | null = null
-  slides: Array<MainSliderSlide> = new Array(3).fill({
-    title: 'Стрелковые и&nbsp;охотничьи аксессуары',
-    subTitle: 'Огромный выбор товаров',
-    text: 'Европейские разработки, японское качество. 3 года гарантии на все!',
-    background: '/slide-01.jpg',
-  })
+  slides: Array<MainSliderSlide> = [
+    {
+      title: 'Стрелковые и&nbsp;охотничьи аксессуары',
+      subTitle: 'Огромный выбор товаров',
+      text: 'Европейские разработки, японское качество. 3 года гарантии на все!',
+      background: '/slide-01.jpg',
+    },
+    {
+      title: 'Стрелковые и&nbsp;охотничьи аксессуары',
+      subTitle: 'Огромный выбор товаров',
+      text: 'Европейские разработки, японское качество. 3 года гарантии на все!',
+      background: '/slide-01.jpg',
+    },
+    {
+      title: 'Стрелковые и&nbsp;охотничьи аксессуары',
+      subTitle: 'Огромный выбор товаров',
+      text: 'Европейские разработки, японское качество. 3 года гарантии на все!',
+      background: '/slide-01.jpg',
+    },
+  ]
 
   delay = 5000
   isHovered = false
@@ -127,11 +156,9 @@ export default class MainSlider extends Vue {
     this.interval = null
   }
 
-  slideChangeTransitionEnd(swiper: Swiper) {
+  slideChangeTransitionEnd() {
     setTimeout(() => {
-      console.log( swiper?.realIndex);
-      
-      this.currentIndex = swiper?.realIndex ?? 0
+      this.currentIndex = this._swiper?.realIndex ?? 0
       this.stopTimer()
       this.clearTimer()
 
@@ -231,6 +258,7 @@ $main-slider-height: 635px;
     display: inline-block;
     width: 20px;
     height: 20px;
+    cursor: pointer;
 
     &::before {
       content: '';
@@ -241,6 +269,42 @@ $main-slider-height: 635px;
       top: 8px;
       border-radius: 50%;
       background-color: $gray-600;
+    }
+  }
+
+  &__arrows {
+    position: absolute;
+    top: 176px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    pointer-events: none;
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+  }
+
+  &__arrow {
+    &-prev,
+    &-next {
+      width: 42px;
+      height: 42px;
+      border: 1px solid;
+      border-color: $white;
+      border-radius: 50%;
+      margin-bottom: 13px;
+      background-image: url("data:image/svg+xml,%3Csvg width='9' height='5' viewBox='0 0 9 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.11495 5L4.5 1.98568L7.88505 5L9 4.00716L4.5 -3.33798e-07L-3.15589e-08 4.00716L1.11495 5Z' fill='white'/%3E%3C/svg%3E%0A");
+      background-repeat: no-repeat;
+      background-position: 50% 47%;
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    &-next {
+      transform: rotateX(180deg);
     }
   }
 }

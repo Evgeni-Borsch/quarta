@@ -1,5 +1,5 @@
 <template>
-  <div class="main-slider-dot">
+  <div v-if="index === currentIndex" class="main-slider-dot">
     <svg
       width="20px"
       height="20px"
@@ -21,6 +21,8 @@
         fill="transparent"
         stroke-width="1"
         stroke="white"
+        stroke-dasharray="0 62.831853072"
+        stroke-dashoffset="15.707963268"
         ref="circle"
       />
     </svg>
@@ -33,28 +35,28 @@ import MainSlider from './MainSlider.vue'
 
 @Component({})
 export default class MainSliderDot extends Vue {
-  perimeter = 10 * 2 * Math.PI
+  perimeter = 62.831853072
   $parent!: MainSlider
 
   @Ref('circle') circle!: SVGCircleElement
+  @Prop({ required: true }) index!: number
 
   get progress() {
     return this.$parent.timerProgress
   }
 
+  get currentIndex() {
+    return this.$parent.currentIndex
+  }
+
   @Watch('progress')
   onProgress(progress: number) {
-    this.circle.setAttribute(
+    this.circle?.setAttribute(
       'stroke-dasharray',
       `${this.perimeter * progress} ${
         this.perimeter - this.perimeter * progress
       }`
     )
-  }
-
-  mounted() {
-    this.onProgress(0)
-    this.circle.setAttribute('stroke-dashoffset', `${this.perimeter / 4}`)
   }
 }
 </script>
