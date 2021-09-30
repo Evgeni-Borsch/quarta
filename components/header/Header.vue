@@ -153,7 +153,7 @@ export default defineComponent({
 }
 
 .header {
-  position: sticky;
+  // position: sticky;
   top: 0;
 
   padding-top: 14px;

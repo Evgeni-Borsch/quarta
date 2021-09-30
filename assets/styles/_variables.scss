@@ -854,9 +854,9 @@ $input-padding-y-sm: $input-btn-padding-y-sm !default;
 $input-padding-x-sm: $input-btn-padding-x-sm !default;
 $input-font-size-sm: $input-btn-font-size-sm !default;
 
-$input-padding-y-lg: $input-btn-padding-y-lg !default;
-$input-padding-x-lg: $input-btn-padding-x-lg !default;
-$input-font-size-lg: $input-btn-font-size-lg !default;
+$input-padding-y-lg: 1.125rem !default;
+$input-padding-x-lg: 1.125rem !default;
+$input-font-size-lg: 1rem !default;
 
 $input-bg: $body-bg !default;
 $input-disabled-bg: $gray-200 !default;
@@ -869,7 +869,7 @@ $input-box-shadow: $box-shadow-inset !default;
 
 $input-border-radius: $border-radius !default;
 $input-border-radius-sm: $border-radius-sm !default;
-$input-border-radius-lg: $border-radius-lg !default;
+$input-border-radius-lg: $border-radius !default;
 
 $input-focus-bg: $input-bg !default;
 $input-focus-border-color: tint-color($component-active-bg, 50%) !default;
@@ -914,9 +914,9 @@ $form-color-width: 3rem !default;
 // scss-docs-end form-input-variables
 
 // scss-docs-start form-check-variables
-$form-check-input-width: 1em !default;
+$form-check-input-width: 1rem !default;
 $form-check-min-height: $font-size-base * $line-height-base !default;
-$form-check-padding-start: $form-check-input-width + 0.5em !default;
+$form-check-padding-start: $form-check-input-width + 0.5rem !default;
 $form-check-margin-bottom: 0.125rem !default;
 $form-check-label-color: null !default;
 $form-check-label-cursor: null !default;
@@ -924,17 +924,17 @@ $form-check-transition: null !default;
 
 $form-check-input-active-filter: brightness(90%) !default;
 
-$form-check-input-bg: $input-bg !default;
-$form-check-input-border: 1px solid rgba($black, 0.25) !default;
-$form-check-input-border-radius: 0.25em !default;
+$form-check-input-bg: transparent !default;
+$form-check-input-border: 1px solid $gray-200 !default;
+$form-check-input-border-radius: 0.125rem !default;
 $form-check-radio-border-radius: 50% !default;
-$form-check-input-focus-border: $input-focus-border-color !default;
-$form-check-input-focus-box-shadow: $input-btn-focus-box-shadow !default;
+$form-check-input-focus-border: $secondary !default;
+$form-check-input-focus-box-shadow: none !default;
 
-$form-check-input-checked-color: $component-active-color !default;
-$form-check-input-checked-bg-color: $component-active-bg !default;
-$form-check-input-checked-border-color: $form-check-input-checked-bg-color !default;
-$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/></svg>") !default;
+$form-check-input-checked-color: $secondary !default;
+$form-check-input-checked-bg-color: transparent !default;
+$form-check-input-checked-border-color: $gray-200 !default;
+$form-check-input-checked-bg-image: url('data:image/svg+xml,<svg width="9" height="8" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.42069 6.91431C3.47956 6.99648 3.55717 7.06343 3.64708 7.10962C3.73699 7.1558 3.83661 7.1799 3.93769 7.1799C4.03877 7.1799 4.13839 7.1558 4.2283 7.10962C4.31821 7.06343 4.39582 6.99648 4.45469 6.91431L8.66669 1.07431C8.74269 0.968313 8.66669 0.820312 8.53669 0.820312H7.59869C7.39469 0.820312 7.20069 0.918312 7.08069 1.08631L3.93869 5.44631L2.51469 3.47031C2.39469 3.30431 2.20269 3.20431 1.99669 3.20431H1.05869C0.928691 3.20431 0.852691 3.35231 0.928691 3.45831L3.42069 6.91431V6.91431Z" fill="#{$form-check-input-checked-color}"/></svg>') !default;
 $form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$form-check-input-checked-color}'/></svg>") !default;
 
 $form-check-input-indeterminate-color: $component-active-color !default;

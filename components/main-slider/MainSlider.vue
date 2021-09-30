@@ -1,5 +1,10 @@
 <template>
-  <div class="main-slider" @mouseenter="onMouseEnter" @mouseleave="onMouseOut">
+  <div
+    class="main-slider"
+    :class="{ 'main-slider__compact': compact }"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseOut"
+  >
     <div v-swiper:_swiper="swiperOptions">
       <div class="swiper-wrapper">
         <div
@@ -28,7 +33,7 @@
       </div>
     </div>
 
-    <MainSliderProgressVue />
+    <MainSliderProgressVue v-if="!compact" />
 
     <div class="main-slider__arrows">
       <div class="container">
@@ -43,7 +48,7 @@
       </div>
     </div>
 
-    <div class="main-slider__dots">
+    <div v-if="!compact" class="main-slider__dots">
       <div class="container">
         <div
           v-for="(slide, index) of slides"
@@ -59,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 import { directive } from 'vue-awesome-swiper'
 import SwiperCore, { Scrollbar, Swiper, SwiperOptions } from 'swiper/core'
 import MainSliderDotCircle from './MainSliderDotCircle.vue'
@@ -89,6 +94,8 @@ export interface MainSliderSlide {
   },
 })
 export default class MainSlider extends Vue {
+  @Prop({ default: false }) compact!: boolean
+
   _swiper: Swiper | null = null
   slides: Array<MainSliderSlide> = [
     {
@@ -127,7 +134,7 @@ export default class MainSlider extends Vue {
     return {
       slidesPerView: 1,
       direction: 'vertical',
-      height: 635,
+      height: this.compact ? 318 : 635,
       loop: true,
       on: {
         slideChangeTransitionEnd: this.slideChangeTransitionEnd,
@@ -202,12 +209,17 @@ export default class MainSlider extends Vue {
 
 <style lang="scss">
 $main-slider-height: 635px;
+$main-slider-compact-height: 318px;
 
 .main-slider {
   position: relative;
   height: $main-slider-height;
   overflow: hidden;
   color: $white;
+
+  &__compact {
+    height: $main-slider-compact-height;
+  }
 
   &__subtitle {
     color: rgba($white, 0.62);
@@ -287,6 +299,11 @@ $main-slider-height: 635px;
     }
   }
 
+  &__compact &__arrows {
+    top: 110px;
+
+  }
+
   &__arrow {
     &-prev,
     &-next {
@@ -317,6 +334,16 @@ $main-slider-height: 635px;
 
     .container {
       margin-top: 130px;
+    }
+  }
+}
+
+.main-slider__compact .swiper {
+  &-slide {
+    height: $main-slider-compact-height;
+
+    .container {
+      margin-top: 56px;
     }
   }
 }

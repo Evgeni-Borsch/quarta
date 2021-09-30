@@ -1,4 +1,5 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
+import { getStore } from '~/utils/store-accessor'
 
 export interface Category {
   name: string

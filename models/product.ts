@@ -1,10 +1,10 @@
-export interface ProductPhoto {
+export interface IProductPhoto {
   small: string
   large: string
   default: string
 }
 
-export interface Product {
+export interface IProduct {
   article: string
   name: string
   price: number
@@ -12,7 +12,7 @@ export interface Product {
   discount?: number
   rating: number
   bonus?: number
-  images: Array<ProductPhoto>
+  images: Array<IProductPhoto>
   available: boolean
   availability?: unknown
   props: { [prop: string]: string }

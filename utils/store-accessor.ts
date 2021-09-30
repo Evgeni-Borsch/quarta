@@ -1,12 +1,22 @@
+/* eslint-disable import/no-mutable-exports */
+
 import { getModule } from 'nuxt-property-decorator'
 import { Store } from 'vuex'
 import Categories from '~/store/categories'
+import Products from '~/store/products'
 
-// eslint-disable-next-line import/no-mutable-exports
 let categories!: Categories
+let products!: Products
+let _store!: Store<any>
 
 function initialiseStores(store: Store<any>) {
+  _store = store
   categories = getModule(Categories, store)
+  products = getModule(Products, store)
 }
 
-export { initialiseStores, categories }
+function getStore() {
+  return _store
+}
+
+export { initialiseStores, getStore, categories, products }

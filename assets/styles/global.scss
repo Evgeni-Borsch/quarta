@@ -77,3 +77,22 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+input.form-check-input {
+  background-size: auto;
+  transition: $transition-base;
+
+  .label:hover + &,
+  &:hover {
+    border-color: $gray-600;
+  }
+
+  .label:hover + &:checked,
+  &:checked:hover {
+    border-color: $secondary;
+  }
+
+  &:focus {
+    border-color: $gray-600;
+  }
+}

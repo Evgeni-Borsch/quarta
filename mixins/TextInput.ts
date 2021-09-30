@@ -7,6 +7,7 @@ export default class TextInput extends mixins(BaseInput) {
   innerValue: string = ''
 
   @Prop({ default: '' }) value!: string
+  @Prop({ default: null }) placeholder!: string
 
   @Watch('innerValue')
   @Emit('input')

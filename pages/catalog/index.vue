@@ -1,19 +1,92 @@
 <template>
   <div class="catalog">
-    <MainSliderVue />
+    <MainSliderVue :compact="true" />
+    <BreadcrumbsVue :path="breadcrumbs" />
+
+    <section class="catalog__categories">
+      <div class="container">
+        <div class="row">
+          <div class="col-4">
+            <CategoryCardVue
+              title="Оружие и патроны"
+              image="/barrel-gun.png"
+              :count="126"
+            />
+          </div>
+          <div class="col-4">
+            <CategoryCardVue
+              title="Оптика и кронштейны"
+              image="/scope.png"
+              :count="126"
+            />
+          </div>
+          <div class="col-4">
+            <CategoryCardVue
+              title="Снаряжение и одежда"
+              image="/equipment.png"
+              :count="126"
+            />
+          </div>
+          <div class="col-4">
+            <CategoryCardVue
+              title="Чистка, смазка и уход"
+              image="/care.png"
+              :count="126"
+            />
+          </div>
+          <div class="col-4">
+            <CategoryCardVue
+              title="Тюнинг оружия"
+              image="/tunning.png"
+              :count="126"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <SubscribeVue />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import BreadcrumbsVue, { BreadcrumbsLink } from '~/components/Breadcrumbs.vue'
+import CategoryCardVue from '~/components/CategoryCard.vue'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'
+import SubscribeVue from '~/components/Subscribe.vue'
 
 @Component({
   components: {
     MainSliderVue,
+    CategoryCardVue,
+    BreadcrumbsVue,
+    SubscribeVue,
   },
 })
-export default class Index extends Vue {}
+export default class Index extends Vue {
+  breadcrumbs: Array<BreadcrumbsLink> = [
+    {
+      title: 'Главная',
+      url: '/',
+    },
+    {
+      title: 'Каталог',
+      url: '/catalog',
+    },
+  ]
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.catalog {
+  &__categories {
+    background-color: $gray-100;
+    padding-bottom: 8.4375rem;
+
+    [class*='col-'] {
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+</style>

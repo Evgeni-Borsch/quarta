@@ -1,5 +1,5 @@
 <template>
-  <section class="product">
+  <section v-if="product" class="product">
     <div class="container">
       <div class="row">
         <div class="col-6">
@@ -10,7 +10,7 @@
           <div class="product__article">Артикул: {{ product.article }}</div>
 
           <div class="product__title">
-            {{ product.name }}
+            {{ product.title }}
           </div>
 
           <StarsVue />
@@ -84,19 +84,22 @@
 
 <script lang="ts">
 import {
-  defineComponent,
+  computed,
   Ref,
   ref,
   unref,
+  useFetch,
+  useRoute,
   watch,
 } from '@nuxtjs/composition-api'
+import { get } from '@vueuse/shared'
+import { Component, Vue } from 'vue-property-decorator'
 
-import ProductAbout from './ProductAbout.vue'
+import ProductAboutVue from './ProductAbout.vue'
 
 import HeartIcon from '@/assets/icons/heart.svg?icon'
 import CompareIcon from '@/assets/icons/compare.svg?icon'
 
-import { Product } from '@/models/product'
 import DeliveryIcon from '@/assets/icons/delivery.svg?icon'
 import LoactionIcon from '@/assets/icons/location.svg?icon'
 import StarsVue from '@/components/stars/Stars.vue'
@@ -104,17 +107,19 @@ import InfoVue from '@/components/Info.vue'
 import ProductPriceVue from '@/components/product/ProductPrice.vue'
 import ProductPhotosVue from '@/components/product/ProductPhotos.vue'
 import ProductComboVue from '@/components/product/ProductCombo.vue'
+import { ProductItem, products } from '~/store'
 
-export default defineComponent({
+@Component({
   components: {
     InfoVue,
-    DeliveryIcon,
-    LoactionIcon,
     StarsVue,
     ProductPriceVue,
     ProductPhotosVue,
     ProductComboVue,
-    ProductAbout,
+    ProductAboutVue,
+
+    DeliveryIcon,
+    LoactionIcon,
     HeartIcon,
     CompareIcon,
   },
@@ -129,51 +134,33 @@ export default defineComponent({
       e.target.value = setCount(e.target.value).toString()
     }
 
-    const product: Product = {
-      article: 'AB66632',
-      name: 'Бинокль Nikon Monarch 7 8x42, Призмы Porro',
-      price: 44260,
-      priceOld: 50260,
-      discount: 25,
-      bonus: 285,
-      available: true,
-      rating: 4.7,
-      images: [
-        {
-          default: '/product-01-01.jpg',
-          small: '/product-01-01.jpg',
-          large: '/product-01-01.jpg',
-        },
-      ],
-      props: {
-        'Увеличение (х)': '8',
-        'Диаметр объектива (мм)': '56',
-        'Угол зрения (реальный/градусы)': '6,2',
-      },
-      description: `<ul>
-<li><span> Легкий (менее 500 г) корпус изготовлен из армированного стекловолокном поликарбоната.</span></li>
-<li><span>Тщательно продуманная и компактная конструкция.</span></li>
-<li><span>Стекло ED со сверхнизким рассеиванием для устранения хроматических аберраций и более яркого, чёткого изображения.</span></li>
-<li><span>Диэлектрическое высокоотражающее многослойное покрытие призм обеспечивает более яркое изображение по всему полю зрения и более естественные цвета.</span></li>
-<li><span>Все линзы и призмы имеют многослойное покрытие для получения яркого и чёткого изображения.</span></li>
-<li><span>Наружные поверхности линз объектива и окуляра имеют износостойкое покрытие, которое предотвращает появление царапин (только модели 8х42 и 10х42).</span></li>
-<li><span>Крышеобразные призмы с фазокорректирующим покрытием обеспечивают более высокое разрешение.</span></li>
-<li><span>Широкое видимое поле зрения (60,7&deg;).</span></li>
-<li><span>Большое удаление выходного зрачка гарантирует полный обзор всего поля зрения даже для людей, которые носят очки.</span></li>
-<li><span>Для всех линз и призм используется оптика из экологичного стекла, не содержащего свинец и мышьяк.</span></li>
-<li><span>Водонепроницаемые (до 1 м в течение 10 минут), а также защищённые от запотевания, благодаря применению уплотнительных колец и заполнению азотом.</span></li>
-</ul>`,
-      configuration:
-        '<p><span>Бинокль, защитные крышки на окуляр и объектив, чехол, ремень для переноски бинокля, салфетка для очистки оптики, инструкция по эксплуатации, гарантийный талон, коробка (ДхШхВ), мм &ndash; 170х100х180.<br /><br />В разделе &laquo;Инструкции&raquo; можно посмотреть полную информацию.</span></p>',
-    }
+    const product: Ref<ProductItem | null> = ref(null)
+
+    const { fetch, fetchState } = useFetch(async () => {
+      const route = useRoute()
+      const id = computed(() => get(route).params!.id)
+      const productItem = await products.getById(id.value)
+
+      product.value = productItem
+    })
+
+    fetch()
 
     watch(count, () => {
       if (unref(count) < 1) count.value = 1
     })
 
-    return { count, onCountInput, increaseCount, decreaseCount, product }
+    return {
+      count,
+      onCountInput,
+      increaseCount,
+      decreaseCount,
+      product,
+      fetchState,
+    }
   },
 })
+export default class Product extends Vue {}
 </script>
 
 <style lang="scss" scoped>

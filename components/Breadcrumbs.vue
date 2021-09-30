@@ -10,7 +10,7 @@
           <span v-if="isLast(index)">
             {{ page.title }}
           </span>
-          <a v-else :href="page.slug">
+          <a v-else :href="page.url">
             {{ page.title }}
           </a>
         </li>
@@ -20,24 +20,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
-export default defineComponent({
-  props: {
-    path: {
-      type: Array,
-      required: true,
-    },
-  },
-  setup({ path }) {
-    const pathLength = path.length
-    const isLast = (index: number) => pathLength - 1 === index
+export interface BreadcrumbsLink {
+  title: string
+  url: string
+}
 
-    return {
-      isLast,
-    }
-  },
-})
+@Component({})
+export default class Breadcrumbs extends Vue {
+  @Prop({ required: true }) path!: Array<BreadcrumbsLink>
+
+  isLast(index: number) {
+    return this.path.length - 1 === index
+  }
+}
 </script>
 
 <style lang="scss" scoped>
