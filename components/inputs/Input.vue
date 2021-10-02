@@ -15,6 +15,7 @@
       :type="type"
       :placeholder="placeholder"
       class="form-control"
+      :class="{ [`bg-${bg}`]: bg }"
       rows="3"
     />
   </div>
@@ -29,6 +30,7 @@ import Sizable from '~/mixins/Sizable'
 @Component({})
 export default class Textarea extends mixins(TextInput, Sizable) {
   @Prop({ default: 'text' }) type!: string
+  @Prop({ default: null }) bg!: string
 }
 </script>
 

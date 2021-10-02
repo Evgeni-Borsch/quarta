@@ -2,7 +2,7 @@
   <section class="subscribe">
     <div class="container">
       <div class="row">
-        <div class="col-6">
+        <div class="col-6 subscribe__title">
           <h2>
             <small>Подписаться на новости</small><br />
             Будьте в курсе событий!
@@ -11,15 +11,15 @@
 
         <div class="col-6">
           <form action="">
-            <InputVue placeholder="Введите email" size="large" />
+            <InputVue placeholder="Введите email" size="large" bg="white" />
 
-            <div class="row mt-3">
+            <div class="row mt-4">
               <div class="col-6">
-                <CheckboxVue size="large" />
+                <CheckboxVue size="large" :value="true" />
               </div>
 
-              <div class="col-6">
-                <button class="btn btn-primary">Подписаться</button>
+              <div class="col-6 subscribe__button">
+                <button class="btn btn-primary btn-lg">Подписаться</button>
               </div>
             </div>
           </form>
@@ -44,5 +44,29 @@ export default class Subscribe extends Vue {}
 .subscribe {
   padding: 8.4375rem 0;
   background-color: $white;
+
+  h2 {
+    font-size: 2.1875rem;
+    color: $gray-900;
+
+    small {
+      font-size: 1rem;
+      color: $gray-600;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__title {
+    padding-bottom: 6rem;
+    background-image: url('~/assets/images/paper-plane.svg');
+    background-repeat: no-repeat;
+    background-position: 80% 100%;
+  }
+
+  &__button {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 </style>
