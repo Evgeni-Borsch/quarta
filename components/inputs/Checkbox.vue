@@ -7,7 +7,7 @@
       type="checkbox"
     />
     <label class="form-check-label" :for="`i_${uid}`">
-      Я соглашаюсь на обработку персональных данных
+      <slot />
     </label>
   </div>
 </template>
@@ -19,7 +19,7 @@ import HasUid from '~/mixins/HasUid'
 import Sizable from '~/mixins/Sizable'
 
 @Component({})
-export default class Checkbox extends mixins(Sizable, HasUid) {
+export default class CheckboxVue extends mixins(Sizable, HasUid) {
   innerValue = false
 
   @Prop({ default: false }) value!: boolean
@@ -42,10 +42,24 @@ export default class Checkbox extends mixins(Sizable, HasUid) {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .checkbox {
+  min-height: none;
+  margin-bottom: 0.5rem;
+
   input {
     transform: translateY(-0.25rem);
+    cursor: pointer;
+  }
+
+  label {
+    color: $gray-900;
+    cursor: pointer;
+
+    &::v-deep small {
+      color: $gray-600;
+      font-size: 1em;
+    }
   }
 
   &--large {

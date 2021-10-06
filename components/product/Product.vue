@@ -34,7 +34,7 @@
           </div>
 
           <div class="product__add">
-            <span class="product__add-count">
+            <span v-if="isInCart" class="product__add-count">
               <span class="product__add-minus" @click="decreaseCount">-</span>
               <span class="product__add-plus" @click="increaseCount">+</span>
 
@@ -46,7 +46,9 @@
               />
             </span>
 
-            <button class="btn btn-primary">В корзину</button>
+            <button v-else class="btn btn-primary" @click="addToCart">
+              В корзину
+            </button>
             <button class="btn bg-white mx-1"><HeartIcon /> В избранное</button>
             <button class="btn bg-white mx-1">
               <CompareIcon /> В сравнение
@@ -78,22 +80,13 @@
       </div>
     </div>
 
-    <ProductAbout :product="product" />
+    <ProductAboutVue :product="product" />
   </section>
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  Ref,
-  ref,
-  unref,
-  useFetch,
-  useRoute,
-  watch,
-} from '@nuxtjs/composition-api'
-import { get } from '@vueuse/shared'
-import { Component, Vue } from 'vue-property-decorator'
+import { Ref, ref, unref, watch } from '@nuxtjs/composition-api'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 import ProductAboutVue from './ProductAbout.vue'
 
@@ -107,7 +100,7 @@ import InfoVue from '@/components/Info.vue'
 import ProductPriceVue from '@/components/product/ProductPrice.vue'
 import ProductPhotosVue from '@/components/product/ProductPhotos.vue'
 import ProductComboVue from '@/components/product/ProductCombo.vue'
-import { ProductItem, products } from '~/store'
+import { cart, ProductItem } from '~/store'
 
 @Component({
   components: {
@@ -117,50 +110,51 @@ import { ProductItem, products } from '~/store'
     ProductPhotosVue,
     ProductComboVue,
     ProductAboutVue,
-
     DeliveryIcon,
     LoactionIcon,
     HeartIcon,
     CompareIcon,
   },
-  setup() {
-    const count: Ref<number> = ref(1)
-    const setCount = (num: string) => (count.value = parseInt(num) || 1)
-    const increaseCount = () => count.value++
-    const decreaseCount = () => {
-      if (count.value > 1) count.value--
-    }
-    const onCountInput = (e: Event & { target: HTMLInputElement }) => {
-      e.target.value = setCount(e.target.value).toString()
-    }
-
-    const product: Ref<ProductItem | null> = ref(null)
-
-    const { fetch, fetchState } = useFetch(async () => {
-      const route = useRoute()
-      const id = computed(() => get(route).params!.id)
-      const productItem = await products.getById(id.value)
-
-      product.value = productItem
-    })
-
-    fetch()
-
-    watch(count, () => {
-      if (unref(count) < 1) count.value = 1
-    })
-
-    return {
-      count,
-      onCountInput,
-      increaseCount,
-      decreaseCount,
-      product,
-      fetchState,
-    }
-  },
 })
-export default class Product extends Vue {}
+export default class ProductVue extends Vue {
+  @Prop({ required: true }) product!: ProductItem
+
+  get isInCart() {
+    return cart.items.has(this.product.id)
+  }
+
+  get count() {
+    return cart.getItem(this.product.id)?.count ?? 1
+  }
+
+  addToCart() {
+    cart.addItem(this.product.id)
+  }
+
+  setCount(count: number) {
+    cart.setCount({ id: this.product.id, count })
+  }
+
+  increaseCount() {
+    this.setCount(this.count + 1)
+  }
+
+  decreaseCount() {
+    if (this.count > 0) {
+      this.setCount(this.count - 1)
+    }
+  }
+
+  onCountInput(e: Event & { target: HTMLInputElement }) {
+    const count = Math.abs(parseInt(e.target.value))
+
+    if (isNaN(count)) {
+      e.target.value = this.count.toString()
+    }
+
+    this.setCount(count)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

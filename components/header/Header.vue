@@ -60,7 +60,7 @@
           <button class="btn btn-link px-2 mx-2">
             <div class="position-relative px-1">
               <CartIcon />
-              <BageVue>4</BageVue>
+              <BageVue v-if="cartCount">{{ cartCount }}</BageVue>
             </div>
           </button>
         </div>
@@ -74,14 +74,9 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-} from '@nuxtjs/composition-api'
-import { useWindowScroll, throttledWatch, debouncedWatch } from '@vueuse/core'
+import { computed, onMounted, Ref, ref } from '@nuxtjs/composition-api'
+import { useWindowScroll, debouncedWatch } from '@vueuse/core'
+import { Component, Vue } from 'vue-property-decorator'
 
 import BageVue from '../Bage.vue'
 import HeaderCategoriesVue from './HeaderCategories.vue'
@@ -93,8 +88,9 @@ import CompareIcon from '@/assets/icons/compare.svg?icon'
 import CartIcon from '@/assets/icons/cart.svg?icon'
 import LocationIcon from '@/assets/icons/location.svg?icon'
 import PersonIcon from '@/assets/icons/person.svg?icon'
+import { cart } from '~/store'
 
-export default defineComponent({
+@Component({
   name: 'Header',
   components: {
     HeaderSerachVue,
@@ -131,6 +127,11 @@ export default defineComponent({
     return { logo, direction, isTop, lastScrollY, scrollUp }
   },
 })
+export default class HeaderVue extends Vue {
+  get cartCount() {
+    return cart.countTotal
+  }
+}
 </script>
 
 <style lang="scss" scoped>

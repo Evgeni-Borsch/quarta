@@ -60,10 +60,15 @@ ul {
 }
 
 li {
-  margin-bottom: 1.25em;
+  margin-bottom: 1.25rem;
 }
 
-h3 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: $gray-800;
 }
 
@@ -95,4 +100,8 @@ input.form-check-input {
   &:focus {
     border-color: $gray-600;
   }
+}
+
+.btn-lg {
+  font-weight: 500;
 }

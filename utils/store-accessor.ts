@@ -2,21 +2,27 @@
 
 import { getModule } from 'nuxt-property-decorator'
 import { Store } from 'vuex'
-import Categories from '~/store/categories'
-import Products from '~/store/products'
+import CategoriesModule from '~/store/categories'
+import ProductsModule from '~/store/products'
+import FiltersModule from '~/store/filters'
+import CartModule from '~/store/cart'
 
-let categories!: Categories
-let products!: Products
+let categories!: CategoriesModule
+let products!: ProductsModule
+let filters!: FiltersModule
+let cart!: CartModule
 let _store!: Store<any>
 
 function initialiseStores(store: Store<any>) {
   _store = store
-  categories = getModule(Categories, store)
-  products = getModule(Products, store)
+  categories = getModule(CategoriesModule, store)
+  products = getModule(ProductsModule, store)
+  filters = getModule(FiltersModule, store)
+  cart = getModule(CartModule, store)
 }
 
 function getStore() {
   return _store
 }
 
-export { initialiseStores, getStore, categories, products }
+export { initialiseStores, getStore, categories, products, filters, cart }

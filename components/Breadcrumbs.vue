@@ -39,9 +39,13 @@ export default class Breadcrumbs extends Vue {
 
 <style lang="scss" scoped>
 .breadcrumbs {
-  padding-top: 40px;
-  padding-bottom: 60px;
+  padding: 2.5rem 0 1.25rem;
   background-color: $body-bg;
+
+  ul {
+    margin-bottom: 0;
+    padding: 0;
+  }
 
   li.breadcrumbs__item {
     display: inline-block;

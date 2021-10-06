@@ -1,41 +1,31 @@
 <template>
-  <div class="product-availability container pb-5">
+  <div class="product-availability container pb-5" v-if="availability">
     <h3>Наличие товара</h3>
 
     <div class="row product-availability__header">
       <div class="col-5 product-availability__cell">Адрес</div>
       <div class="col-2 product-availability__cell">Режим работы</div>
-      <div class="col-2 product-availability__cell">Наличие</div>
+      <div class="col-3 product-availability__cell">Наличие</div>
       <div class="col"></div>
     </div>
 
-    <div class="row product-availability__spot">
+    <div
+      v-for="store of availability.stores"
+      :key="store.id"
+      class="row product-availability__spot"
+    >
       <div class="col-5 product-availability__cell">
         <div class="product-availability__address">
           <LocationIcon class="icon" />
-          <b>Санкт-Петербург</b>, ул. Гражданский проспект, д. 39А (м.
-          "Академическая")
+          <span v-html="store.title" />
         </div>
       </div>
-      <div class="col-2 product-availability__cell">10:00 – 22:00</div>
-      <div class="col-2 product-availability__cell">В наличии</div>
+      <div class="col-2 product-availability__cell">{{ store.schedule }}</div>
       <div class="col-3 product-availability__cell">
-        <button class="btn">Выбрать</button>
+        <ProductAvailabilityBageVue :avaible="!!store.amount" />
       </div>
-    </div>
-
-    <div class="row product-availability__spot">
-      <div class="col-5 product-availability__cell">
-        <div class="product-availability__address">
-          <LocationIcon class="icon" />
-          <b>Санкт-Петербург</b>, ул. Гражданский проспект, д. 39А (м.
-          "Академическая")
-        </div>
-      </div>
-      <div class="col-2 product-availability__cell">10:00 – 22:00</div>
-      <div class="col-2 product-availability__cell">В наличии</div>
-      <div class="col-3 product-availability__cell">
-        <button class="btn">Выбрать</button>
+      <div class="col-2 product-availability__cell">
+        <button class="btn" :disabled="!store.amount">Выбрать</button>
       </div>
     </div>
 
@@ -44,13 +34,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import ProductAvailabilityBageVue from './ProductAvailabilityBage.vue'
 import LocationIcon from '~/assets/icons/location.svg?icon'
+import { ProductAvailability, ProductItem, products } from '~/store'
 
-export default defineComponent({
-  components: { LocationIcon },
-  setup() {},
-})
+@Component({ components: { LocationIcon, ProductAvailabilityBageVue } })
+export default class ProductAvailabilityVue extends Vue {
+  availability: ProductAvailability | null = null
+
+  @Prop({ required: true }) product!: ProductItem
+
+  async fetchAvailability() {
+    this.availability = (await products.getProductAvailability(
+      this.product.id
+    )) as ProductAvailability
+  }
+
+  beforeMount() {
+    this.fetchAvailability()
+  }
+}
 </script>
 
 <style lang="scss" scoped>

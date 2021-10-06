@@ -22,6 +22,7 @@ export interface Photo {
 
 export interface ProductResponse {
   ID: string
+  NAME: string
   CODE: string
   DEFAULT_PICTURE: {
     SRC: string
@@ -39,6 +40,23 @@ export interface ProductResponse {
   PATH: Array<PathItem>
   PREVIEW_PICTURE: {
     ALT: string
-    SAFE_SRC: string
+    SRC: string
   }
+  PRICES: {
+    BASE: {
+      CAN_BUY: string
+      VALUE: number
+      DISCOUNT_DIFF_PERCENT: number
+      DISCOUNT_VALUE: number
+    }
+  }
+}
+
+export interface ProductAvailabilityResponse {
+  STORES: Array<{
+    ID: string
+    TITLE: string
+    AMOUNT: string
+    SCHEDULE: string
+  }>
 }

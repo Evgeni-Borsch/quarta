@@ -5,7 +5,7 @@
         {{ title }}
       </h6>
     </header>
-    <div v-if="isDesktop || isExpanded" class="footer-collapse__content">
+    <div v-if="isExpanded" class="footer-collapse__content">
       <slot />
     </div>
   </div>
@@ -25,7 +25,7 @@ export default defineComponent({
   },
   setup() {
     const { isDesktop } = useBreakpoints()
-    const isExpanded = ref(false)
+    const isExpanded = ref(true)
     const toggle = useToggle(isExpanded)
 
     return {
@@ -39,6 +39,5 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .footer-collapse {
-  
 }
 </style>
