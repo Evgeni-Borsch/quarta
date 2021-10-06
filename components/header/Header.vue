@@ -108,7 +108,7 @@ import { cart } from '~/store'
     const lastScrollY: Ref<number> = ref(0)
     const prevDirection = ref('down')
     const scrollUp = ref(false)
-    const isTop = computed(() => scrollY.value < window?.innerHeight ?? 200)
+    const isTop = computed(() => scrollY.value < globalThis?.innerHeight ?? 200)
 
     onMounted(() => {
       debouncedWatch(
