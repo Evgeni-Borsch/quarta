@@ -105,7 +105,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AdvantagesVue from '~/components/Advantages.vue'
 import BaseSliderVue from '~/components/BaseSlider.vue'
-import BreadcrumbsVue, { BreadcrumbsLink } from '~/components/Breadcrumbs.vue'
+import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import CategoryCardVue from '~/components/CategoryCard.vue'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import PromoCardVue from '~/components/promo/PromoCard.vue'
@@ -114,6 +114,7 @@ import PromoWide from '~/components/promo/PromoWide.vue'
 import YouTubePromotionVue from '~/components/promo/YouTubePromotion.vue'
 import PromoWideLight from '~/components/promo/PromoWideLight.vue'
 import PromoWideImageTextVue from '~/components/promo/PromoWideImageText.vue'
+import { Page } from '~/models/general'
 
 @Component({
   components: {
@@ -131,14 +132,16 @@ import PromoWideImageTextVue from '~/components/promo/PromoWideImageText.vue'
   },
 })
 export default class IndexPage extends Vue {
-  breadcrumbs: Array<BreadcrumbsLink> = [
+  breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
-      url: '/',
+      slug: 'index',
+      path: '/',
     },
     {
       title: 'Каталог',
-      url: '/catalog',
+      slug: 'catalog',
+      path: '/catalog',
     },
   ]
 }
