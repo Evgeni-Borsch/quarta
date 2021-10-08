@@ -51,10 +51,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import BreadcrumbsVue, { BreadcrumbsLink } from '~/components/Breadcrumbs.vue'
+import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import CategoryCardVue from '~/components/CategoryCard.vue'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
+import { Page } from '~/models/general'
 
 @Component({
   components: {
@@ -65,14 +66,16 @@ import SubscribeVue from '~/components/Subscribe.vue'
   },
 })
 export default class CategoryPage extends Vue {
-  breadcrumbs: Array<BreadcrumbsLink> = [
+  breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
-      url: '/',
+      slug: 'index',
+      path: '/',
     },
     {
       title: 'Каталог',
-      url: '/catalog',
+      slug: 'catalog',
+      path: '/catalog',
     },
   ]
 }

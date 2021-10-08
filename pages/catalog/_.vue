@@ -50,9 +50,10 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import SubCategorySelectorVue from '~/components/catalog/SubCategorySelector.vue'
 
-import BreadcrumbsVue, { BreadcrumbsLink } from '~/components/Breadcrumbs.vue'
+import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import FiltersVue from '~/components/catalog/filters/Filters.vue'
 import ProductCardVue from '~/components/product/ProductCard.vue'
+import { Page } from '~/models/general'
 
 @Component({
   components: {
@@ -64,18 +65,21 @@ import ProductCardVue from '~/components/product/ProductCard.vue'
   },
 })
 export default class CategoryPathResolver extends Vue {
-  breadcrumbs: Array<BreadcrumbsLink> = [
+  breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
-      url: '/',
+      slug: 'index',
+      path: '/',
     },
     {
       title: 'Каталог',
-      url: '/catalog',
+      slug: 'catalog',
+      path: '/catalog',
     },
     {
       title: 'Оптика и кронштейны',
-      url: '/catalog/optics',
+      slug: 'optics',
+      path: '/catalog/optics',
     },
   ]
 }
