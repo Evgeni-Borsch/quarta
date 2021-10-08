@@ -28,6 +28,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import DocumentDownloadIcon from '~/assets/icons/document-download.svg?icon'
+import { ProductItem } from '~/store'
 
 @Component({
   components: {
@@ -35,6 +36,8 @@ import DocumentDownloadIcon from '~/assets/icons/document-download.svg?icon'
   },
 })
 export default class ProductInstructions extends Vue {
+  @Prop({ required: true }) product!: ProductItem
+
   files = [
     {
       name: 'Инструкция HS403B - 2016.pdf',

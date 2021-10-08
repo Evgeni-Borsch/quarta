@@ -1,7 +1,17 @@
 export interface ProductProperty {
   NAME: string
-  DISPLAY_VALUE: string
-  SORT: string
+  '~VALUE': {
+    TEXT: string
+  }
+}
+
+export interface ProductPathItem {
+  NAME: string
+  CODE: string
+}
+
+export interface ProductFileProperty extends ProductProperty {
+  SRC: Array<string>
 }
 
 export interface MetaTags {
@@ -27,11 +37,16 @@ export interface ProductResponse {
   DEFAULT_PICTURE: {
     SRC: string
   }
-  DISPLAY_PROPERTIES: {
+  PROPERTIES: {
     ART: ProductProperty
     CHARACTERISTICS: ProductProperty
     DESCRIPTION: ProductProperty
     EQUIPMENT: ProductProperty
+    INSTRUCTIONS: ProductFileProperty
+    IMAGES: ProductFileProperty
+  }
+  SECTION: {
+    PATH: Array<ProductPathItem>
   }
   ITEM_MEASURE: {
     TITLE: string

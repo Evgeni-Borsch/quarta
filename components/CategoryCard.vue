@@ -1,5 +1,9 @@
 <template>
-  <a href="#" class="category-card">
+  <a
+    href="#"
+    class="category-card"
+    :class="{ 'category-card--compact': compact }"
+  >
     <div class="category-card__background"></div>
 
     <div class="category-card__body">
@@ -10,7 +14,7 @@
       <div class="category-card__title">
         {{ title }}
       </div>
-      <div v-if="count !== null" class="category-card__count">
+      <div v-if="count !== null && !compact" class="category-card__count">
         {{ count }} товаров
       </div>
     </div>
@@ -25,6 +29,7 @@ export default class CategoryCard extends Vue {
   @Prop({ required: true }) title!: string
   @Prop({ required: true }) image!: string
   @Prop({ default: null }) count!: number
+  @Prop({ default: false }) compact!: boolean
 }
 </script>
 
@@ -37,6 +42,7 @@ export default class CategoryCard extends Vue {
   border-radius: $border-radius-lg;
   transition: $transition-base;
   overflow: hidden;
+  background-color: $gray-200;
 
   &:hover {
     box-shadow: 0px 0px 66px rgba(0, 0, 0, 0.18);
@@ -90,6 +96,11 @@ export default class CategoryCard extends Vue {
     color: $gray-900;
     font-size: 1.625rem;
     font-weight: 500;
+  }
+
+  &--compact &__title {
+    margin-top: 2.5rem;
+    font-size: 1rem;
   }
 
   &__count {

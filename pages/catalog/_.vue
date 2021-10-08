@@ -63,7 +63,7 @@ import ProductCardVue from '~/components/product/ProductCard.vue'
     ProductCardVue,
   },
 })
-export default class CategoryVue extends Vue {
+export default class CategoryPathResolver extends Vue {
   breadcrumbs: Array<BreadcrumbsLink> = [
     {
       title: 'Главная',

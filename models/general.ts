@@ -1,6 +1,7 @@
 export interface Page {
   title: string
   slug: string
+  path: string
 }
 
 export class BaseStoredEntity {

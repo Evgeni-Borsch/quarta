@@ -1,0 +1,162 @@
+<template>
+  <div class="index">
+    <MainSliderVue />
+
+    <section class="bg-light catalog-slider">
+      <BaseSliderVue :slides-desktop="4">
+        <CategoryCardVue
+          title="Оружие и патроны"
+          image="/barrel-gun.png"
+          :compact="true"
+        />
+        <CategoryCardVue
+          title="Оптика и кронштейны"
+          image="/scope.png"
+          :compact="true"
+        />
+        <CategoryCardVue
+          title="Снаряжение и одежда"
+          image="/equipment.png"
+          :compact="true"
+        />
+        <CategoryCardVue
+          title="Чистка, смазка и уход"
+          image="/care.png"
+          :compact="true"
+        />
+        <CategoryCardVue
+          title="Тюнинг оружия"
+          image="/tunning.png"
+          :compact="true"
+        />
+      </BaseSliderVue>
+    </section>
+
+    <AdvantagesVue />
+
+    <YouTubePromotionVue />
+
+    <section class="promo">
+      <div class="container">
+        <PromoWideLight />
+      </div>
+
+      <BaseSliderVue class="promo__slider">
+        <PromoCardVue
+          title="Скидка 12% на прицелы&nbsp;Nikko&nbsp;Stirling!"
+          image="/promo-scope.png"
+        >
+          <p>Мы рады сообщить о новом поступлении товара</p>
+        </PromoCardVue>
+        <PromoCardVue
+          title="Скидка 12% на прицелы&nbsp;Nikko&nbsp;Stirling!"
+          image="/promo-loyality.jpg"
+          :image-as-background="true"
+        >
+          <p>Мы рады сообщить о новом поступлении товара</p>
+        </PromoCardVue>
+
+        <PromoCardVue
+          title="Скидка 12% на прицелы&nbsp;Nikko&nbsp;Stirling!"
+          image="/promo-scope.png"
+        >
+          <p>Мы рады сообщить о новом поступлении товара</p>
+        </PromoCardVue>
+      </BaseSliderVue>
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <PromoCardVue
+              title="Скидка 12% на прицелы&nbsp;Nikko&nbsp;Stirling!"
+              image="/promo-loyality.jpg"
+              :image-as-background="true"
+            >
+              <p>Мы рады сообщить о новом поступлении товара</p>
+            </PromoCardVue>
+          </div>
+
+          <div class="col-6">
+            <PromoCardVue
+              title="Скидка 12% на прицелы&nbsp;Nikko&nbsp;Stirling!"
+              image="/promo-headphones.png"
+            >
+              <p>Мы рады сообщить о новом поступлении товара</p>
+            </PromoCardVue>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <PromoWide image="/promo-wide.jpg">
+      <div class="row">
+        <div class="col-6">
+          <PromoWideImageTextVue small-text="21 апреля 2021">
+            <p>Обзор коллиматорных прицелов и аксессуаров нового поколения.</p>
+          </PromoWideImageTextVue>
+        </div>
+      </div>
+    </PromoWide>
+
+    <SubscribeVue />
+  </div>
+</template>
+
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import AdvantagesVue from '~/components/Advantages.vue'
+import BaseSliderVue from '~/components/BaseSlider.vue'
+import BreadcrumbsVue, { BreadcrumbsLink } from '~/components/Breadcrumbs.vue'
+import CategoryCardVue from '~/components/CategoryCard.vue'
+import MainSliderVue from '~/components/main-slider/MainSlider.vue'
+import PromoCardVue from '~/components/promo/PromoCard.vue'
+import SubscribeVue from '~/components/Subscribe.vue'
+import PromoWide from '~/components/promo/PromoWide.vue'
+import YouTubePromotionVue from '~/components/promo/YouTubePromotion.vue'
+import PromoWideLight from '~/components/promo/PromoWideLight.vue'
+import PromoWideImageTextVue from '~/components/promo/PromoWideImageText.vue'
+
+@Component({
+  components: {
+    MainSliderVue,
+    CategoryCardVue,
+    BreadcrumbsVue,
+    SubscribeVue,
+    BaseSliderVue,
+    AdvantagesVue,
+    PromoWide,
+    YouTubePromotionVue,
+    PromoCardVue,
+    PromoWideLight,
+    PromoWideImageTextVue,
+  },
+})
+export default class IndexPage extends Vue {
+  breadcrumbs: Array<BreadcrumbsLink> = [
+    {
+      title: 'Главная',
+      url: '/',
+    },
+    {
+      title: 'Каталог',
+      url: '/catalog',
+    },
+  ]
+}
+</script>
+
+<style lang="scss" scoped>
+.catalog-slider {
+  &::v-deep .base-slider {
+    padding: 8.75rem 0;
+  }
+}
+
+.promo {
+  padding: 7.25rem 0;
+  background-color: $white;
+
+  &__slider {
+    margin-bottom: 4.25rem;
+  }
+}
+</style>

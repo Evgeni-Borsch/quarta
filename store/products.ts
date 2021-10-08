@@ -1,9 +1,10 @@
 import { Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import { BaseStoredEntity } from '~/models/general'
+import { BaseStoredEntity, Page } from '~/models/general'
 
 import { getProduct, getProductAvailability } from '~/services/api/product'
 import {
   ProductAvailabilityResponse,
+  ProductPathItem,
   ProductResponse,
 } from '~/services/api/product/model'
 import { API_BASE_URL } from '~/services/constants'
@@ -30,6 +31,7 @@ export class ProductItem extends BaseStoredEntity {
   bonus!: number
   available!: boolean
   images!: Array<ProductPhoto>
+  breadcrumbs!: Array<Page>
   props!: string
 
   constructor(response: ProductResponse) {
@@ -40,10 +42,17 @@ export class ProductItem extends BaseStoredEntity {
 
     this.id = response.ID.toString()
     this.slug = response.CODE
-    this.article = response.DISPLAY_PROPERTIES.ART.DISPLAY_VALUE
+    this.article = response.PROPERTIES.ART['~VALUE'].TEXT
     this.title = response.NAME || response.META_TAGS.BROWSER_TITLE
-    this.description = response.DISPLAY_PROPERTIES.DESCRIPTION.DISPLAY_VALUE
-    this.configuration = response.DISPLAY_PROPERTIES.EQUIPMENT.DISPLAY_VALUE
+    this.description = response.PROPERTIES.DESCRIPTION['~VALUE'].TEXT
+    this.configuration = response.PROPERTIES.EQUIPMENT['~VALUE'].TEXT
+    this.breadcrumbs = response.SECTION.PATH.map((item) => {
+      return {
+        title: item.NAME,
+        slug: item.CODE,
+        path: '/catalog/' + item.CODE,
+      }
+    })
 
     this.price = PRICE.DISCOUNT_VALUE || PRICE.VALUE
     this.priceOld = PRICE.VALUE
@@ -51,15 +60,13 @@ export class ProductItem extends BaseStoredEntity {
     this.bonus = 285
     this.available = PRICE.CAN_BUY === 'Y'
 
-    this.props = response.DISPLAY_PROPERTIES.CHARACTERISTICS.DISPLAY_VALUE
+    this.props = response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
 
-    this.images = [
-      {
-        default: API_BASE_URL + response.PREVIEW_PICTURE.SRC,
-        small: '',
-        large: '',
-      },
-    ]
+    this.images = response.PROPERTIES.IMAGES.SRC.map((src) => ({
+      default: API_BASE_URL + src,
+      small: '',
+      large: '',
+    }))
   }
 }
 

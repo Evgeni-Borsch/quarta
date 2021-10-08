@@ -64,7 +64,7 @@ import SubscribeVue from '~/components/Subscribe.vue'
     SubscribeVue,
   },
 })
-export default class Index extends Vue {
+export default class CategoryPage extends Vue {
   breadcrumbs: Array<BreadcrumbsLink> = [
     {
       title: 'Главная',

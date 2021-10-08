@@ -39,6 +39,8 @@ export default Vue.extend({
       try {
         productItem = await products.getById(id)
       } catch (e) {
+        console.error(e)
+
         return error({ statusCode: 404, message: 'Product not found' })
       }
 
@@ -47,28 +49,19 @@ export default Vue.extend({
       }
 
       product.value = productItem
+
+      breadcrumbs.value = [
+        {
+          title: 'Главная',
+          slug: 'index',
+          path: '/'
+        },
+        ...productItem.breadcrumbs,
+      ]
     })
+    const breadcrumbs: Ref<Array<Page>> = ref([])
 
     fetch()
-
-    const breadcrumbs: Ref<Array<Page>> = ref([
-      {
-        title: 'Главная',
-        slug: 'index',
-      },
-      {
-        title: 'Каталог',
-        slug: 'catalog',
-      },
-      {
-        title: 'Оптика и кронштейны',
-        slug: 'category',
-      },
-      {
-        title: 'Бинокль Nikon Monarch 7 8x42, Призмы Porro',
-        slug: 'product',
-      },
-    ])
 
     return { product, breadcrumbs }
   },

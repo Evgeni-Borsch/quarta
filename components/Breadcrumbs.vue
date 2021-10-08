@@ -10,7 +10,7 @@
           <span v-if="isLast(index)">
             {{ page.title }}
           </span>
-          <a v-else :href="page.url">
+          <a v-else :href="page.path">
             {{ page.title }}
           </a>
         </li>
@@ -21,15 +21,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-
-export interface BreadcrumbsLink {
-  title: string
-  url: string
-}
+import { Page } from '~/models/general'
 
 @Component({})
 export default class Breadcrumbs extends Vue {
-  @Prop({ required: true }) path!: Array<BreadcrumbsLink>
+  @Prop({ required: true }) path!: Array<Page>
 
   isLast(index: number) {
     return this.path.length - 1 === index

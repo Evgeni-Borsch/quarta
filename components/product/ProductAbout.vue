@@ -76,9 +76,12 @@
       v-if="currentTab === 'availability'"
       :product="product"
     />
-    <ProductInstructionsVue v-if="currentTab === 'documents'" />
-    <ProductAskVue v-if="currentTab === 'questions'" />
-    <ProductReviewsVue v-if="currentTab === 'reviews'" />
+    <ProductInstructionsVue
+      v-if="currentTab === 'documents'"
+      :product="product"
+    />
+    <ProductAskVue v-if="currentTab === 'questions'" :product="product" />
+    <ProductReviewsVue v-if="currentTab === 'reviews'" :product="product" />
   </div>
 </template>
 

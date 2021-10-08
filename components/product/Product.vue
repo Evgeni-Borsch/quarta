@@ -154,6 +154,11 @@ export default class ProductVue extends Vue {
 
     this.setCount(count)
   }
+
+  mounted(){
+    console.log(this.product);
+    
+  }
 }
 </script>
 
