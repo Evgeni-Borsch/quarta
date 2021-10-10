@@ -1,5 +1,5 @@
 <template>
-  <PromoWide image="/yt-promo.jpg" backdrop-class="bg-primary">
+  <PromoWide image="/yt-promo.jpg" class="bg-primary">
     <div class="row">
       <div class="col"></div>
       <div class="col-5">

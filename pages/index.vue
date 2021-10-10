@@ -87,15 +87,68 @@
       </div>
     </section>
 
-    <PromoWide image="/promo-wide.jpg">
+    <PromoWide image="/promo-wide.jpg" class="bg-gray-200">
       <div class="row">
         <div class="col-6">
           <PromoWideImageTextVue small-text="21 апреля 2021">
             <p>Обзор коллиматорных прицелов и аксессуаров нового поколения.</p>
           </PromoWideImageTextVue>
         </div>
+        <div class="col-6 pt-4">
+          <BaseSliderVue :slides-desktop="1" :no-container="true">
+            <PromoProductSlideVue />
+            <PromoProductSlideVue />
+            <PromoProductSlideVue />
+          </BaseSliderVue>
+        </div>
       </div>
     </PromoWide>
+
+    <section class="promo-grid">
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <PromoCardVue
+              title="Скидка до&nbsp;25% на&nbsp;новый товар"
+              image="/promo-horn.png"
+              :large="true"
+            >
+              <p>
+                Подборка охотничьих товаров по выгодным ценам. Количество
+                ограничено!
+              </p>
+            </PromoCardVue>
+          </div>
+          <div class="col-3">
+            <ProductCardVue />
+          </div>
+
+          <div class="col-3">
+            <ProductCardVue />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-3">
+            <ProductCardVue />
+          </div>
+
+          <div class="col-3">
+            <ProductCardVue />
+          </div>
+
+          <div class="col-6">
+            <PromoCardVue
+              title="Скидка 12% на прицелы&nbsp;Nikko&nbsp;Stirling!"
+              image="/promo-pistol.png"
+              :large="true"
+            >
+              <p>Мы рады сообщить о новом поступлении товара</p>
+            </PromoCardVue>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <SubscribeVue />
   </div>
@@ -114,6 +167,8 @@ import PromoWide from '~/components/promo/PromoWide.vue'
 import YouTubePromotionVue from '~/components/promo/YouTubePromotion.vue'
 import PromoWideLight from '~/components/promo/PromoWideLight.vue'
 import PromoWideImageTextVue from '~/components/promo/PromoWideImageText.vue'
+import PromoProductSlideVue from '~/components/promo/PromoProductSlide.vue'
+import ProductCardVue from '~/components/product/ProductCard.vue'
 import { Page } from '~/models/general'
 
 @Component({
@@ -129,6 +184,8 @@ import { Page } from '~/models/general'
     PromoCardVue,
     PromoWideLight,
     PromoWideImageTextVue,
+    PromoProductSlideVue,
+    ProductCardVue,
   },
 })
 export default class IndexPage extends Vue {
@@ -160,6 +217,15 @@ export default class IndexPage extends Vue {
 
   &__slider {
     margin-bottom: 4.25rem;
+  }
+}
+
+.promo-grid {
+  padding: 7.25rem 0;
+  background-color: $gray-100;
+
+  .row {
+    margin-bottom: 20px;
   }
 }
 </style>

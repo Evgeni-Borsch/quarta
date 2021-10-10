@@ -1,6 +1,6 @@
 <template>
   <div class="base-slider">
-    <div class="container">
+    <div :class="{ container: !noContainer }">
       <div v-swiper:swiper="swiperOptions" class="swiper">
         <div class="swiper-wrapper">
           <div
@@ -51,6 +51,7 @@ SwiperCore.use([Scrollbar])
 })
 export default class BaseSliderVue extends Vue {
   @Prop({ default: 2 }) slidesDesktop!: number
+  @Prop({ default: false }) noContainer!: boolean
 
   swiper!: Swiper
   slideNodes: Array<VNode> = []

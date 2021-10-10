@@ -44,12 +44,7 @@ export default class WidePromotionVue extends Vue {
   height: 28.125rem;
 
   @media screen and (min-width: 2048px) {
-    border-radius: $border-radius-lg;
     overflow: hidden;
-  }
-
-  &__wrapper {
-    background-color: $white;
   }
 
   &__image {
@@ -73,17 +68,6 @@ export default class WidePromotionVue extends Vue {
     bottom: 0;
     left: 0;
     right: 0;
-
-    // &::v-deep {
-    //   .container,
-    //   .row,
-    //   [class*='col-'] {
-    //     height: 100%;
-    //   }
-    // }
-  }
-
-  &::v-deep {
   }
 }
 </style>
