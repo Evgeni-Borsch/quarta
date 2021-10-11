@@ -67,6 +67,8 @@ export default class SubCategorySelectorVue extends Vue {
 
 <style lang="scss" scoped>
 .subcategory-selector {
+  margin-bottom: 3.125rem - 1.1875rem;
+
   .btn {
     background-color: $white;
     color: $gray-900;

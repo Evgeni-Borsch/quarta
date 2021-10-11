@@ -16,27 +16,46 @@
         <FiltersVue />
 
         <div class="col">
-          <div class="row">
+          <FiltersSortVue />
+          <div v-if="product" class="row category__products">
             <div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
-            </div><div class="col-3">
-              <ProductCardVue />
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
+            </div>
+            <div class="col-3">
+              <ProductCardVue :product="product" />
             </div>
           </div>
         </div>
@@ -54,6 +73,8 @@ import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import FiltersVue from '~/components/catalog/filters/Filters.vue'
 import ProductCardVue from '~/components/product/ProductCard.vue'
 import { Page } from '~/models/general'
+import { ProductItem, products } from '~/store'
+import FiltersSortVue from '~/components/catalog/filters/FiltersSort.vue'
 
 @Component({
   components: {
@@ -62,9 +83,12 @@ import { Page } from '~/models/general'
     BreadcrumbsVue,
     FiltersVue,
     ProductCardVue,
+    FiltersSortVue,
   },
 })
 export default class CategoryPathResolver extends Vue {
+  product: ProductItem | null = null
+
   breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
@@ -82,6 +106,12 @@ export default class CategoryPathResolver extends Vue {
       path: '/catalog/optics',
     },
   ]
+
+  created() {
+    products.getById('318').then((product) => {
+      this.product = product
+    })
+  }
 }
 </script>
 
@@ -95,6 +125,12 @@ export default class CategoryPathResolver extends Vue {
 
   &__header {
     padding-bottom: 3.125rem;
+  }
+
+  &__products {
+    [class*='col-'] {
+      margin-bottom: 20px;
+    }
   }
 }
 </style>
