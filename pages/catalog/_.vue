@@ -11,7 +11,7 @@
 
     <SubCategorySelectorVue />
 
-    <div class="container">
+    <div class="container category__main">
       <div class="row">
         <FiltersVue />
 
@@ -54,13 +54,13 @@
             <div class="col-3">
               <ProductCardVue :product="product" />
             </div>
-            <div class="col-3">
-              <ProductCardVue :product="product" />
-            </div>
           </div>
+          <PaginationVue />
         </div>
       </div>
     </div>
+
+    <SubscribeVue />
   </div>
 </template>
 
@@ -75,6 +75,8 @@ import ProductCardVue from '~/components/product/ProductCard.vue'
 import { Page } from '~/models/general'
 import { ProductItem, products } from '~/store'
 import FiltersSortVue from '~/components/catalog/filters/FiltersSort.vue'
+import PaginationVue from '~/components/Pagination.vue'
+import SubscribeVue from '~/components/Subscribe.vue'
 
 @Component({
   components: {
@@ -84,6 +86,8 @@ import FiltersSortVue from '~/components/catalog/filters/FiltersSort.vue'
     FiltersVue,
     ProductCardVue,
     FiltersSortVue,
+    PaginationVue,
+    SubscribeVue,
   },
 })
 export default class CategoryPathResolver extends Vue {
@@ -131,6 +135,10 @@ export default class CategoryPathResolver extends Vue {
     [class*='col-'] {
       margin-bottom: 20px;
     }
+  }
+
+  &__main {
+    padding-bottom: 8.4375rem;
   }
 }
 </style>

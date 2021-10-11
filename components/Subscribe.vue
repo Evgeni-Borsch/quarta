@@ -39,7 +39,7 @@ import InputVue from './inputs/Input.vue'
 @Component({
   components: { InputVue, CheckboxVue },
 })
-export default class Subscribe extends Vue {}
+export default class SubscribeVue extends Vue {}
 </script>
 
 <style lang="scss" scoped>
