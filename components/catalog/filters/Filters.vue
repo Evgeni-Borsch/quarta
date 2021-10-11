@@ -2,6 +2,7 @@
   <div class="filters">
     <section class="filters__header">
       <h6>Фильтры</h6>
+      <div class="filters__clear" @click="clear">Сбросить</div>
     </section>
     <FiltersSectionVue
       v-for="(section, index) of filters"
@@ -33,7 +34,12 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import CheckboxVue from '../../inputs/Checkbox.vue'
 import FiltersSectionVue from './FiltersSection.vue'
 import FiltersItem from './FiltersItem.vue'
-import { CheckboxFilter, FiltersSection, MakerFilter } from '~/store/filters'
+import {
+  CheckboxFilter,
+  FiltersSection,
+  MakerFilter,
+  RangeFilter,
+} from '~/store/filters'
 import { filters } from '~/store'
 
 @Component({
@@ -65,6 +71,14 @@ export default class FiltersVue extends Vue {
         }),
       ],
     }),
+    new FiltersSection({
+      title: 'Цена',
+      children: [
+        new RangeFilter({
+          title: 'Цена',
+        }),
+      ],
+    }),
   ]
 
   // get filters() {
@@ -79,6 +93,10 @@ export default class FiltersVue extends Vue {
     return item instanceof FiltersSection
   }
 
+  clear() {
+    filters.clearActiveFilters()
+  }
+
   created() {
     const filtersAsString = this.$route.query?.filters
 
@@ -91,8 +109,6 @@ export default class FiltersVue extends Vue {
 
   @Watch('activeFilters')
   onActiveFiltersChange() {
-    console.log(this.activeFilters)
-
     const filtersAsString = JSON.stringify(
       Object.fromEntries(this.activeFilters)
     )
@@ -116,6 +132,25 @@ export default class FiltersVue extends Vue {
   padding: 0.3125rem 0;
   background-color: $white;
   border-radius: $border-radius-lg;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h6 {
+      margin: 0;
+    }
+  }
+
+  &__clear {
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $primary;
+    }
+  }
 
   section {
     padding: 1.4375rem 1.25rem;

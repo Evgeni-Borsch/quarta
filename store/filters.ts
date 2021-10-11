@@ -61,6 +61,22 @@ export class CheckboxFilter extends Filter {
 
 export class MakerFilter extends CheckboxFilter {}
 
+export interface Range extends Array<number | null> {
+  0: number | null
+  1: number | null
+}
+export class RangeFilter extends Filter {
+  value: Range = [null, null]
+
+  setMin(value: number | null) {
+    this.value[0] = value
+  }
+
+  setMax(value: number | null) {
+    this.value[1] = value
+  }
+}
+
 export class FiltersSection {
   title!: string
   children!: Array<Filter> | Array<FiltersSection>

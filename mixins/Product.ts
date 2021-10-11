@@ -40,8 +40,4 @@ export default class ProductMixin extends Vue {
 
     this.setCount(count)
   }
-
-  mounted() {
-    console.log(this.product)
-  }
 }
