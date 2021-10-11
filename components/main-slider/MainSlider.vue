@@ -51,7 +51,7 @@
     <div v-if="!compact" class="main-slider__dots">
       <div class="container">
         <div
-          v-for="(slide, index) of slides"
+          v-for="(slide, index) of mainSlider"
           :key="index"
           class="main-slider__dot"
           @click="() => _swiper.slideTo(index + 1)"
@@ -72,6 +72,8 @@ import MainSliderProgressVue from './MainSliderProgress.vue'
 
 import 'swiper/swiper.scss'
 import 'swiper/components/scrollbar/scrollbar.min.css'
+import { getMainSlider } from '~/services/api/sliders'
+import { API_BASE_URL } from '~/services/constants'
 
 SwiperCore.use([Scrollbar])
 
@@ -95,7 +97,8 @@ export interface MainSliderSlide {
 })
 export default class MainSlider extends Vue {
   @Prop({ default: false }) compact!: boolean
-  @Prop({required: true}) slides!: Array<MainSliderSlide>
+  // @Prop({ required: true }) slides!: Array<MainSliderSlide>
+  slides: Array<MainSliderSlide> = []
 
   _swiper: Swiper | null = null
 
@@ -121,6 +124,19 @@ export default class MainSlider extends Vue {
         slideChangeTransitionEnd: this.slideChangeTransitionEnd,
       },
     }
+  }
+
+  created() {
+    getMainSlider().then((sliderData) => {
+      sliderData.ITEMS.forEach((item) => {
+        this.slides.push({
+          title: item.FIELDS.NAME,
+          subTitle: item.FIELDS.PREVIEW_TEXT,
+          text: item.PROPERTIES.DESCRIPTION.VALUE,
+          background: API_BASE_URL + item.FIELDS.DETAIL_PICTURE.SRC,
+        })
+      })
+    })
   }
 
   @Watch('isHovered')
@@ -283,7 +299,6 @@ $main-slider-compact-height: 318px;
 
   &__compact &__arrows {
     top: 110px;
-
   }
 
   &__arrow {

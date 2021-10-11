@@ -215,7 +215,7 @@ export default class IndexPage extends Vue {
   ]
 
   created() {
-    products.getById('4672').then((product) => {
+    products.getById('318').then((product) => {
       this.product = product
     })
 
