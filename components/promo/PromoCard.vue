@@ -53,7 +53,8 @@ export default class PromoCardVue extends Vue {
   color: $gray-600;
 
   &--large {
-    height: 34.25rem;
+    min-height: 34.25rem;
+    height: 100%;
     padding-bottom: 3.75rem;
 
     figure {

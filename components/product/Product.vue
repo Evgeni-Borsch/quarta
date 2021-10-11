@@ -85,8 +85,8 @@
 </template>
 
 <script lang="ts">
-import { Ref, ref, unref, watch } from '@nuxtjs/composition-api'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
+import { mixins } from 'vue-class-component'
 
 import ProductAboutVue from './ProductAbout.vue'
 
@@ -100,7 +100,8 @@ import InfoVue from '@/components/Info.vue'
 import ProductPriceVue from '@/components/product/ProductPrice.vue'
 import ProductPhotosVue from '@/components/product/ProductPhotos.vue'
 import ProductComboVue from '@/components/product/ProductCombo.vue'
-import { cart, ProductItem } from '~/store'
+
+import ProductMixin from '~/mixins/Product'
 
 @Component({
   components: {
@@ -116,50 +117,7 @@ import { cart, ProductItem } from '~/store'
     CompareIcon,
   },
 })
-export default class ProductVue extends Vue {
-  @Prop({ required: true }) product!: ProductItem
-
-  get isInCart() {
-    return cart.items.has(this.product.id)
-  }
-
-  get count() {
-    return cart.getItem(this.product.id)?.count ?? 1
-  }
-
-  addToCart() {
-    cart.addItem(this.product.id)
-  }
-
-  setCount(count: number) {
-    cart.setCount({ id: this.product.id, count })
-  }
-
-  increaseCount() {
-    this.setCount(this.count + 1)
-  }
-
-  decreaseCount() {
-    if (this.count > 0) {
-      this.setCount(this.count - 1)
-    }
-  }
-
-  onCountInput(e: Event & { target: HTMLInputElement }) {
-    const count = Math.abs(parseInt(e.target.value))
-
-    if (isNaN(count)) {
-      e.target.value = this.count.toString()
-    }
-
-    this.setCount(count)
-  }
-
-  mounted(){
-    console.log(this.product);
-    
-  }
-}
+export default class ProductVue extends mixins(ProductMixin) {}
 </script>
 
 <style lang="scss" scoped>

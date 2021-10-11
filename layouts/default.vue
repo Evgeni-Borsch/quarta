@@ -1,5 +1,7 @@
 <template>
   <div class="wrapper">
+    <PortalTarget name="modal" />
+
     <HeaderVue />
     <main>
       <Nuxt />
@@ -11,6 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
+import { PortalTarget } from 'portal-vue'
 
 import HeaderVue from '~/components/header/Header.vue'
 import FooterVue from '~/components/footer/Footer.vue'
@@ -21,6 +24,8 @@ export default defineComponent({
   components: {
     HeaderVue,
     FooterVue,
+
+    PortalTarget,
   },
   setup() {},
 })

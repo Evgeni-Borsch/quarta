@@ -7,38 +7,24 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { Prop, Vue, Component } from 'vue-property-decorator'
 import numberWithSpaces from '@/utils/numberWithSpaces'
 
-export default defineComponent({
-  props: {
-    current: {
-      type: Number,
-      required: true,
-    },
-    old: {
-      type: Number,
-      default: 0,
-    },
-    discount: {
-      type: Number,
-      default: 0,
-    },
-    size: {
-      type: String,
-      default: 'default',
-    },
-  },
-  setup(props) {
-    const currentPrice = computed(() => numberWithSpaces(props.current))
-    const oldPrice = computed(() => numberWithSpaces(props.old))
+@Component({})
+export default class ProductPriceVue extends Vue {
+  @Prop({ required: true }) current!: number
+  @Prop({ default: 0 }) old!: number
+  @Prop({ default: 0 }) discount!: number
+  @Prop({ default: 'default' }) size!: string
 
-    return {
-      currentPrice,
-      oldPrice,
-    }
-  },
-})
+  get currentPrice() {
+    return numberWithSpaces(this.current)
+  }
+
+  get oldPrice() {
+    return numberWithSpaces(this.old)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

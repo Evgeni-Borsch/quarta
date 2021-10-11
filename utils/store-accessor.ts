@@ -6,11 +6,13 @@ import CategoriesModule from '~/store/categories'
 import ProductsModule from '~/store/products'
 import FiltersModule from '~/store/filters'
 import CartModule from '~/store/cart'
+import LocationModule from '~/store/location'
 
 let categories!: CategoriesModule
 let products!: ProductsModule
 let filters!: FiltersModule
 let cart!: CartModule
+let location!: LocationModule
 let _store!: Store<any>
 
 function initialiseStores(store: Store<any>) {
@@ -19,10 +21,19 @@ function initialiseStores(store: Store<any>) {
   products = getModule(ProductsModule, store)
   filters = getModule(FiltersModule, store)
   cart = getModule(CartModule, store)
+  location = getModule(LocationModule, store)
 }
 
 function getStore() {
   return _store
 }
 
-export { initialiseStores, getStore, categories, products, filters, cart }
+export {
+  initialiseStores,
+  getStore,
+  categories,
+  products,
+  filters,
+  cart,
+  location,
+}

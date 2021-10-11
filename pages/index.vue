@@ -120,21 +120,21 @@
             </PromoCardVue>
           </div>
           <div class="col-3">
-            <ProductCardVue />
+            <ProductCardVue :product="product" />
           </div>
 
           <div class="col-3">
-            <ProductCardVue />
+            <ProductCardVue :product="product" />
           </div>
         </div>
 
         <div class="row">
           <div class="col-3">
-            <ProductCardVue />
+            <ProductCardVue :product="product" />
           </div>
 
           <div class="col-3">
-            <ProductCardVue />
+            <ProductCardVue :product="product" />
           </div>
 
           <div class="col-6">
@@ -149,6 +149,8 @@
         </div>
       </div>
     </section>
+
+    <NewsSliderVue />
 
     <SubscribeVue />
   </div>
@@ -170,6 +172,8 @@ import PromoWideImageTextVue from '~/components/promo/PromoWideImageText.vue'
 import PromoProductSlideVue from '~/components/promo/PromoProductSlide.vue'
 import ProductCardVue from '~/components/product/ProductCard.vue'
 import { Page } from '~/models/general'
+import NewsSliderVue from '~/components/news/NewsSlider.vue'
+import { ProductItem, products } from '~/store'
 
 @Component({
   components: {
@@ -186,9 +190,11 @@ import { Page } from '~/models/general'
     PromoWideImageTextVue,
     PromoProductSlideVue,
     ProductCardVue,
+    NewsSliderVue,
   },
 })
 export default class IndexPage extends Vue {
+  product: ProductItem | null = null
   breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
@@ -201,6 +207,12 @@ export default class IndexPage extends Vue {
       path: '/catalog',
     },
   ]
+
+  created() {
+    products.getById('318').then((product) => {
+      this.product = product
+    })
+  }
 }
 </script>
 

@@ -1435,7 +1435,7 @@ $badge-border-radius: $border-radius !default;
 // Modals
 
 // scss-docs-start modal-variables
-$modal-inner-padding: $spacer !default;
+$modal-inner-padding: 2.5rem !default;
 
 $modal-footer-margin-between: 0.5rem !default;
 
@@ -1446,18 +1446,18 @@ $modal-title-line-height: $line-height-base !default;
 
 $modal-content-color: null !default;
 $modal-content-bg: $white !default;
-$modal-content-border-color: rgba($black, 0.2) !default;
+$modal-content-border-color: transparent !default;
 $modal-content-border-width: $border-width !default;
 $modal-content-border-radius: $border-radius-lg !default;
 $modal-content-inner-border-radius: subtract(
   $modal-content-border-radius,
   $modal-content-border-width
 ) !default;
-$modal-content-box-shadow-xs: $box-shadow-sm !default;
-$modal-content-box-shadow-sm-up: $box-shadow !default;
+$modal-content-box-shadow-xs: $box-shadow-lg !default;
+$modal-content-box-shadow-sm-up: $box-shadow-lg !default;
 
 $modal-backdrop-bg: $black !default;
-$modal-backdrop-opacity: 0.5 !default;
+$modal-backdrop-opacity: 0.3 !default;
 $modal-header-border-color: $border-color !default;
 $modal-footer-border-color: $modal-header-border-color !default;
 $modal-header-border-width: $modal-content-border-width !default;

@@ -21,7 +21,6 @@ import useDecline from '~/utils/useDecline'
 
 export interface StarsProps {
   rating: number
-  interactive: boolean
   count: boolean
   reviews: number | null
 }
@@ -38,10 +37,6 @@ export default defineComponent({
       type: Number,
       default: 0,
       // required: true,
-    },
-    interactive: {
-      type: Boolean,
-      default: false,
     },
     count: {
       type: Boolean,

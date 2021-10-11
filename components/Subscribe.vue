@@ -15,7 +15,9 @@
 
             <div class="row mt-4">
               <div class="col-6">
-                <CheckboxVue size="large" :value="true" />
+                <CheckboxVue size="large" :value="true">
+                  Я соглашаюсь на обработку персональных данных
+                </CheckboxVue>
               </div>
 
               <div class="col-6 subscribe__button">
@@ -67,6 +69,12 @@ export default class Subscribe extends Vue {}
   &__button {
     display: flex;
     justify-content: flex-end;
+  }
+
+  &::v-deep {
+    .form-check-label {
+      color: $gray-600;
+    }
   }
 }
 </style>

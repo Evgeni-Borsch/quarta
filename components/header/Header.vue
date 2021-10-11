@@ -6,11 +6,15 @@
       'header--hidden': !isTop && !scrollUp,
     }"
   >
+    <ModalLocationVue
+      v-if="showSelectLoacation"
+      @hide="showSelectLoacation = false"
+    />
     <div class="container">
       <div class="row header__top-row">
         <div class="header__location col">
-          <a href="#" class="header__city">
-            <LocationIcon class="mx-1" />Санкт-Петербург
+          <a class="header__city" @click="showSelectLoacation = true">
+            <LocationIcon class="mx-1" />{{ currentLocation.name }}
           </a>
           <a href="#" class="header__spot">Магазины</a>
         </div>
@@ -81,6 +85,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import BageVue from '../Bage.vue'
 import HeaderCategoriesVue from './HeaderCategories.vue'
 import HeaderSerachVue from './HeaderSerach.vue'
+import ModalLocationVue from '~/components/modal/ModalLocation.vue'
 
 import logo from '@/assets/images/logo.svg'
 import HeartIcon from '@/assets/icons/heart.svg?icon'
@@ -88,7 +93,7 @@ import CompareIcon from '@/assets/icons/compare.svg?icon'
 import CartIcon from '@/assets/icons/cart.svg?icon'
 import LocationIcon from '@/assets/icons/location.svg?icon'
 import PersonIcon from '@/assets/icons/person.svg?icon'
-import { cart } from '~/store'
+import { cart, location } from '~/store'
 
 @Component({
   name: 'Header',
@@ -96,6 +101,7 @@ import { cart } from '~/store'
     HeaderSerachVue,
     BageVue,
     HeaderCategoriesVue,
+    ModalLocationVue,
     HeartIcon,
     CartIcon,
     CompareIcon,
@@ -128,8 +134,14 @@ import { cart } from '~/store'
   },
 })
 export default class HeaderVue extends Vue {
+  showSelectLoacation = false
+
   get cartCount() {
     return cart.countTotal
+  }
+
+  get currentLocation() {
+    return location.currentItem
   }
 }
 </script>
@@ -211,6 +223,7 @@ export default class HeaderVue extends Vue {
     display: inline-flex;
     align-items: center;
     margin-right: 1rem;
+    cursor: pointer
   }
 
   &__nav {
