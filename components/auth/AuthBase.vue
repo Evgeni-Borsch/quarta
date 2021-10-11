@@ -67,5 +67,13 @@ export default class LoginPage extends Vue {
       margin-bottom: 3.125rem;
     }
   }
+
+  &::v-deep {
+    .checkbox {
+      label {
+        color: $gray-600
+      }
+    }
+  }
 }
 </style>

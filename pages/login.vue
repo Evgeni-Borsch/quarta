@@ -1,5 +1,5 @@
 <template>
-  <AuthBaseVue>
+  <AuthBaseVue title="Вход">
     <div class="row">
       <div v-if="AuthType.phone === type" class="col-5">
         <InputVue
@@ -8,6 +8,7 @@
           label="По номеру телефона"
           type="text"
           mask="+7 (###) ###-##-##"
+          placeholder="+7 (___) ___-__-__"
         />
 
         <button class="btn btn-primary btn-lg w-100 mb-3">Получить код из СМС</button>
