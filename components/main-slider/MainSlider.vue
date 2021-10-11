@@ -95,28 +95,9 @@ export interface MainSliderSlide {
 })
 export default class MainSlider extends Vue {
   @Prop({ default: false }) compact!: boolean
+  @Prop({required: true}) slides!: Array<MainSliderSlide>
 
   _swiper: Swiper | null = null
-  slides: Array<MainSliderSlide> = [
-    {
-      title: 'Стрелковые и&nbsp;охотничьи аксессуары',
-      subTitle: 'Огромный выбор товаров',
-      text: 'Европейские разработки, японское качество. 3 года гарантии на все!',
-      background: '/slide-01.jpg',
-    },
-    {
-      title: 'Стрелковые и&nbsp;охотничьи аксессуары',
-      subTitle: 'Огромный выбор товаров',
-      text: 'Европейские разработки, японское качество. 3 года гарантии на все!',
-      background: '/slide-01.jpg',
-    },
-    {
-      title: 'Стрелковые и&nbsp;охотничьи аксессуары',
-      subTitle: 'Огромный выбор товаров',
-      text: 'Европейские разработки, японское качество. 3 года гарантии на все!',
-      background: '/slide-01.jpg',
-    },
-  ]
 
   delay = 5000
   isHovered = false
@@ -227,6 +208,7 @@ $main-slider-compact-height: 318px;
   }
 
   &__title {
+    max-width: 95%;
     font-size: 3.75rem;
     line-height: 3.75rem;
     font-weight: 700;

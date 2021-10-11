@@ -13,3 +13,8 @@ export enum AuthType {
   phone = 'phone',
   email = 'email',
 }
+
+export enum ClientType {
+  retail = 'retail',
+  wholesale = 'wholesale',
+}

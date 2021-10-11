@@ -1,18 +1,16 @@
 <template>
-  <PromoWide image="/yt-promo.jpg" class="bg-primary">
+  <PromoWide v-if="response" :image="image" class="bg-primary">
     <div class="row">
       <div class="col"></div>
       <div class="col-5">
-        <h3>
-          Следите за&nbsp;выпусками&nbsp;на нашем&nbsp;<b>YouTube-канале</b>
-        </h3>
-        <button class="btn btn-outline-light">Смотреть</button>
+        <h3 v-html="title"></h3>
+        <a :href="link" class="btn btn-outline-light">{{ buttonText }}</a>
       </div>
     </div>
 
     <template #content-backdrop>
       <div class="backdrop">
-        <a href="#">
+        <a :href="link">
           <PlayButtonSvg class="play-button" />
         </a>
       </div>
@@ -24,11 +22,45 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import PromoWide from './PromoWide.vue'
 import PlayButtonSvg from '~/assets/images/play-button.svg?inline'
+import cache from '~/services/cache'
+import { BannerResponse, getBanner } from '~/services/api/sections'
+import { API_BASE_URL } from '~/services/constants'
+
+const YOUTUBE_PROMOTION_CACHE = 'YOUTUBE_PROMOTION_CACHE'
 
 @Component({
   components: { PromoWide, PlayButtonSvg },
 })
-export default class YouTubePromotionVue extends Vue {}
+export default class YouTubePromotionVue extends Vue {
+  response: BannerResponse | null = null
+
+  get title() {
+    return this.response?.PROPERTIES.BANNER_TEXT.VALUE
+  }
+
+  get buttonText() {
+    return this.response?.PROPERTIES.BANNER_BTN_TEXT.VALUE
+  }
+
+  get image() {
+    return API_BASE_URL + this.response?.PROPERTIES.BANNER_IMAGE.SRC
+  }
+
+  get link() {
+    return this.response?.PROPERTIES.BANNER_LINK.VALUE
+  }
+
+  created() {
+    if (cache[YOUTUBE_PROMOTION_CACHE]) {
+      this.response = cache[YOUTUBE_PROMOTION_CACHE] as BannerResponse
+      return null
+    }
+
+    getBanner('327').then((response) => {
+      this.response = response
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
