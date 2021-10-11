@@ -11,9 +11,11 @@
     </label>
 
     <span class="input__container">
-      <input
+      <component
+        :is="mask ? 'the-mask' : 'input'"
         :id="`i_${uid}`"
         v-model="innerValue"
+        :mask="mask"
         :type="type"
         :placeholder="placeholder"
         class="form-control"
@@ -36,23 +38,31 @@
 <script lang="ts">
 import { mixins } from 'vue-class-component'
 import { Component, Prop } from 'vue-property-decorator'
+import { TheMask } from 'vue-the-mask'
 import TextInput from '~/mixins/TextInput'
 import Sizable from '~/mixins/Sizable'
 
 import CloseIcon from '~/assets/icons/close.svg?icon'
 
 @Component({
-  components: { CloseIcon },
+  components: { CloseIcon, TheMask },
 })
 export default class Textarea extends mixins(TextInput, Sizable) {
   @Prop({ default: 'text' }) type!: string
   @Prop({ default: false }) clearable!: boolean
   @Prop({ default: null }) bg!: string
+  @Prop({ default: null }) mask!: string
 }
 </script>
 
 <style lang="scss" scpoed>
 .input {
+  &--lg {
+    input {
+      padding: 1.125rem;
+    }
+  }
+
   &__container {
     display: block;
     position: relative;

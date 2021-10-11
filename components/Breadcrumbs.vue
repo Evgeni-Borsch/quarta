@@ -1,6 +1,6 @@
 <template>
   <div class="breadcrumbs">
-    <div class="container">
+    <div :class="{ container }">
       <ul>
         <li
           v-for="(page, index) of path"
@@ -24,8 +24,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Page } from '~/models/general'
 
 @Component({})
-export default class Breadcrumbs extends Vue {
+export default class BreadcrumbsVue extends Vue {
   @Prop({ required: true }) path!: Array<Page>
+  @Prop({ default: true }) container!: boolean
 
   isLast(index: number) {
     return this.path.length - 1 === index
