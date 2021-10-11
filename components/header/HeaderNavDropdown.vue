@@ -97,6 +97,7 @@ export default class HeaderNavDropdown extends Vue {
   height: 31.25rem;
   background-color: $gray-100;
   box-shadow: $box-shadow-sm;
+  z-index: 100;
 
   &--odd {
     background-color: $white;
