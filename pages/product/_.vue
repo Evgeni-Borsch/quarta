@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="product">
     <BreadcrumbsVue :path="breadcrumbs" />
     <ProductVue :product="product" />
     <ReviewsSliderVue class="bg-white" />
@@ -11,7 +11,7 @@
 import Vue from 'vue'
 import { ref, Ref } from 'vue-demi'
 import { get } from '@vueuse/shared'
-import { useContext, useFetch, useRoute } from '@nuxtjs/composition-api'
+import { useFetch, useRoute } from '@nuxtjs/composition-api'
 
 import { Page } from '~/models/general'
 
@@ -28,42 +28,34 @@ export default Vue.extend({
     BreadcrumbsVue,
     ReviewsSliderVue,
   },
+  middleware: 'product',
   setup() {
-    const { redirect, error } = useContext()
     const product: Ref<ProductItem | null> = ref(null)
-    const { fetch } = useFetch(async () => {
-      const route = useRoute()
-      const [id, slug] = get(route).params.pathMatch.split('/')
-      let productItem = null
-
-      try {
-        productItem = await products.getById(id)
-      } catch (e) {
-        console.error(e)
-
-        return error({ statusCode: 404, message: 'Product not found' })
-      }
-
-      if (slug !== productItem.slug) {
-        redirect(302, `/product/${id}/${productItem.slug}`)
-      }
-
-      product.value = productItem
-
-      breadcrumbs.value = [
-        {
-          title: 'Главная',
-          slug: 'index',
-          path: '/'
-        },
-        ...productItem.breadcrumbs,
-      ]
-    })
     const breadcrumbs: Ref<Array<Page>> = ref([])
 
-    fetch()
+    const { fetch } = useFetch(async () => {
+      const route = useRoute()
+      const [id] = get(route).params.pathMatch.split('/')
 
-    return { product, breadcrumbs }
+      await products.getById(id).then((p) => {
+        product.value = p
+        breadcrumbs.value = [
+          {
+            title: 'Главная',
+            slug: 'index',
+            path: '/',
+          },
+          ...p.breadcrumbs,
+          {
+            title: p.title,
+            slug: p.slug,
+            path: `/product/${id}/${p.slug}`,
+          },
+        ]
+      })
+    })
+
+    return { product, breadcrumbs, fetch }
   },
 })
 </script>

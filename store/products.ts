@@ -38,14 +38,14 @@ export class ProductItem extends BaseStoredEntity {
     super()
     this.rawResponse = response
 
-    const PRICE = response.PRICES.BASE
+    const PRICE = {} // response.PRICES.BASE
 
     this.id = response.ID.toString()
     this.slug = response.CODE
-    this.article = response.PROPERTIES.ART['~VALUE'].TEXT
-    this.title = response.NAME || response.META_TAGS.BROWSER_TITLE
-    this.description = response.PROPERTIES.DESCRIPTION['~VALUE'].TEXT
-    this.configuration = response.PROPERTIES.EQUIPMENT['~VALUE'].TEXT
+    this.article = response.PROPERTIES.CML2_ARTICLE.VALUE
+    this.title = response.NAME
+    this.description = '' // response.PROPERTIES.DESCRIPTION['~VALUE'].TEXT
+    this.configuration = '' // response.PROPERTIES.EQUIPMENT['~VALUE'].TEXT
     this.breadcrumbs = response.SECTION.PATH.map((item) => {
       return {
         title: item.NAME,
@@ -54,19 +54,20 @@ export class ProductItem extends BaseStoredEntity {
       }
     })
 
-    this.price = PRICE.DISCOUNT_VALUE || PRICE.VALUE
-    this.priceOld = PRICE.VALUE
-    this.discount = PRICE.DISCOUNT_DIFF_PERCENT
+    this.price = 33000 // PRICE.DISCOUNT_VALUE || PRICE.VALUE
+    this.priceOld = 55000 // PRICE.VALUE
+    this.discount = 25 // PRICE.DISCOUNT_DIFF_PERCENT
     this.bonus = 285
-    this.available = PRICE.CAN_BUY === 'Y'
+    this.available = true // PRICE.CAN_BUY === 'Y'
 
-    this.props = response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
+    this.props = '' // response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
 
-    this.images = response.PROPERTIES.IMAGES.SRC.map((src) => ({
-      default: API_BASE_URL + src,
-      small: '',
-      large: '',
-    }))
+    this.images = [] 
+    //  response.PROPERTIES.IMAGES.SRC.map((src) => ({
+    //   default: API_BASE_URL + src,
+    //   small: '',
+    //   large: '',
+    // }))
   }
 }
 

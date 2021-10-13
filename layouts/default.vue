@@ -24,7 +24,6 @@ export default defineComponent({
   components: {
     HeaderVue,
     FooterVue,
-
     PortalTarget,
   },
   setup() {},

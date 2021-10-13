@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row">
         <div class="col-6">
-          <ProductPhotosVue :images="product.images" />
+          <!-- <ProductPhotosVue :images="product.images" /> -->
         </div>
 
         <div class="col-6">
@@ -75,7 +75,7 @@
             </div>
           </div>
 
-          <ProductComboVue parent="parentId" />
+          <!-- <ProductComboVue parent="parentId" /> -->
         </div>
       </div>
     </div>

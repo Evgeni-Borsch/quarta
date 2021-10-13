@@ -1,8 +1,6 @@
 export interface ProductProperty {
   NAME: string
-  '~VALUE': {
-    TEXT: string
-  }
+  VALUE: string
 }
 
 export interface ProductPathItem {
@@ -38,7 +36,7 @@ export interface ProductResponse {
     SRC: string
   }
   PROPERTIES: {
-    ART: ProductProperty
+    CML2_ARTICLE: ProductProperty
     CHARACTERISTICS: ProductProperty
     DESCRIPTION: ProductProperty
     EQUIPMENT: ProductProperty
@@ -56,14 +54,6 @@ export interface ProductResponse {
   PREVIEW_PICTURE: {
     ALT: string
     SRC: string
-  }
-  PRICES: {
-    BASE: {
-      CAN_BUY: string
-      VALUE: number
-      DISCOUNT_DIFF_PERCENT: number
-      DISCOUNT_VALUE: number
-    }
   }
 }
 
