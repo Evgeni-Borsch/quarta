@@ -1,21 +1,12 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import { getStore } from '~/utils/store-accessor'
+import { getSectionList, CatalogSection } from '~/services/api/catalog'
+import { getStore, categories } from '~/utils/store-accessor'
 
 export interface Category {
+  id: string
   name: string
   slug: string
-  children?: Array<Category>
-}
-
-function getFlatten(category: Category) {
-  let flatten: Array<Category> = []
-
-  flatten.push(category)
-  category.children?.forEach((child) => {
-    flatten = [...flatten, ...getFlatten(child)]
-  })
-
-  return flatten
+  parent: string | null
 }
 
 @Module({
@@ -24,124 +15,102 @@ function getFlatten(category: Category) {
   namespaced: true,
 })
 export default class CategoriesModule extends VuexModule {
-  items: Array<Category> = [
-    {
-      name: 'Оружие и патроны',
-      slug: 'weapons',
-      children: [
-        { name: 'Гладкоствольное оружие', slug: 'smoothbore' },
-        { name: 'Нарезное оружие', slug: 'rifle' },
-        { name: 'Комиссионное оружие', slug: 'sale' },
-      ],
-    },
-    { name: 'Оптика и кронштейны', slug: 'accessories', children: [] },
-    { name: 'Тюнинг оружия', slug: 'tuning', children: [] },
-    { name: 'Снаряжение и одежда', slug: 'gear', children: [] },
-    { name: 'Чистка, смазка и уход', slug: 'consumables', children: [] },
-    // { name: 'Рыбалка', slug: 'fishing', children: [] },
-  ]
+  isFetched = false
+  items: Map<string, Category> = new Map()
+  itemsByParent: Map<string, Array<Category>> = new Map()
 
   activeCategory: string | null = null
   categoriesToShow: Array<string> = []
   protectedCategories: Array<string> = []
 
-  // ~~~ Getters
-
-  get rootCategory(): Category {
-    return {
-      name: 'Каталог товаров',
-      slug: 'catalog',
-      children: this.items,
+  get getItemsAsync() {
+    return async () => {
+      if (!this.isFetched) await Promise.all([categories.fetch()])
+      return this.itemsByParent
     }
   }
 
-  get flatten() {
-    return getFlatten(this.rootCategory)
-  }
-
-  get getBySlug() {
-    return (slug: string): Category | undefined => {
-      return this.flatten.find((item) => item.slug === slug)
+  get getByParentAsync() {
+    return async (id: string) => {
+      return (await this.getItemsAsync()).get(id)
     }
   }
 
-  // ~~~ Mutations
+  get getAllParents() {
+    return (id: string) => {
+      const parents = []
+      let currentItem = this.items.get(id)
 
-  @Mutation
-  setActiveCategory(value: string | null) {
-    this.activeCategory = value
-  }
-
-  @Mutation
-  setCategoriesToShow(value: Array<string>) {
-    this.categoriesToShow = value
-  }
-
-  @Mutation
-  setProtectedCategories(value: Array<string>) {
-    this.protectedCategories = value
-  }
-
-  // ~~~ Actions of `categoriesToShow`
-
-  @Action
-  addCategoryToShow(category: string) {
-    if (this.categoriesToShow.includes(category)) return
-    this.setCategoriesToShow([...this.categoriesToShow, category])
-  }
-
-  @Action
-  removeCategoryToShow(category: string) {
-    const newCategoies = [...this.categoriesToShow]
-    const index = newCategoies.indexOf(category)
-
-    if (index !== -1) {
-      newCategoies.splice(index, 1)
-      this.setCategoriesToShow(newCategoies)
-    }
-  }
-
-  @Action
-  clearCategoriesToShow() {
-    this.setCategoriesToShow([])
-  }
-
-  @Action
-  clearUnprotected() {
-    const showed = [...this.categoriesToShow]
-    const newShowed = []
-
-    while (showed.length) {
-      const category = showed.shift() as string
-      if (!this.protectedCategories.includes(category)) {
-        newShowed.push(category)
+      while (currentItem?.parent !== '0') {
+        currentItem = this.items.get(currentItem?.parent as string)
+        parents.push(currentItem)
       }
-    }
 
-    this.setCategoriesToShow(newShowed)
-  }
-
-  // ~~~ Actions of `protectedCategories`
-
-  @Action
-  addProtectedCategory(category: string) {
-    if (this.protectedCategories.includes(category)) return
-    this.setProtectedCategories([...this.protectedCategories, category])
-  }
-
-  @Action
-  removeProtectedCategory(category: string) {
-    const newCategoies = [...this.protectedCategories]
-    const index = newCategoies.indexOf(category)
-
-    if (index !== -1) {
-      newCategoies.splice(index, 1)
-      this.setProtectedCategories(newCategoies)
+      return parents
     }
   }
 
+  get getLevel() {
+    return (id: string) => {
+      return this.getAllParents(id).length
+    }
+  }
+
+  get getAllDescendants() {
+    return (id: string) => {
+      const descendants: Array<Category> = []
+
+      this.itemsByParent.get(id)?.forEach((item) => {
+        descendants.push(item, ...this.getAllDescendants(item.id))
+      })
+
+      return descendants
+    }
+  }
+
   @Action
-  clearProtectedCategory() {
-    this.setProtectedCategories([])
+  async fetch() {
+    await getSectionList(3).then((response) => {
+      const itemsByParent = new Map(this.itemsByParent)
+      const items = new Map(this.items)
+
+      response.SECTIONS.forEach((item) => {
+        const parentId = item.IBLOCK_SECTION_ID || '0'
+
+        if (!itemsByParent.has(parentId)) {
+          itemsByParent.set(parentId, [])
+        }
+
+        const category = {
+          id: item.ID,
+          name: item.NAME,
+          parent: parentId,
+          slug: item.CODE,
+        }
+
+        items.set(category.id, category)
+        itemsByParent.get(parentId)?.push(category)
+      })
+
+      this.setItemsByParent(itemsByParent)
+      this.setItems(items)
+
+      this.setFetched()
+    })
+  }
+
+  @Mutation
+  setItemsByParent(items: Map<string, Array<Category>>) {
+    this.itemsByParent = items
+  }
+
+  @Mutation
+  setItems(items: Map<string, Category>) {
+    this.items = items
+  }
+
+  @Mutation
+  setFetched() {
+    this.isFetched = true
   }
 }

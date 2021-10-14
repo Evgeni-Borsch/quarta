@@ -16,3 +16,12 @@ export interface MainSliderResponse {
     }
   }>
 }
+
+export interface MainSliderSlide {
+  subTitle?: string
+  title: string
+  background: string
+  text: string
+  buttonText?: string
+  buttonLink?: string
+}

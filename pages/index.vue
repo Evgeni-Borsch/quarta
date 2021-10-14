@@ -34,7 +34,7 @@
 
     <AdvantagesVue />
 
-    <YouTubePromotionVue />
+    <!-- <YouTubePromotionVue /> -->
 
     <section class="promo">
       <div class="container">
@@ -158,13 +158,13 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { ref, useFetch, Ref } from '@nuxtjs/composition-api'
+
 import AdvantagesVue from '~/components/Advantages.vue'
 import BaseSliderVue from '~/components/BaseSlider.vue'
 import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import CategoryCardVue from '~/components/CategoryCard.vue'
-import MainSliderVue, {
-  MainSliderSlide,
-} from '~/components/main-slider/MainSlider.vue'
+import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import PromoCardVue from '~/components/promo/PromoCard.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
 import PromoWide from '~/components/promo/PromoWide.vue'
@@ -177,7 +177,7 @@ import { Page } from '~/models/general'
 import NewsSliderVue from '~/components/news/NewsSlider.vue'
 import { ProductItem, products } from '~/store'
 
-import { getMainSlider } from '~/services/api/sliders'
+import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
 import { API_BASE_URL } from '~/services/constants'
 
 @Component({
@@ -197,10 +197,25 @@ import { API_BASE_URL } from '~/services/constants'
     ProductCardVue,
     NewsSliderVue,
   },
+  setup() {
+    const mainSlider: Ref<Array<MainSliderSlide>> = ref([])
+
+    useFetch(async () => {
+      const fetchMainSlider = getMainSlider().then((slides) => {
+        mainSlider.value = slides
+      })
+
+      await Promise.all([fetchMainSlider])
+    })
+
+    return {
+      mainSlider,
+    }
+  },
 })
 export default class IndexPage extends Vue {
+  mainSlider!: Array<MainSliderSlide>
   product: ProductItem | null = null
-  mainSlider: Array<MainSliderSlide> = []
   breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
@@ -215,20 +230,9 @@ export default class IndexPage extends Vue {
   ]
 
   created() {
-    products.getById('318').then((product) => {
-      this.product = product
-    })
-
-    getMainSlider().then((sliderData) => {
-      sliderData.ITEMS.forEach((item) => {
-        this.mainSlider.push({
-          title: item.FIELDS.NAME,
-          subTitle: item.FIELDS.PREVIEW_TEXT,
-          text: item.PROPERTIES.DESCRIPTION.VALUE,
-          background: API_BASE_URL + item.FIELDS.DETAIL_PICTURE.SRC,
-        })
-      })
-    })
+    // products.getById('4622').then((product) => {
+    //   this.product = product
+    // })
   }
 }
 </script>

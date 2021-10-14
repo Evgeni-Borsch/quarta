@@ -1,9 +1,21 @@
-import { MainSliderResponse } from './model'
+import { MainSliderResponse, MainSliderSlide } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
+export * from './model'
 
-export async function getMainSlider(): Promise<MainSliderResponse> {
+export async function getMainSlider(): Promise<Array<MainSliderSlide>> {
   const { $axios } = getStore()
 
-  return await $axios.$get(`${API_BASE_URL}/sliders/mainslider.php`)
+  const response: MainSliderResponse = await $axios.$get(
+    `${API_BASE_URL}/sliders/mainslider.php?SECTION_ID=478`
+  )
+
+  return response.ITEMS.map((item) => {
+    return {
+      title: item.FIELDS.NAME,
+      subTitle: item.FIELDS.PREVIEW_TEXT,
+      text: item.PROPERTIES.DESCRIPTION.VALUE,
+      background: API_BASE_URL + item.FIELDS.DETAIL_PICTURE.SRC,
+    }
+  })
 }

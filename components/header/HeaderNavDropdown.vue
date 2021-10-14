@@ -10,8 +10,9 @@
       :style="getStyles()"
     >
       <ul>
-        <li v-for="child of category.children" :key="child.slug">
+        <li v-for="child of category.categories" :key="child.slug">
           <a
+            :href="`/catalog/${child.slug}`"
             @mouseenter="() => onMouseOverChild(child)"
             @mouseleave="() => onMouseOutChild(child)"
             >{{ child.name }}</a
@@ -26,18 +27,18 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
-import HeaderCategories from './HeaderCategories.vue'
+import HeaderCategories, { HeaderDropdownData } from './HeaderCategories.vue'
 import { Category, categories } from '~/store'
 import getLatest from '~/utils/getLatest'
 
 @Component({
-  setup() {},
+  setup() {}
 })
 export default class HeaderNavDropdown extends Vue {
   $parent!: HeaderCategories
   hasOpenedSubmenu = false
 
-  @Prop({ required: true }) category!: Category
+  @Prop({ required: true }) category!: HeaderDropdownData
   @Prop({ required: true }) index!: number
 
   get isEven() {
@@ -45,44 +46,33 @@ export default class HeaderNavDropdown extends Vue {
   }
 
   onMouseOver() {
-    categories.addProtectedCategory(this.category.slug)
+    this.$parent.protectDropdown(this.category.id)
   }
 
   onMouseOut() {
     setTimeout(() => {
-      if (getLatest(categories.categoriesToShow) === this.category.slug) {
-        categories.removeCategoryToShow(this.category.slug)
+      if (!this.$parent.protectedDropdowns.includes(this.category.id)) {
+        this.$parent.removeDropdown(this.category.id)
       }
-      categories.removeProtectedCategory(this.category.slug)
+      this.$parent.unprotectDropdown(this.category.id)
     })
   }
 
   onMouseOverChild(category: Category) {
-    if (category.children?.length) {
-      categories.addCategoryToShow(category.slug)
-    }
+    this.$parent.addDropdown(category.id)
   }
 
   onMouseOutChild(category: Category) {
     setTimeout(() => {
-      if (getLatest(categories.protectedCategories) !== category.slug) {
-        categories.removeCategoryToShow(category.slug)
+      if (!this.$parent.protectedDropdowns.includes(category.id)) {
+        this.$parent.removeDropdown(category.id)
       }
     })
-
-    // setTimeout(() => {
-    //   const length = categories.categoriesToShow.length
-    //   const latest = categories.categoriesToShow[length - 1]
-    //   if (latest !== categories.activeCategory) {
-    //     categories.removeCategoryToShow(category.slug)
-    //     this.hasOpenedSubmenu = false
-    //   }
-    // })
   }
 
   getStyles() {
     return {
-      transform: `translateX(${100 * this.index}%)`,
+      transform: `translateX(${100 * this.index}%)`
     }
   }
 }
@@ -98,6 +88,7 @@ export default class HeaderNavDropdown extends Vue {
   background-color: $gray-100;
   box-shadow: $box-shadow-sm;
   z-index: 100;
+  overflow-y: auto;
 
   &--odd {
     background-color: $white;

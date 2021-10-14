@@ -2,8 +2,8 @@
   <div ref="categories" class="header-categories">
     <a
       class="header-categories__item"
-      @mouseenter="(e) => onMouseOver(e, rootCategory)"
-      @mouseleave="(e) => onMouseOut(e, rootCategory)"
+      @mouseenter="(e) => onMouseOver(e, '0')"
+      @mouseleave="(e) => onMouseOut(e, '0')"
     >
       <div class="header-categories__icon">
         <CatalogIcon />
@@ -11,21 +11,22 @@
       Каталог товаров
     </a>
     <a
-      v-for="category of categories"
-      :key="category.slug"
+      v-for="category of rootCategory"
+      :key="category.id"
       class="header-categories__item"
-      @mouseenter="(e) => onMouseOver(e, category)"
-      @mouseleave="(e) => onMouseOut(e, category)"
+      :href="`/catalog/${category}`"
+      @mouseenter="(e) => onMouseOver(e, category.id)"
+      @mouseleave="(e) => onMouseOut(e, category.id)"
     >
       {{ category.name }}
     </a>
 
     <div class="header-categories__dropdowns" :style="dropDownsStyles">
       <HeaderNavDropdown
-        v-for="(categorySlug, index) of categoriesToShow"
-        :key="categorySlug"
+        v-for="(dropdown, index) of dropdowns"
+        :key="index"
         :index="index"
-        :category="getCategoryBySlug(categorySlug)"
+        :category="dropdown"
       />
     </div>
   </div>
@@ -34,30 +35,40 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { ref, Ref as CompositionRef, useFetch } from '@nuxtjs/composition-api'
+
+// import HeaderNavDropdown from './HeaderNavDropdown.vue'
+
 import { Ref } from 'vue-property-decorator'
-
-import HeaderNavDropdown from './HeaderNavDropdown.vue'
-
 import CatalogIcon from '~/assets/icons/catalog.svg?icon'
 import { categories, Category } from '~/store'
 
-@Component({
-  name: 'HeaderCategories',
-  components: { CatalogIcon, HeaderNavDropdown },
-  setup() {},
-})
-export default class HeaderCategories extends Vue {
-  @Ref('categories') categoriesRef!: HTMLElement
+export interface HeaderDropdownData {
+  id: string
+  categories: Array<Category>
+}
 
+@Component({
+  components: { CatalogIcon },
+  setup() {
+    const rootCategory: CompositionRef<Array<Category>> = ref([])
+
+    useFetch(async () => {
+      await categories.getByParentAsync('0').then((data) => {
+        rootCategory.value = data as Array<Category>
+      })
+    })
+
+    return { rootCategory }
+  }
+})
+export default class HeaderCategoriesVue extends Vue {
+  rootCategory!: Array<Category>
+  protectedDropdowns: Array<string> = []
+  dropdowns: Array<HeaderDropdownData> = []
   dropDownsLeft = 0
 
-  get categories() {
-    return categories.items
-  }
-
-  get rootCategory() {
-    return categories.rootCategory
-  }
+  @Ref('categories') categoriesRef!: HTMLElement
 
   get categoriesToShow() {
     return categories.categoriesToShow
@@ -65,29 +76,71 @@ export default class HeaderCategories extends Vue {
 
   get dropDownsStyles() {
     return {
-      left: `${this.dropDownsLeft}px`,
+      left: `${this.dropDownsLeft}px`
     }
   }
 
-  getCategoryBySlug(slug: string): Category {
-    return categories.getBySlug(slug) as Category
+  async addDropdown(categoryId: string) {
+    const candidateIndex = this.dropdowns.findIndex(
+      (dropdown) => dropdown.id === categoryId
+    )
+
+    if (candidateIndex !== -1) return null
+
+    await categories.getByParentAsync(categoryId).then((categoriesList) => {
+      if (!categoriesList) return null
+
+      setTimeout(() => {
+        this.dropdowns.push({
+          id: categoryId,
+          categories: categoriesList as Array<Category>
+        })
+      })
+    })
   }
 
-  onMouseOver(e: Event & { target: HTMLElement }, category: Category) {
+  removeDropdown(categoryId: string) {
+    const index = this.dropdowns.findIndex(
+      (dropdown) => dropdown.id === categoryId
+    )
+
+    this.dropdowns.splice(index, 1)
+  }
+
+  removeAllUnprotacted() {
+    const dropdownIds = this.dropdowns.map((d) => d.id)
+
+    dropdownIds.forEach((id) => {
+      if (!this.protectedDropdowns.includes(id)) this.removeDropdown(id)
+    })
+  }
+
+  protectDropdown(categoryId: string) {
+    this.protectedDropdowns.push(categoryId)
+  }
+
+  unprotectDropdown(categoryId: string) {
+    const index = this.protectedDropdowns.indexOf(categoryId)
+    this.protectedDropdowns.splice(index, 1)
+  }
+
+  onMouseOver(e: Event & { target: HTMLElement }, categoryId: string) {
     const categoriesRect = this.categoriesRef.getBoundingClientRect()
     const rect = e.target.getBoundingClientRect()
-
     this.dropDownsLeft = rect.left - categoriesRect.left
 
-    if (category.children?.length) {
-      categories.addCategoryToShow(category.slug)
-    }
+    setTimeout(() => {
+      this.addDropdown(categoryId)
+    })
   }
 
-  onMouseOut(_e: Event, category: Category) {
+  onMouseOut(_e: Event, categoryId: string) {
     setTimeout(() => {
-      if (categories.protectedCategories.includes(category.slug)) return
-      categories.removeCategoryToShow(category.slug)
+      if (this.protectedDropdowns.includes(categoryId)) {
+        return null
+      }
+
+      this.removeDropdown(categoryId)
     })
   }
 }
