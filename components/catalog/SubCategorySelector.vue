@@ -1,67 +1,29 @@
 <template>
   <section class="subcategory-selector">
     <div class="container">
-      <button
-        v-for="(category, index) of subcategories"
-        :key="index"
+      <router-link
+        v-for="category of categories"
+        :key="category.slug"
+        :to="`/catalog/${category.slug}`"
         class="btn"
         :class="{
-          active: index === 0,
+          active: category.slug === currentSlug
         }"
       >
-        {{ category.title }}
-      </button>
+        {{ category.name }}
+      </router-link>
     </div>
   </section>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Category } from '~/store'
 
 @Component({})
 export default class SubCategorySelectorVue extends Vue {
-  subcategories = [
-    {
-      title: 'Оптические прицелы',
-      url: '#',
-    },
-    {
-      title: 'Бинокли',
-      url: '#',
-    },
-    {
-      title: 'Дальномеры',
-      url: '#',
-    },
-    {
-      title: 'Зрительные трубки',
-      url: '#',
-    },
-    {
-      title: 'Коллиматорные прицелы',
-      url: '#',
-    },
-    {
-      title: 'Приборы ночного видения',
-      url: '#',
-    },
-    {
-      title: 'Цифровые приборы день/ночь',
-      url: '#',
-    },
-    {
-      title: 'Монокуляры',
-      url: '#',
-    },
-    {
-      title: 'Тепловизионные приборы',
-      url: '#',
-    },
-    {
-      title: 'Камеры',
-      url: '#',
-    },
-  ]
+  @Prop({ required: true }) categories!: Array<Category>
+  @Prop({ required: true }) currentSlug!: string
 }
 </script>
 

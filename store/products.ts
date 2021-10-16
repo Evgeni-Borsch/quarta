@@ -46,23 +46,25 @@ export class ProductItem extends BaseStoredEntity {
     this.title = response.NAME
     this.description = '' // response.PROPERTIES.DESCRIPTION['~VALUE'].TEXT
     this.configuration = '' // response.PROPERTIES.EQUIPMENT['~VALUE'].TEXT
-    this.breadcrumbs = response.SECTION.PATH.map((item) => {
-      return {
-        title: item.NAME,
-        slug: item.CODE,
-        path: '/catalog/' + item.CODE,
-      }
-    })
+    this.breadcrumbs = []
 
-    this.price = 33000 // PRICE.DISCOUNT_VALUE || PRICE.VALUE
-    this.priceOld = 55000 // PRICE.VALUE
-    this.discount = 25 // PRICE.DISCOUNT_DIFF_PERCENT
+    // response.SECTION.PATH.map((item) => {
+    //   return {
+    //     title: item.NAME,
+    //     slug: item.CODE,
+    //     path: '/catalog/' + item.CODE,
+    //   }
+    // })
+
+    this.price = response.ITEM_PRICES[0].PRICE // PRICE.DISCOUNT_VALUE || PRICE.VALUE
+    this.priceOld = 0 // PRICE.VALUE
+    this.discount = 0 // PRICE.DISCOUNT_DIFF_PERCENT
     this.bonus = 285
     this.available = true // PRICE.CAN_BUY === 'Y'
 
     this.props = '' // response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
 
-    this.images = [] 
+    this.images = []
     //  response.PROPERTIES.IMAGES.SRC.map((src) => ({
     //   default: API_BASE_URL + src,
     //   small: '',

@@ -1,7 +1,8 @@
 <template>
   <div ref="categories" class="header-categories">
-    <a
+    <router-link
       class="header-categories__item"
+      to="/catalog"
       @mouseenter="(e) => onMouseOver(e, '0')"
       @mouseleave="(e) => onMouseOut(e, '0')"
     >
@@ -9,17 +10,17 @@
         <CatalogIcon />
       </div>
       Каталог товаров
-    </a>
-    <a
+    </router-link>
+    <router-link
       v-for="category of rootCategory"
       :key="category.id"
       class="header-categories__item"
-      :href="`/catalog/${category}`"
+      :to="`/catalog/${category.slug}`"
       @mouseenter="(e) => onMouseOver(e, category.id)"
       @mouseleave="(e) => onMouseOut(e, category.id)"
     >
       {{ category.name }}
-    </a>
+    </router-link>
 
     <div class="header-categories__dropdowns" :style="dropDownsStyles">
       <HeaderNavDropdown

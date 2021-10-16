@@ -6,16 +6,19 @@
         <HeartIcon />
       </div>
 
-      <figure>
-        <img :src="product.images[0].default" alt="" />
-      </figure>
+      <router-link :to="`/product/${product.id}/${product.slug}`">
+        <!-- <img :src="product.images[0].default" alt="" /> -->
+      </router-link>
     </div>
 
     <div class="product-card__article">Артикул: {{ product.article }}</div>
 
-    <a class="product-card__title">
+    <router-link
+      :to="`/product/${product.id}/${product.slug}`"
+      class="product-card__title"
+    >
       {{ product.title }}
-    </a>
+    </router-link>
 
     <ProductPriceVue
       :current="product.price"
@@ -64,7 +67,7 @@ import HeartIcon from '~/assets/icons/heart.svg?icon'
 import ProductMixin from '~/mixins/Product'
 
 @Component({
-  components: { StarsVue, ProductPriceVue, CompareIcon, HeartIcon },
+  components: { StarsVue, ProductPriceVue, CompareIcon, HeartIcon }
 })
 export default class ProductCardVue extends mixins(ProductMixin) {
   @Prop({ default: 'default' }) size!: string

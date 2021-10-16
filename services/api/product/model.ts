@@ -29,7 +29,7 @@ export interface Photo {
 }
 
 export interface ProductResponse {
-  ID: string
+  ID: number
   NAME: string
   CODE: string
   DEFAULT_PICTURE: {
@@ -49,6 +49,10 @@ export interface ProductResponse {
   ITEM_MEASURE: {
     TITLE: string
   }
+  ITEM_PRICES: Array<{
+    BASE_PRICE: number
+    PRICE: number
+  }>
   META_TAGS: MetaTags
   PATH: Array<PathItem>
   PREVIEW_PICTURE: {

@@ -1,6 +1,6 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import { getSectionList, CatalogSection } from '~/services/api/catalog'
-import { getStore, categories } from '~/utils/store-accessor'
+import { getSectionList } from '~/services/api/catalog'
+import { categories } from '~/utils/store-accessor'
 
 export interface Category {
   id: string
@@ -17,6 +17,7 @@ export interface Category {
 export default class CategoriesModule extends VuexModule {
   isFetched = false
   items: Map<string, Category> = new Map()
+  itemsBySlug: Map<string, Category> = new Map()
   itemsByParent: Map<string, Array<Category>> = new Map()
 
   activeCategory: string | null = null
@@ -25,19 +26,48 @@ export default class CategoriesModule extends VuexModule {
 
   get getItemsAsync() {
     return async () => {
-      if (!this.isFetched) await Promise.all([categories.fetch()])
+      await categories.fetchIfNotFetched()
+      return this.items
+    }
+  }
+
+  get getItemsByParentAsync() {
+    return async () => {
+      await categories.fetchIfNotFetched()
       return this.itemsByParent
     }
   }
 
   get getByParentAsync() {
     return async (id: string) => {
-      return (await this.getItemsAsync()).get(id)
+      return (await this.getItemsByParentAsync()).get(id)
     }
   }
 
-  get getAllParents() {
-    return (id: string) => {
+  get getBySlugAsync() {
+    return async (slug: string) => {
+      await categories.fetchIfNotFetched()
+
+      if (this.itemsBySlug.has(slug)) return this.itemsBySlug.get(slug)
+
+      const itemBySlug = Array.from(this.items, ([_id, item]) => item).find(
+        (item) => item.slug === slug
+      )
+
+      if (itemBySlug) {
+        const items = new Map(this.itemsBySlug)
+        items.set(slug, itemBySlug)
+        categories.setItemsBySlug(items)
+      }
+
+      return itemBySlug
+    }
+  }
+
+  get getAllParentsAsync() {
+    return async (id: string) => {
+      await categories.fetchIfNotFetched()
+
       const parents = []
       let currentItem = this.items.get(id)
 
@@ -46,18 +76,20 @@ export default class CategoriesModule extends VuexModule {
         parents.push(currentItem)
       }
 
-      return parents
+      return parents.reverse()
     }
   }
 
-  get getLevel() {
-    return (id: string) => {
-      return this.getAllParents(id).length
+  get getLevelAsync() {
+    return async (id: string) => {
+      return (await this.getAllParentsAsync(id)).length
     }
   }
 
   get getAllDescendants() {
     return (id: string) => {
+      if (!this.isFetched) throw new Error('Categories must be fetched!')
+
       const descendants: Array<Category> = []
 
       this.itemsByParent.get(id)?.forEach((item) => {
@@ -69,8 +101,13 @@ export default class CategoriesModule extends VuexModule {
   }
 
   @Action
+  async fetchIfNotFetched() {
+    if (!this.isFetched) await categories.fetch()
+  }
+
+  @Action
   async fetch() {
-    await getSectionList(3).then((response) => {
+    await getSectionList(2).then((response) => {
       const itemsByParent = new Map(this.itemsByParent)
       const items = new Map(this.items)
 
@@ -94,7 +131,6 @@ export default class CategoriesModule extends VuexModule {
 
       this.setItemsByParent(itemsByParent)
       this.setItems(items)
-
       this.setFetched()
     })
   }
@@ -112,5 +148,10 @@ export default class CategoriesModule extends VuexModule {
   @Mutation
   setFetched() {
     this.isFetched = true
+  }
+
+  @Mutation
+  setItemsBySlug(items: Map<string, Category>) {
+    this.itemsBySlug = items
   }
 }

@@ -2,8 +2,8 @@
   <div class="filters-item">
     <CheckboxVue
       v-if="isItCheckbox()"
-      :value="valueIsInStore ? itemValue : null"
-      @change="(value) => item.setValue(value)"
+      :value="valueIsInStore"
+      @change="onCheckboxChange"
     >
       <span v-html="item.title" />
     </CheckboxVue>
@@ -25,18 +25,18 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import CheckboxVue from '~/components/inputs/Checkbox.vue'
 import { filters } from '~/store'
-import { CheckboxFilter, FilterType, RangeFilter } from '~/store/filters'
+import { CheckboxFilter, FilterInstance, RangeFilter } from '~/store/filters'
 
 import InputVue from '~/components/inputs/Input.vue'
 
 @Component({
   components: {
     CheckboxVue,
-    InputVue,
-  },
+    InputVue
+  }
 })
 export default class FiltersItemVue extends Vue {
-  @Prop({ required: true }) item!: FilterType
+  @Prop({ required: true }) item!: FilterInstance
 
   isItCheckbox() {
     return this.item instanceof CheckboxFilter
@@ -46,12 +46,29 @@ export default class FiltersItemVue extends Vue {
     return this.item instanceof RangeFilter
   }
 
-  get itemValue() {
-    return filters.activeFilters.get(this.item.id)
+  get valueIsInStore() {
+    if (this.isItCheckbox()) {
+      return filters.isChecked({
+        name: this.item.name,
+        value: this.item.value as string
+      })
+    }
+
+    return false
   }
 
-  get valueIsInStore() {
-    return this.itemValue !== undefined
+  onCheckboxChange(value: boolean) {
+    if (value) {
+      filters.addCheckboxValue({
+        name: this.item.name,
+        value: this.item.value as string
+      })
+    } else {
+      filters.removeCheckboxValue({
+        name: this.item.name,
+        value: this.item.value as string
+      })
+    }
   }
 }
 </script>

@@ -6,11 +6,11 @@ export * from './model'
 export async function getBenefits(): Promise<BenefitsResponse> {
   const { $axios } = getStore()
 
-  return await $axios.$get(`${API_BASE_URL}/about/benefits.php`)
+  return await $axios.$get(`${API_BASE_URL}/api/about/benefits.php`)
 }
 
 export async function getBanner(id: string): Promise<BannerResponse> {
   const { $axios } = getStore()
 
-  return await $axios.$get(`${API_BASE_URL}/news/banner.php?ID=${id}`)
+  return await $axios.$get(`${API_BASE_URL}/api/news/banner.php?ID=${id}`)
 }

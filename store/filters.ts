@@ -3,17 +3,16 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { filters } from '~/store'
 
-let lastId = 0
-const filterInstances: Array<FilterType> = []
-
-function getUID() {
-  lastId++
-  return lastId
+export enum FilterType {
+  checkbox = 'checkbox',
+  range = 'range',
 }
 
-export type FilterType = Filter | CheckboxFilter | MakerFilter
+export type FilterInstance = Filter | CheckboxFilter | RangeFilter
 
 export interface FiltersOptions {
+  name: string
+  value: unknown
   title: string
 }
 
@@ -23,43 +22,20 @@ export interface FiltersSectionOptions {
 }
 
 export abstract class Filter {
-  id: string = getUID().toString()
+  name!: string
   title!: string
   value!: unknown
-  parent?: FiltersSection
 
   constructor(options: FiltersOptions) {
+    this.name = options.name
+    this.value = options.value
     this.title = options.title
-    filterInstances.push(this)
-  }
-
-  setValue(_value: unknown) {
-    throw new Error(
-      `Method setValue is not implemented in ${this.constructor.name}`
-    )
-  }
-
-  destroy() {
-    const index = filterInstances.indexOf(this)
-    filterInstances.splice(index, 1)
   }
 }
 
 export class CheckboxFilter extends Filter {
-  value!: boolean
-
-  setValue(value: boolean) {
-    this.value = value
-
-    if (value) {
-      filters.addActiveFilter({ id: this.id, value })
-    } else {
-      filters.removeActiveFilter(this.id)
-    }
-  }
+  value!: string
 }
-
-export class MakerFilter extends CheckboxFilter {}
 
 export interface Range extends Array<number | null> {
   0: number | null
@@ -84,15 +60,6 @@ export class FiltersSection {
   constructor(options: FiltersSectionOptions) {
     this.title = options.title
     this.children = options.children
-    this.mountParents()
-  }
-
-  mountParents() {
-    this.children.forEach((child: Filter | FiltersSection) => {
-      if (child instanceof Filter) {
-        child.parent = this
-      }
-    })
   }
 }
 
@@ -102,10 +69,20 @@ export class FiltersSection {
   namespaced: true,
 })
 export default class FiltersModule extends VuexModule {
-  activeFilters: Map<string, unknown> = new Map()
+  activeFilters: Map<string, Array<string>> = new Map()
+
+  get isChecked() {
+    return (payload: { name: string; value: string }) => {
+      const { name, value } = payload
+      const filter = this.activeFilters.get(name)
+
+      if (filter === undefined) return false
+      return filter.includes(value)
+    }
+  }
 
   @Mutation
-  setActiveFilters(activeFilters: Map<string, unknown>) {
+  setActiveFilters(activeFilters: Map<string, Array<string>>) {
     this.activeFilters = activeFilters
   }
 
@@ -115,23 +92,39 @@ export default class FiltersModule extends VuexModule {
   // }
 
   @Action
-  addActiveFilter(payload: { id: string; value: unknown }) {
-    const { id, value } = payload
+  addCheckboxValue(payload: { name: string; value: string }) {
+    const { name, value } = payload
     const activeFilters = new Map(this.activeFilters)
-    activeFilters.set(id, value)
+    const checked = this.activeFilters.get(name) || []
+
+    if (checked.includes(value)) return null
+
+    checked.push(value)
+    activeFilters.set(name, checked)
     this.setActiveFilters(activeFilters)
   }
 
   @Action
-  removeActiveFilter(id: string) {
+  removeCheckboxValue(payload: { name: string; value: string }) {
+    const { name, value } = payload
     const activeFilters = new Map(this.activeFilters)
-    activeFilters.delete(id)
+    const checked = this.activeFilters.get(name) || []
+
+    const index = checked.indexOf(value)
+    checked.splice(index, 1)
+
+    if (checked.length) {
+      activeFilters.set(name, checked)
+    } else {
+      activeFilters.delete(name)
+    }
+
     this.setActiveFilters(activeFilters)
   }
 
   @Action
-  restoreFilters(filters: { [key: string]: unknown }) {
-    const activeFilters = new Map(this.activeFilters)
+  restoreFilters(filters: { [key: string]: Array<string> }) {
+    const activeFilters = new Map()
 
     for (const key in filters) {
       const value = filters[key]

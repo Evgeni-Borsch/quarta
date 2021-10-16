@@ -1,5 +1,5 @@
 <template>
-  <div class="filters">
+  <div v-if="filters.length" class="filters">
     <section class="filters__header">
       <h6>Фильтры</h6>
       <div class="filters__clear" @click="clear">Сбросить</div>
@@ -31,55 +31,96 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import {
+  computed,
+  onUpdated,
+  ref,
+  Ref,
+  useFetch,
+  watch
+} from '@nuxtjs/composition-api'
 import CheckboxVue from '../../inputs/Checkbox.vue'
 import FiltersSectionVue from './FiltersSection.vue'
 import FiltersItem from './FiltersItem.vue'
-import {
-  CheckboxFilter,
-  FiltersSection,
-  MakerFilter,
-  RangeFilter,
-} from '~/store/filters'
-import { filters } from '~/store'
+import { CheckboxFilter, FiltersSection, RangeFilter } from '~/store/filters'
+import { Category, filters } from '~/store'
+import { getFilters } from '~/services/api/catalog'
 
 @Component({
   components: { FiltersSectionVue, CheckboxVue, FiltersItem },
+  setup(props) {
+    const category = computed(() => props.category as Category)
+    const filters: Ref<Array<FiltersSection> | null> = ref([])
+
+    const { fetch } = useFetch(() => {
+      if (!category.value) return
+
+      return getFilters(category.value.id).then((filtersResponse) => {
+        filters.value = []
+
+        if (filtersResponse.P_MANIFACTURER) {
+          filters.value.push(
+            new FiltersSection({
+              title: 'Производитель',
+              children: filtersResponse.P_MANIFACTURER?.VALUE2?.map(
+                (filter) => {
+                  return new CheckboxFilter({
+                    name: filtersResponse.P_MANIFACTURER.ID,
+                    value: filter.ID,
+                    title: filter.NAME
+                  })
+                }
+              )
+            })
+          )
+        }
+
+        if (filtersResponse.P_BRAND) {
+          filters.value.push(
+            new FiltersSection({
+              title: 'Бренд',
+              children: filtersResponse.P_BRAND.VALUE2?.map((filter) => {
+                return new CheckboxFilter({
+                  name: filtersResponse.P_BRAND.ID,
+                  value: filter.ID,
+                  title: filter.NAME
+                })
+              })
+            })
+          )
+        }
+
+        if (filtersResponse.P_PROPERTIES) {
+          filters.value.push(
+            new FiltersSection({
+              title: 'Характеристики',
+              children: filtersResponse.P_PROPERTIES.VALUE2.map((prop) => {
+                return new FiltersSection({
+                  title: prop.NAME,
+                  children: prop.P_VALUE.VALUE.map((value) => {
+                    return new CheckboxFilter({
+                      name: prop.ID,
+                      value,
+                      title: value
+                    })
+                  })
+                })
+              })
+            })
+          )
+        }
+      })
+    })
+
+    watch(category, fetch)
+
+    return { filters }
+  }
 })
 export default class FiltersVue extends Vue {
-  filters: Array<FiltersSection> = [
-    new FiltersSection({
-      title: 'Производитель',
-      children: [
-        new MakerFilter({
-          title: 'Japan Optics / Hakko <small>(Япония)</small>',
-        }),
-      ],
-    }),
-    new FiltersSection({
-      title: 'Характеристики',
-      children: [
-        new FiltersSection({
-          title: 'Тип',
-          children: [
-            new CheckboxFilter({
-              title: 'Закрытый',
-            }),
-            new CheckboxFilter({
-              title: 'Открытый',
-            }),
-          ],
-        }),
-      ],
-    }),
-    new FiltersSection({
-      title: 'Цена',
-      children: [
-        new RangeFilter({
-          title: 'Цена',
-        }),
-      ],
-    }),
-  ]
+  @Prop({ required: true }) category!: Category
+
+  filters!: Array<FiltersSection>
 
   // get filters() {
   //   return Array.from(filters.filtersList)
@@ -102,7 +143,6 @@ export default class FiltersVue extends Vue {
 
     if (typeof filtersAsString === 'string') {
       const filtersParsed = JSON.parse(filtersAsString)
-
       filters.restoreFilters(filtersParsed)
     }
   }
@@ -116,8 +156,8 @@ export default class FiltersVue extends Vue {
     this.$router.push({
       path: this.$route.path,
       query: {
-        filters: filtersAsString,
-      },
+        filters: filtersAsString
+      }
     })
   }
 }
