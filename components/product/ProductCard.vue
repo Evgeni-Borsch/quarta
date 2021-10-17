@@ -16,9 +16,8 @@
     <router-link
       :to="`/product/${product.id}/${product.slug}`"
       class="product-card__title"
-    >
-      {{ product.title }}
-    </router-link>
+      v-html="product.title"
+    />
 
     <ProductPriceVue
       :current="product.price"

@@ -1,7 +1,14 @@
 <template>
   <div class="filters-sort">
-    <CheckboxVue> В наличии </CheckboxVue>
-    <SelectVue :options="sortOptions" label="Сортировать:" />
+    <CheckboxVue :value="onlyAvailable" @change="setOnlyAvailable">
+      В наличии
+    </CheckboxVue>
+    <SelectVue
+      :options="sortOptions"
+      :value="sort"
+      label="Сортировать:"
+      @change="setSort"
+    />
 
     <div class="filters-sort__count">
       Выводить по:
@@ -9,8 +16,8 @@
         <li
           v-for="option of countOptions"
           :key="option.value"
-          :class="{ active: currentCount === option.value }"
-          @click="() => (currentCount = option.value)"
+          :class="{ active: itemsPerPage === option.value }"
+          @click="() => setItemsPerPage(option.value)"
         >
           {{ option.title }}
         </li>
@@ -20,51 +27,84 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import {
+  Vue,
+  Component,
+  Prop,
+  InjectReactive,
+  Inject
+} from 'vue-property-decorator'
+import ProductsGridVue from '../ProductsGrid.vue'
 import CheckboxVue from '~/components/inputs/Checkbox.vue'
 import SelectVue, { SelectOption } from '~/components/Select.vue'
+import CategoryPathResolver from '~/pages/catalog/_.vue'
+import {
+  CatalogCount,
+  CatalogCountType,
+  CatalogSort,
+  CatalogSortType
+} from '~/services/api/catalog'
 
 @Component({
   components: {
     CheckboxVue,
-    SelectVue,
-  },
+    SelectVue
+  }
 })
 export default class FiltersSortVue extends Vue {
   currentCount = '20'
+  $parent!: ProductsGridVue
+
+  @InjectReactive() onlyAvailable!: boolean
+  @InjectReactive() itemsPerPage!: CatalogCountType
+  @InjectReactive() sort!: CatalogSortType
+
+  @Inject() categoryContext!: CategoryPathResolver
+
+  setOnlyAvailable(value: boolean) {
+    this.categoryContext.onlyAvailable = value
+  }
+
+  setItemsPerPage(value: CatalogCountType) {
+    this.categoryContext.itemsPerPage = value
+  }
+
+  setSort(value: CatalogSortType) {
+    this.categoryContext.sort = value
+  }
 
   sortOptions: Array<SelectOption> = [
     {
       title: 'по популярности',
-      value: 'popularity',
+      value: CatalogSort.popularity
     },
     {
       title: 'дешевле',
-      value: 'lowPrice',
+      value: CatalogSort.cheaper
     },
     {
       title: 'дороже',
-      value: 'hightPrice',
-    },
+      value: CatalogSort.expensive
+    }
   ]
 
-  countOptions: Array<SelectOption> = [
+  countOptions: Array<any> = [
     {
       title: '20',
-      value: '20',
+      value: CatalogCount.twenty
     },
     {
       title: '40',
-      value: '40',
+      value: CatalogCount.fourty
     },
     {
       title: '60',
-      value: '60',
+      value: CatalogCount.sixty
     },
     {
       title: 'Показать все',
-      value: 'all',
-    },
+      value: CatalogCount.all
+    }
   ]
 }
 </script>

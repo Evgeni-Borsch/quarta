@@ -1,9 +1,9 @@
 import { Context } from '@nuxt/types'
-import { categories, filters } from '~/store'
+import { categories } from '~/store'
 
 export default function (context: Context) {
   const { route, error } = context
-  const slug = route.params.category
+  const [slug] = route.params.pathMatch.split('/')
 
   return categories
     .getBySlugAsync(slug)

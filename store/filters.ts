@@ -81,6 +81,10 @@ export default class FiltersModule extends VuexModule {
     }
   }
 
+  get asString() {
+    return JSON.stringify(Object.fromEntries(this.activeFilters))
+  }
+
   @Mutation
   setActiveFilters(activeFilters: Map<string, Array<string>>) {
     this.activeFilters = activeFilters

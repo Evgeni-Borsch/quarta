@@ -16,7 +16,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component({})
 export default class CabinetSectionVue extends Vue {
   mounted() {
-    console.log(this.$slots)
+    // console.log(this.$slots)
   }
 }
 </script>

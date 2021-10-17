@@ -30,101 +30,21 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import {
-  computed,
-  onUpdated,
-  ref,
-  Ref,
-  useFetch,
-  watch
-} from '@nuxtjs/composition-api'
+import { Vue, Component, InjectReactive, Watch } from 'vue-property-decorator'
 import CheckboxVue from '../../inputs/Checkbox.vue'
 import FiltersSectionVue from './FiltersSection.vue'
 import FiltersItem from './FiltersItem.vue'
-import { CheckboxFilter, FiltersSection, RangeFilter } from '~/store/filters'
+import { CheckboxFilter, FiltersSection } from '~/store/filters'
 import { Category, filters } from '~/store'
 import { getFilters } from '~/services/api/catalog'
 
 @Component({
-  components: { FiltersSectionVue, CheckboxVue, FiltersItem },
-  setup(props) {
-    const category = computed(() => props.category as Category)
-    const filters: Ref<Array<FiltersSection> | null> = ref([])
-
-    const { fetch } = useFetch(() => {
-      if (!category.value) return
-
-      return getFilters(category.value.id).then((filtersResponse) => {
-        filters.value = []
-
-        if (filtersResponse.P_MANIFACTURER) {
-          filters.value.push(
-            new FiltersSection({
-              title: 'Производитель',
-              children: filtersResponse.P_MANIFACTURER?.VALUE2?.map(
-                (filter) => {
-                  return new CheckboxFilter({
-                    name: filtersResponse.P_MANIFACTURER.ID,
-                    value: filter.ID,
-                    title: filter.NAME
-                  })
-                }
-              )
-            })
-          )
-        }
-
-        if (filtersResponse.P_BRAND) {
-          filters.value.push(
-            new FiltersSection({
-              title: 'Бренд',
-              children: filtersResponse.P_BRAND.VALUE2?.map((filter) => {
-                return new CheckboxFilter({
-                  name: filtersResponse.P_BRAND.ID,
-                  value: filter.ID,
-                  title: filter.NAME
-                })
-              })
-            })
-          )
-        }
-
-        if (filtersResponse.P_PROPERTIES) {
-          filters.value.push(
-            new FiltersSection({
-              title: 'Характеристики',
-              children: filtersResponse.P_PROPERTIES.VALUE2.map((prop) => {
-                return new FiltersSection({
-                  title: prop.NAME,
-                  children: prop.P_VALUE.VALUE.map((value) => {
-                    return new CheckboxFilter({
-                      name: prop.ID,
-                      value,
-                      title: value
-                    })
-                  })
-                })
-              })
-            })
-          )
-        }
-      })
-    })
-
-    watch(category, fetch)
-
-    return { filters }
-  }
+  components: { FiltersSectionVue, CheckboxVue, FiltersItem }
 })
 export default class FiltersVue extends Vue {
-  @Prop({ required: true }) category!: Category
+  filters: Array<FiltersSection> = []
 
-  filters!: Array<FiltersSection>
-
-  // get filters() {
-  //   return Array.from(filters.filtersList)
-  // }
+  @InjectReactive() category!: Category
 
   get activeFilters() {
     return filters.activeFilters
@@ -144,19 +64,68 @@ export default class FiltersVue extends Vue {
     if (typeof filtersAsString === 'string') {
       const filtersParsed = JSON.parse(filtersAsString)
       filters.restoreFilters(filtersParsed)
+    } else {
+      this.clear()
     }
+
+    this.init()
   }
 
-  @Watch('activeFilters')
-  onActiveFiltersChange() {
-    const filtersAsString = JSON.stringify(
-      Object.fromEntries(this.activeFilters)
-    )
+  @Watch('category')
+  init() {
+    if (!this.category) return
 
-    this.$router.push({
-      path: this.$route.path,
-      query: {
-        filters: filtersAsString
+    return getFilters(this.category.id).then((filtersResponse) => {
+      this.filters = []
+
+      if (filtersResponse.P_MANIFACTURER) {
+        this.filters.push(
+          new FiltersSection({
+            title: 'Производитель',
+            children: filtersResponse.P_MANIFACTURER?.VALUE2?.map((filter) => {
+              return new CheckboxFilter({
+                name: filtersResponse.P_MANIFACTURER.ID,
+                value: filter.ID,
+                title: filter.NAME
+              })
+            })
+          })
+        )
+      }
+
+      if (filtersResponse.P_BRAND) {
+        this.filters.push(
+          new FiltersSection({
+            title: 'Бренд',
+            children: filtersResponse.P_BRAND.VALUE2?.map((filter) => {
+              return new CheckboxFilter({
+                name: filtersResponse.P_BRAND.ID,
+                value: filter.ID,
+                title: filter.NAME
+              })
+            })
+          })
+        )
+      }
+
+      if (filtersResponse.P_PROPERTIES) {
+        this.filters.push(
+          new FiltersSection({
+            title: 'Характеристики',
+            children: filtersResponse.P_PROPERTIES.VALUE2.map((prop) => {
+              return new FiltersSection({
+                title: prop.NAME,
+                children: prop.P_VALUE.VALUE.map((value) => {
+                  return new CheckboxFilter({
+                    name: prop.ID,
+                    value,
+                    title: value
+                  })
+                })
+              })
+            })
+          })
+        )
       }
     })
   }

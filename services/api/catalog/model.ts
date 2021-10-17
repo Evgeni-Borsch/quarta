@@ -8,12 +8,36 @@ export interface CatalogSection {
   IBLOCK_SECTION_ID: string | null
 }
 
+export enum CatalogSort {
+  popularity = 'popularity',
+  cheaper = 'cheaper',
+  expensive = 'expensive',
+}
+
+export enum CatalogCount {
+  twenty = 20,
+  fourty = 40,
+  sixty = 60,
+  all = 9999,
+}
+
+export type CatalogSortType =
+  | typeof CatalogSort.popularity
+  | typeof CatalogSort.cheaper
+  | typeof CatalogSort.expensive
+
+export type CatalogCountType =
+  | typeof CatalogCount.twenty
+  | typeof CatalogCount.fourty
+  | typeof CatalogCount.sixty
+  | typeof CatalogCount.all
 export interface CatalogSectionsResponse {
   SECTIONS: Array<CatalogSection>
 }
 
 export interface CatalogCategory extends CatalogSection {
-  ITEMS: Array<ProductResponse>
+  ELEMENT_COUNT: string
+  ITEMS?: Array<ProductResponse>
 }
 
 export interface FiltersResponse {
