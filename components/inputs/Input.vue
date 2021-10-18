@@ -4,23 +4,47 @@
     :class="{
       'input--lg': isLarge,
       'input--sm': isSmall,
+      'input--required': required,
+      'is-invalid': error
     }"
   >
     <label v-if="label" :for="`i_${uid}`" class="form-label">
       {{ label }}
     </label>
+    <InfoVue v-if="info">
+      {{ info }}
+    </InfoVue>
 
     <span class="input__container">
-      <component
-        :is="mask ? 'the-mask' : 'input'"
+      <the-mask
+        v-if="mask"
         :id="`i_${uid}`"
         v-model="innerValue"
         :mask="mask"
         :type="type"
         :placeholder="placeholder"
         class="form-control"
-        :class="{ [`bg-${bg}`]: bg }"
+        :class="{ [`bg-${bg}`]: bg, 'is-invalid': error }"
+        @blur.native="(e) => $emit('blur', e)"
+        @focus.native="(e) => $emit('focus', e)"
       />
+
+      <input
+        v-else
+        :id="`i_${uid}`"
+        v-model="innerValue"
+        :mask="mask"
+        :type="type"
+        :placeholder="placeholder"
+        class="form-control"
+        :class="{ [`bg-${bg}`]: bg, 'is-invalid': error }"
+        @blur="(e) => $emit('blur', e)"
+        @focus="(e) => $emit('focus', e)"
+      />
+
+      <div v-if="typeof error === 'string'" class="invalid-feedback">
+        {{ error }}
+      </div>
 
       <transition name="fade">
         <div
@@ -37,21 +61,28 @@
 
 <script lang="ts">
 import { mixins } from 'vue-class-component'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Emit, Prop, Watch } from 'vue-property-decorator'
 import { TheMask } from 'vue-the-mask'
+import InfoVue from '../Info.vue'
 import TextInput from '~/mixins/TextInput'
 import Sizable from '~/mixins/Sizable'
 
 import CloseIcon from '~/assets/icons/close.svg?icon'
 
 @Component({
-  components: { CloseIcon, TheMask },
+  components: { CloseIcon, TheMask, InfoVue }
 })
 export default class Textarea extends mixins(TextInput, Sizable) {
   @Prop({ default: 'text' }) type!: string
   @Prop({ default: false }) clearable!: boolean
   @Prop({ default: null }) bg!: string
   @Prop({ default: null }) mask!: string
+  @Prop({ default: null }) info!: string
+
+  @Watch('innerValue')
+  onChange() {
+    console.log(this.innerValue)
+  }
 }
 </script>
 
@@ -60,6 +91,16 @@ export default class Textarea extends mixins(TextInput, Sizable) {
   &--lg {
     input {
       padding: 1.125rem;
+    }
+  }
+
+  &--required {
+    label {
+      &::after {
+        content: '*';
+        color: $secondary;
+        font-size: 1.2em;
+      }
     }
   }
 
@@ -92,6 +133,11 @@ export default class Textarea extends mixins(TextInput, Sizable) {
     &:focus {
       color: $gray-900;
     }
+  }
+
+  .info {
+    position: relative;
+    top: -2px;
   }
 }
 </style>

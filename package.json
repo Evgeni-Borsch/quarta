@@ -16,6 +16,7 @@
     "@popperjs/core": "^2.10.1",
     "@types/fast-levenshtein": "^0.0.2",
     "@types/vue-the-mask": "^0.11.1",
+    "@types/vuelidate": "^0.7.15",
     "@vueuse/core": "^5.2.0",
     "autosize": "^5.0.1",
     "axios": "^0.21.4",
@@ -31,7 +32,8 @@
     "swiper": "^6.8.4",
     "vue-awesome-swiper": "^4.1.1",
     "vue-cumulative-circle": "^1.0.1",
-    "vue-the-mask": "^0.11.1"
+    "vue-the-mask": "^0.11.1",
+    "vuelidate": "^0.7.6"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

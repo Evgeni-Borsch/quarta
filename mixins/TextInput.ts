@@ -8,10 +8,21 @@ export default class TextInput extends mixins(BaseInput) {
 
   @Prop({ default: '' }) value!: string
   @Prop({ default: null }) placeholder!: string
+  @Prop({ default: false }) error!: string | boolean
+  @Prop({ default: false }) required!: boolean
 
   @Watch('innerValue')
   @Emit('input')
-  emitInput(value: string) {
-    return value
+  onValueChange() {
+    return this.innerValue
+  }
+
+  @Watch('value')
+  updateValue() {
+    this.innerValue = this.value
+  }
+
+  created() {
+    this.updateValue()
   }
 }
