@@ -77,7 +77,7 @@ export default class ProductsGridVue extends Vue {
 
     this.itemsTotal = parseInt(categoryResponse.ELEMENT_COUNT)
 
-    if (this.itemsTotal === 0) return
+    if (categoryResponse.ITEMS === undefined) return
 
     for (const item of categoryResponse.ITEMS) {
       if (!products.items.has(item.ID.toString())) {
