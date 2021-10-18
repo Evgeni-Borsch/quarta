@@ -1,6 +1,6 @@
 <template>
-  <a
-    href="#"
+  <router-link
+    :to="to"
     class="category-card"
     :class="{ 'category-card--compact': compact }"
   >
@@ -18,7 +18,7 @@
         {{ count }} товаров
       </div>
     </div>
-  </a>
+  </router-link>
 </template>
 
 <script lang="ts">
@@ -26,6 +26,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({})
 export default class CategoryCard extends Vue {
+  @Prop({ required: true }) to!: string
   @Prop({ required: true }) title!: string
   @Prop({ required: true }) image!: string
   @Prop({ default: null }) count!: number

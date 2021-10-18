@@ -172,7 +172,7 @@ export default class CategoryPathResolver extends Vue {
   @Watch('activeFilters')
   @Watch('onlyAvailable')
   onActiveFiltersChange() {
-    this.$router.push({
+    this.$router.replace({
       path: this.$route.path,
       query: {
         filters: filters.asString,

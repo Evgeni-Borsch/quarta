@@ -3,7 +3,7 @@
     ref="header"
     class="header"
     :class="{
-      'header--hidden': !isTop && !scrollUp,
+      'header--hidden': !isTop && !scrollUp
     }"
   >
     <ModalLocationVue
@@ -38,9 +38,9 @@
 
       <div class="row header__main-row">
         <div class="header__logo-section">
-          <a href="/">
+          <router-link to="/">
             <img :src="logo" class="header__logo" alt="QUARTA" />
-          </a>
+          </router-link>
         </div>
 
         <div class="header__search-section col">
@@ -106,7 +106,7 @@ import { cart, location } from '~/store'
     CartIcon,
     CompareIcon,
     LocationIcon,
-    PersonIcon,
+    PersonIcon
   },
   setup() {
     const { y: scrollY } = useWindowScroll()
@@ -131,7 +131,7 @@ import { cart, location } from '~/store'
     })
 
     return { logo, direction, isTop, lastScrollY, scrollUp }
-  },
+  }
 })
 export default class HeaderVue extends Vue {
   showSelectLoacation = false
@@ -223,7 +223,7 @@ export default class HeaderVue extends Vue {
     display: inline-flex;
     align-items: center;
     margin-right: 1rem;
-    cursor: pointer
+    cursor: pointer;
   }
 
   &__nav {

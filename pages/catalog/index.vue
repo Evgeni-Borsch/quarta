@@ -1,6 +1,6 @@
 <template>
   <div class="catalog">
-    <MainSliderVue :compact="true" />
+    <MainSliderVue :slides="mainSlider" :compact="true" />
     <BreadcrumbsVue :path="breadcrumbs" />
 
     <section class="catalog__categories">
@@ -10,6 +10,7 @@
             <CategoryCardVue
               title="Оружие и патроны"
               image="/barrel-gun.png"
+              to="/catalog/oruzhie_i_patrony"
               :count="126"
             />
           </div>
@@ -17,6 +18,7 @@
             <CategoryCardVue
               title="Оптика и кронштейны"
               image="/scope.png"
+              to="/catalog/optika_i_kronshteyny"
               :count="126"
             />
           </div>
@@ -24,6 +26,7 @@
             <CategoryCardVue
               title="Снаряжение и одежда"
               image="/equipment.png"
+              to="/catalog/snaryazhenie_i_odezhda"
               :count="126"
             />
           </div>
@@ -31,6 +34,7 @@
             <CategoryCardVue
               title="Чистка, смазка и уход"
               image="/care.png"
+              to="/catalog/sredstva_dlya_ukhoda_za_oruzhiem"
               :count="126"
             />
           </div>
@@ -38,6 +42,7 @@
             <CategoryCardVue
               title="Тюнинг оружия"
               image="/tunning.png"
+              to="/catalog/tyuning_oruzhiya"
               :count="126"
             />
           </div>
@@ -56,28 +61,39 @@ import CategoryCardVue from '~/components/CategoryCard.vue'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
 import { Page } from '~/models/general'
+import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
 
 @Component({
   components: {
     MainSliderVue,
     CategoryCardVue,
     BreadcrumbsVue,
-    SubscribeVue,
-  },
+    SubscribeVue
+  }
 })
 export default class CategoryPage extends Vue {
+  mainSlider: Array<MainSliderSlide> = []
+
   breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
       slug: 'index',
-      path: '/',
+      path: '/'
     },
     {
       title: 'Каталог',
       slug: 'catalog',
-      path: '/catalog',
-    },
+      path: '/catalog'
+    }
   ]
+
+  async fetch() {
+    await this.fetchMainSlider()
+  }
+
+  async fetchMainSlider() {
+    this.mainSlider = await getMainSlider()
+  }
 }
 </script>
 

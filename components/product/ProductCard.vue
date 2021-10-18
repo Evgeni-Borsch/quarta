@@ -7,7 +7,9 @@
       </div>
 
       <router-link :to="`/product/${product.id}/${product.slug}`">
-        <!-- <img :src="product.images[0].default" alt="" /> -->
+        <figure>
+          <img src="/product-01-01.jpg" :alt="product.title" />
+        </figure>
       </router-link>
     </div>
 

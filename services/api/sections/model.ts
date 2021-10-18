@@ -13,6 +13,9 @@ export interface BannerResponse {
     BANNER_IMAGE: {
       SRC: string
     }
+    BANNER_TITLE?: {
+      VALUE: string
+    }
     BANNER_TEXT: {
       VALUE: string
     }

@@ -10,7 +10,7 @@ export interface MainSliderResponse {
       }
     }
     PROPERTIES: {
-      DESCRIPTION: {
+      DESCRIPTION?: {
         VALUE: string
       }
     }

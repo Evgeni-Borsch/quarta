@@ -7,26 +7,31 @@
         <CategoryCardVue
           title="Оружие и патроны"
           image="/barrel-gun.png"
+          to="/catalog/oruzhie_i_patrony"
           :compact="true"
         />
         <CategoryCardVue
           title="Оптика и кронштейны"
           image="/scope.png"
+          to="/catalog/optika_i_kronshteyny"
           :compact="true"
         />
         <CategoryCardVue
           title="Снаряжение и одежда"
           image="/equipment.png"
+          to="/catalog/snaryazhenie_i_odezhda"
           :compact="true"
         />
         <CategoryCardVue
           title="Чистка, смазка и уход"
           image="/care.png"
+          to="/catalog/sredstva_dlya_ukhoda_za_oruzhiem"
           :compact="true"
         />
         <CategoryCardVue
           title="Тюнинг оружия"
           image="/tunning.png"
+          to="/catalog/tyuning_oruzhiya"
           :compact="true"
         />
       </BaseSliderVue>
@@ -34,7 +39,7 @@
 
     <AdvantagesVue />
 
-    <!-- <YouTubePromotionVue /> -->
+    <YouTubePromotionVue />
 
     <section class="promo">
       <div class="container">
@@ -107,43 +112,40 @@
     <section class="promo-grid">
       <div class="container">
         <div class="row">
-          <div class="col-6">
+          <div v-if="firstLargeCard" class="col-6">
             <PromoCardVue
-              title="Скидка до&nbsp;25% на&nbsp;новый товар"
-              image="/promo-horn.png"
+              :title="firstLargeCard.title"
+              :image="firstLargeCard.image"
               :large="true"
             >
-              <p>
-                Подборка охотничьих товаров по выгодным ценам. Количество
-                ограничено!
-              </p>
+              <p v-html="firstLargeCard.text"></p>
             </PromoCardVue>
           </div>
           <div class="col-3">
-            <ProductCardVue :product="product" />
+            <ProductCardVue :product="products[0]" />
           </div>
 
           <div class="col-3">
-            <ProductCardVue :product="product" />
+            <ProductCardVue :product="products[1]" />
           </div>
         </div>
 
         <div class="row">
           <div class="col-3">
-            <ProductCardVue :product="product" />
+            <ProductCardVue :product="products[2]" />
           </div>
 
           <div class="col-3">
-            <ProductCardVue :product="product" />
+            <ProductCardVue :product="products[3]" />
           </div>
 
-          <div class="col-6">
+          <div v-if="secondLargeCard" class="col-6">
             <PromoCardVue
-              title="Скидка 12% на прицелы&nbsp;Nikko&nbsp;Stirling!"
-              image="/promo-pistol.png"
+              :title="secondLargeCard.title"
+              :image="secondLargeCard.image"
               :large="true"
             >
-              <p>Мы рады сообщить о новом поступлении товара</p>
+              <p v-html="secondLargeCard.text"></p>
             </PromoCardVue>
           </div>
         </div>
@@ -179,6 +181,7 @@ import { ProductItem, products } from '~/store'
 
 import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
 import { API_BASE_URL } from '~/services/constants'
+import { BannerResponse, getBanner } from '~/services/api/sections'
 
 @Component({
   components: {
@@ -195,44 +198,67 @@ import { API_BASE_URL } from '~/services/constants'
     PromoWideImageTextVue,
     PromoProductSlideVue,
     ProductCardVue,
-    NewsSliderVue,
-  },
-  setup() {
-    const mainSlider: Ref<Array<MainSliderSlide>> = ref([])
-
-    useFetch(async () => {
-      const fetchMainSlider = getMainSlider().then((slides) => {
-        mainSlider.value = slides
-      })
-
-      await Promise.all([fetchMainSlider])
-    })
-
-    return {
-      mainSlider,
-    }
-  },
+    NewsSliderVue
+  }
 })
 export default class IndexPage extends Vue {
-  mainSlider!: Array<MainSliderSlide>
-  product: ProductItem | null = null
+  mainSlider: Array<MainSliderSlide> = []
+  products: Array<ProductItem> = []
+  largeCards: Array<BannerResponse> = []
   breadcrumbs: Array<Page> = [
     {
       title: 'Главная',
       slug: 'index',
-      path: '/',
+      path: '/'
     },
     {
       title: 'Каталог',
       slug: 'catalog',
-      path: '/catalog',
-    },
+      path: '/catalog'
+    }
   ]
 
-  created() {
-    // products.getById('4622').then((product) => {
-    //   this.product = product
-    // })
+  get firstLargeCard() {
+    return this.getLargeCard(0)
+  }
+
+  get secondLargeCard() {
+    return this.getLargeCard(1)
+  }
+
+  getLargeCard(index = 0) {
+    const card = this.largeCards[index]
+
+    if (!card) return null
+
+    return {
+      title: card.PROPERTIES.BANNER_TITLE?.VALUE ?? '',
+      text: card.PROPERTIES.BANNER_TEXT.VALUE,
+      image: API_BASE_URL + card.PROPERTIES.BANNER_IMAGE.SRC
+    }
+  }
+
+  async fetch() {
+    await this.fetchMainSlider()
+    await this.fetchProducts()
+    await this.fetchBanners()
+  }
+
+  async fetchMainSlider() {
+    this.mainSlider = await getMainSlider()
+  }
+
+  async fetchBanners() {
+    this.largeCards = [await getBanner('4960'), await getBanner('4961')]
+  }
+
+  async fetchProducts() {
+    this.products = [
+      await products.getById('4321'),
+      await products.getById('4322'),
+      await products.getById('4323'),
+      await products.getById('4324')
+    ]
   }
 }
 </script>

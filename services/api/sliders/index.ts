@@ -7,14 +7,14 @@ export async function getMainSlider(): Promise<Array<MainSliderSlide>> {
   const { $axios } = getStore()
 
   const response: MainSliderResponse = await $axios.$get(
-    `${API_BASE_URL}/api/sliders/mainslider.php?SECTION_ID=478`
+    `${API_BASE_URL}/api/sliders/mainslider.php`
   )
 
   return response.ITEMS.map((item) => {
     return {
       title: item.FIELDS.NAME,
       subTitle: item.FIELDS.PREVIEW_TEXT,
-      text: item.PROPERTIES.DESCRIPTION.VALUE,
+      text: item.PROPERTIES.DESCRIPTION?.VALUE ?? '',
       background: API_BASE_URL + item.FIELDS.DETAIL_PICTURE.SRC,
     }
   })

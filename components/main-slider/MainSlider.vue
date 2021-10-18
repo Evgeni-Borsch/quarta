@@ -13,6 +13,12 @@
           :style="{ backgroundImage: `url(${slide.background})` }"
           class="swiper-slide"
         >
+          <div class="main-slider__q">
+            <div class="container">
+              <QLetterSvg v-if="!compact" />
+              <QLetterCompactSvg v-else />
+            </div>
+          </div>
           <div class="container">
             <div class="row">
               <div class="col-6">
@@ -78,12 +84,14 @@ SwiperCore.use([Scrollbar])
 
 @Component({
   directives: {
-    swiper: directive,
+    swiper: directive
   },
   components: {
     MainSliderDotCircle,
     MainSliderProgressVue,
-  },
+    QLetterSvg: () => import('~/assets/images/q.svg?inline'),
+    QLetterCompactSvg: () => import('~/assets/images/q-compact.svg?inline')
+  }
 })
 export default class MainSlider extends Vue {
   @Prop({ default: false }) compact!: boolean
@@ -110,8 +118,8 @@ export default class MainSlider extends Vue {
       height: this.compact ? 318 : 635,
       loop: true,
       on: {
-        slideChangeTransitionEnd: this.slideChangeTransitionEnd,
-      },
+        slideChangeTransitionEnd: this.slideChangeTransitionEnd
+      }
     }
   }
 
@@ -190,25 +198,45 @@ $main-slider-compact-height: 318px;
   overflow: hidden;
   color: $white;
 
+  &__q {
+    position: absolute;
+    left: -180px;
+    right: 0;
+    bottom: -5px;
+    z-index: 1;
+  }
+
+  &__compact &__q {
+    top: 0;
+    bottom: 0;
+    transform: translateY(-54px);
+  }
+
   &__compact {
     height: $main-slider-compact-height;
   }
 
   &__subtitle {
+    position: relative;
     color: rgba($white, 0.62);
     margin-bottom: 1rem;
+    z-index: 2;
   }
 
   &__title {
+    position: relative;
     max-width: 95%;
     font-size: 3.75rem;
     line-height: 3.75rem;
     font-weight: 700;
+    z-index: 2;
   }
 
   &__text {
+    position: relative;
     margin-top: 3rem;
     font-size: 1rem;
+    z-index: 2;
     max-width: 32ch;
   }
 
