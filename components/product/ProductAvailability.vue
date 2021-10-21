@@ -1,5 +1,5 @@
 <template>
-  <div class="product-availability container pb-5" v-if="availability">
+  <div v-if="availability" class="product-availability container pb-5">
     <h3>Наличие товара</h3>
 
     <div class="row product-availability__header">
@@ -31,15 +31,19 @@
 
     <hr />
   </div>
+  <LoadingVue v-else />
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import LoadingVue from '../Loading.vue'
 import ProductAvailabilityBageVue from './ProductAvailabilityBage.vue'
 import LocationIcon from '~/assets/icons/location.svg?icon'
 import { ProductAvailability, ProductItem, products } from '~/store'
 
-@Component({ components: { LocationIcon, ProductAvailabilityBageVue } })
+@Component({
+  components: { LocationIcon, ProductAvailabilityBageVue, LoadingVue }
+})
 export default class ProductAvailabilityVue extends Vue {
   availability: ProductAvailability | null = null
 

@@ -1,6 +1,7 @@
 export interface ProductProperty {
   NAME: string
   VALUE: string
+  '~VALUE': string
 }
 
 export interface ProductPathItem {
@@ -42,6 +43,7 @@ export interface ProductResponse {
     EQUIPMENT: ProductProperty
     INSTRUCTIONS: ProductFileProperty
     IMAGES: ProductFileProperty
+    [key: string]: ProductProperty
   }
   SECTION: {
     PATH: Array<ProductPathItem>

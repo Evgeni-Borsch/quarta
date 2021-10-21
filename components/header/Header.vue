@@ -16,7 +16,35 @@
           <a class="header__city" @click="showSelectLoacation = true">
             <LocationIcon class="mx-1" />{{ currentLocation.name }}
           </a>
-          <a href="#" class="header__spot">Магазины</a>
+          <div
+            ref="spots"
+            class="header__spot"
+            :class="{ 'header__spot--show': showSpots }"
+          >
+            <span @click="showSpots = !showSpots">
+              Магазины <ArrowSmallIcon class="icon" />
+            </span>
+            <div v-if="showSpots" class="header__spot-dropdown">
+              <div class="header__spot-dropdown-item">
+                <span>Адрес:</span> Санкт-Петербург, наб. Обводного канала, д.
+                207Б
+                <br />
+                <span>Режим работы:</span> с 10:00 до 22:00
+              </div>
+              <div class="header__spot-dropdown-item">
+                <span>Адрес:</span> Санкт-Петербург, наб. Обводного канала, д.
+                207Б
+                <br />
+                <span>Режим работы:</span> с 10:00 до 22:00
+              </div>
+              <div class="header__spot-dropdown-item">
+                <span>Адрес:</span> Санкт-Петербург, наб. Обводного канала, д.
+                207Б
+                <br />
+                <span>Режим работы:</span> с 10:00 до 22:00
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="header__nav col">
@@ -79,7 +107,12 @@
 
 <script lang="ts">
 import { computed, onMounted, Ref, ref } from '@nuxtjs/composition-api'
-import { useWindowScroll, debouncedWatch } from '@vueuse/core'
+import {
+  useWindowScroll,
+  debouncedWatch,
+  onClickOutside,
+  templateRef
+} from '@vueuse/core'
 import { Component, Vue } from 'vue-property-decorator'
 
 import BageVue from '../Bage.vue'
@@ -93,6 +126,8 @@ import CompareIcon from '@/assets/icons/compare.svg?icon'
 import CartIcon from '@/assets/icons/cart.svg?icon'
 import LocationIcon from '@/assets/icons/location.svg?icon'
 import PersonIcon from '@/assets/icons/person.svg?icon'
+import ArrowSmallIcon from '@/assets/icons/arrow-small.svg?icon'
+
 import { cart, location } from '~/store'
 
 @Component({
@@ -106,15 +141,22 @@ import { cart, location } from '~/store'
     CartIcon,
     CompareIcon,
     LocationIcon,
-    PersonIcon
+    PersonIcon,
+    ArrowSmallIcon
   },
   setup() {
+    const showSpots = ref(false)
     const { y: scrollY } = useWindowScroll()
     const direction: Ref<string> = ref('down')
     const lastScrollY: Ref<number> = ref(0)
     const prevDirection = ref('down')
     const scrollUp = ref(false)
     const isTop = computed(() => scrollY.value < globalThis?.innerHeight ?? 200)
+    const spotsRef = templateRef('spots')
+
+    onClickOutside(spotsRef, () => {
+      if (showSpots.value) showSpots.value = false
+    })
 
     onMounted(() => {
       debouncedWatch(
@@ -130,7 +172,7 @@ import { cart, location } from '~/store'
       )
     })
 
-    return { logo, direction, isTop, lastScrollY, scrollUp }
+    return { logo, direction, isTop, lastScrollY, scrollUp, showSpots }
   }
 })
 export default class HeaderVue extends Vue {
@@ -150,6 +192,11 @@ export default class HeaderVue extends Vue {
 @mixin middle-column {
   min-width: 702px;
   max-width: 702px;
+
+  @include media-breakpoint-down('xxl') {
+    min-width: 600px;
+    max-width: 600px;
+  }
 }
 
 .btn {
@@ -198,6 +245,11 @@ export default class HeaderVue extends Vue {
   &__logo-section {
     min-width: 333px;
     max-width: 333px;
+
+    @include media-breakpoint-down('xxl') {
+      min-width: 280px;
+      max-width: 280px;
+    }
   }
 
   &__logo {
@@ -224,6 +276,58 @@ export default class HeaderVue extends Vue {
     align-items: center;
     margin-right: 1rem;
     cursor: pointer;
+  }
+
+  &__spot {
+    position: relative;
+
+    .icon {
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    & > span {
+      transition: color 0.2s;
+    }
+
+    & > span:hover {
+      color: $primary;
+    }
+
+    &--show {
+      .icon {
+        transform: rotate(180deg);
+        color: $primary;
+      }
+    }
+  }
+
+  &__spot-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 460px;
+    background-color: $white;
+    box-shadow: $box-shadow-sm;
+    border-radius: $border-radius-sm;
+    padding: 1.375rem 0.875rem;
+    z-index: $zindex-tooltip;
+  }
+
+  &__spot-dropdown-item {
+    font-size: 0.75rem;
+    color: $gray-800;
+
+    &:hover {
+      color: $primary !important;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1.875rem;
+    }
+
+    span {
+      color: $gray-600;
+    }
   }
 
   &__nav {

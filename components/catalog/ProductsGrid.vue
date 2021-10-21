@@ -1,14 +1,26 @@
 <template>
-  <div v-if="category" class="products-grid">
-    <FiltersSortVue />
-
-    <div class="row">
-      <div v-for="product of productsList" :key="product.id" class="col-3">
-        <ProductCardVue v-if="product" :product="product" />
-      </div>
+  <div class="products-grid__wrapper">
+    <div v-if="category" class="products-grid">
+      <FiltersSortVue />
+      <transition-group name="fade">
+        <div v-if="productsList.length" key="grid" class="row">
+          <div
+            v-for="product of productsList"
+            :key="product.id"
+            class="col-6 col-md-3"
+          >
+            <ProductCardVue v-if="product" :product="product" />
+          </div>
+        </div>
+        <LoadingVue v-else key="loading" />
+      </transition-group>
+      <PaginationVue
+        v-if="productsList.length"
+        :total="itemsTotal"
+        :current="page"
+        @change="setPage"
+      />
     </div>
-
-    <PaginationVue :total="itemsTotal" :current="page" @change="setPage" />
   </div>
 </template>
 
@@ -22,6 +34,7 @@ import {
 } from 'vue-property-decorator'
 import PaginationVue from '../Pagination.vue'
 import ProductCardVue from '../product/ProductCard.vue'
+import LoadingVue from '../Loading.vue'
 import FiltersSortVue from './filters/FiltersSort.vue'
 import { Category, filters, ProductItem, products } from '~/store'
 import {
@@ -32,7 +45,7 @@ import {
 import CategoryPathResolver from '~/pages/catalog/_.vue'
 
 @Component({
-  components: { PaginationVue, ProductCardVue, FiltersSortVue }
+  components: { PaginationVue, ProductCardVue, FiltersSortVue, LoadingVue }
 })
 export default class ProductsGridVue extends Vue {
   onlyAvaible!: boolean
@@ -95,6 +108,19 @@ export default class ProductsGridVue extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.products-grid {
+  &__wrapper {
+    position: relative;
+    min-height: 25rem;
+  }
+
+  &::v-deep {
+    .loading {
+      position: absolute;
+    }
+  }
+}
+
 [class*='col-'] {
   margin-bottom: 20px;
 }

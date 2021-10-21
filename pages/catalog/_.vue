@@ -59,26 +59,7 @@ import { CatalogCount, CatalogSort } from '~/services/api/catalog'
     SubscribeVue,
     ProductsGridVue
   },
-  middleware: ['category'],
-
-  async fetch(this: CategoryPathResolver) {
-    const [slug, pageUnsafe] = this.$route.params.pathMatch.split('/')
-    const page = pageUnsafe ? parseInt(pageUnsafe) : 1
-
-    this.setSortSafe(this.$route.query.sort as string)
-    this.setItemsPerPageSafe(this.$route.query.itemsPerPage as string)
-
-    this.slug = slug
-    this.page = page
-    this.onlyAvailable = this.$route.query.onlyAvailable === 'true'
-    this.category = (await categories.getBySlugAsync(slug)) as Category
-    this.parents = (await categories.getAllParentsAsync(
-      this.category.id
-    )) as Array<Category>
-    this.descendants = categories.getAllDescendants(
-      this.parentsWithCurrent[0].id
-    )
-  }
+  middleware: ['category']
 })
 export default class CategoryPathResolver extends Vue {
   product: ProductItem | null = null
@@ -129,6 +110,25 @@ export default class CategoryPathResolver extends Vue {
     })
 
     return prepared
+  }
+
+  async fetch(this: CategoryPathResolver) {
+    const [slug, pageUnsafe] = this.$route.params.pathMatch.split('/')
+    const page = pageUnsafe ? parseInt(pageUnsafe) : 1
+
+    this.setSortSafe(this.$route.query.sort as string)
+    this.setItemsPerPageSafe(this.$route.query.itemsPerPage as string)
+
+    this.slug = slug
+    this.page = page
+    this.onlyAvailable = this.$route.query.onlyAvailable === 'true'
+    this.category = (await categories.getBySlugAsync(slug)) as Category
+    this.parents = (await categories.getAllParentsAsync(
+      this.category.id
+    )) as Array<Category>
+    this.descendants = categories.getAllDescendants(
+      this.parentsWithCurrent[0].id
+    )
   }
 
   setSortSafe(value: string) {

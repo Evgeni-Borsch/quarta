@@ -9,9 +9,7 @@
         <div class="col-6">
           <div class="product__article">Артикул: {{ product.article }}</div>
 
-          <div class="product__title">
-            {{ product.title }}
-          </div>
+          <div class="product__title" v-html="product.title"></div>
 
           <StarsVue />
 
@@ -102,6 +100,7 @@ import ProductPhotosVue from '@/components/product/ProductPhotos.vue'
 import ProductComboVue from '@/components/product/ProductCombo.vue'
 
 import ProductMixin from '~/mixins/Product'
+import { ProductItem } from '~/store'
 
 @Component({
   components: {
@@ -114,10 +113,16 @@ import ProductMixin from '~/mixins/Product'
     DeliveryIcon,
     LoactionIcon,
     HeartIcon,
-    CompareIcon,
-  },
+    CompareIcon
+  }
 })
-export default class ProductVue extends mixins(ProductMixin) {}
+export default class ProductVue extends mixins(ProductMixin) {
+  async fetch() {
+    if (!this.product.isFull) {
+      await ProductItem.updateToFull(this.product)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,4 +1,5 @@
 import { Module, Mutation, VuexModule } from 'vuex-module-decorators'
+import product from '~/middleware/product'
 import { BaseStoredEntity, Page } from '~/models/general'
 
 import { getProduct, getProductAvailability } from '~/services/api/product'
@@ -17,8 +18,19 @@ export interface ProductPhoto {
   large: string
 }
 
+const bannedProps: Array<string> = [
+  'CML2_ARTICLE',
+  'CML2_ATTRIBUTES',
+  'CML2_TRAITS',
+  'CML2_BASE_UNIT',
+  'CML2_TAXES',
+  'MORE_PHOTO',
+  'FILES',
+]
+
 export class ProductItem extends BaseStoredEntity {
   rawResponse!: ProductResponse
+  isFull!: boolean
   id!: string
   slug!: string
   article!: string
@@ -32,13 +44,14 @@ export class ProductItem extends BaseStoredEntity {
   available!: boolean
   images!: Array<ProductPhoto>
   breadcrumbs!: Array<Page>
-  props!: string
+  props!: {
+    [key: string]: string
+  }
 
   constructor(response: ProductResponse) {
     super()
     this.rawResponse = response
-
-    const PRICE = {} // response.PRICES.BASE
+    this.isFull = false
 
     this.id = response.ID.toString()
     this.slug = response.CODE
@@ -62,7 +75,18 @@ export class ProductItem extends BaseStoredEntity {
     this.bonus = 285
     this.available = true // PRICE.CAN_BUY === 'Y'
 
-    this.props = '' // response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
+    this.props = {}
+
+    Object.keys(response.PROPERTIES).forEach((key: string) => {
+      if (bannedProps.includes(key)) return null
+
+      const item = response.PROPERTIES[key]
+      this.props[item.NAME] = item['~VALUE']
+    })
+
+    console.log(this.props)
+
+    // response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
 
     this.images = []
     //  response.PROPERTIES.IMAGES.SRC.map((src) => ({
@@ -70,6 +94,21 @@ export class ProductItem extends BaseStoredEntity {
     //   small: '',
     //   large: '',
     // }))
+  }
+
+  static createShort(response: ProductResponse) {
+    return new ProductItem(response)
+  }
+
+  static createFull(response: ProductResponse) {
+    const product = new ProductItem(response)
+    product.isFull = true
+
+    return product
+  }
+
+  static async updateToFull(product: ProductItem) {
+    products.addItemFull(await getProduct(product.id))
   }
 }
 
@@ -133,6 +172,11 @@ export default class ProductsModule extends VuexModule {
   @Mutation
   addItem(item: ProductResponse) {
     this.items.set(item.ID.toString(), new ProductItem(item))
+  }
+
+  @Mutation
+  addItemFull(item: ProductResponse) {
+    this.items.set(item.ID.toString(), ProductItem.createFull(item))
   }
 
   @Mutation

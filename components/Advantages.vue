@@ -3,7 +3,7 @@
     <div class="container">
       <h2>Наши преимущества</h2>
       <div class="row">
-        <div v-for="(item, index) of list" :key="index" class="col-3">
+        <div v-for="(item, index) of list" :key="index" class="col-6 col-lg-3">
           <h4>
             <img :src="item.image" class="icon" />
             {{ item.title }}
@@ -44,7 +44,7 @@ export default class AdvantagesVue extends Vue {
         this.list.push({
           title: item.NAME,
           text: item.PREVIEW_TEXT,
-          image: API_BASE_URL + item.PREVIEW_PICTURE.SRC,
+          image: API_BASE_URL + item.PREVIEW_PICTURE.SRC
         })
       })
 

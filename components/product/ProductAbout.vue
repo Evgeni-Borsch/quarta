@@ -45,9 +45,9 @@
         <div class="col-6 pe-5">
           <h3>Характеристики</h3>
 
-          <div ref="tableWrapper" v-html="product.props"></div>
+          <!-- <div ref="tableWrapper" v-html="product.props"></div> -->
 
-          <!-- <table class="table table-striped">
+          <table class="table table-striped">
             <tbody>
               <tr
                 v-for="(value, propName) of product.props"
@@ -58,7 +58,7 @@
                 <th scope="row">{{ value }}</th>
               </tr>
             </tbody>
-          </table> -->
+          </table>
         </div>
         <div class="col-6 pe-5">
           <h3>Описание</h3>
@@ -98,9 +98,9 @@ import { ProductItem } from '~/store'
     ProductAvailabilityVue,
     ProductReviewsVue,
     ProductAskVue,
-    ProductInstructionsVue,
+    ProductInstructionsVue
   },
-  setup() {},
+  setup() {}
 })
 export default class ProductAboutVue extends Vue {
   currentTab = 'description'
@@ -114,7 +114,7 @@ export default class ProductAboutVue extends Vue {
 
   createDynamicClass(tab: string) {
     return {
-      'product-about__tab--selected': this.currentTab === tab,
+      'product-about__tab--selected': this.currentTab === tab
     }
   }
 
@@ -124,11 +124,11 @@ export default class ProductAboutVue extends Vue {
   }
 
   mounted() {
-    this.setTableStyles()
+    // this.setTableStyles()
   }
 
   updated() {
-    this.setTableStyles()
+    // this.setTableStyles()
   }
 }
 </script>

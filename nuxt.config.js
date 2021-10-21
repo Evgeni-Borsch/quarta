@@ -46,7 +46,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend(config) {
+    extend(config, { loaders }) {
       const svgRule = config.module.rules.find((rule) => rule.test.test('.svg'))
 
       svgRule.test = /\.(png|jpe?g|gif|webp)$/
@@ -56,6 +56,8 @@ export default {
         include: /node_modules/,
         type: 'javascript/auto',
       })
+
+      loaders.scss.additionalData = '@use "sass:math"; @use "sass:map";'
 
       config.module.rules.push({
         test: /\.svg$/,
