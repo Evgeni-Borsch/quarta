@@ -78,11 +78,6 @@ export default class Textarea extends mixins(TextInput, Sizable) {
   @Prop({ default: null }) bg!: string
   @Prop({ default: null }) mask!: string
   @Prop({ default: null }) info!: string
-
-  @Watch('innerValue')
-  onChange() {
-    console.log(this.innerValue)
-  }
 }
 </script>
 

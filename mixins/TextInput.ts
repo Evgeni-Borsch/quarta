@@ -13,13 +13,14 @@ export default class TextInput extends mixins(BaseInput) {
 
   @Watch('innerValue')
   @Emit('input')
+  @Emit('change')
   onValueChange() {
     return this.innerValue
   }
 
   @Watch('value')
   updateValue() {
-    this.innerValue = this.value
+    this.innerValue = this.value?.toString() ?? ''
   }
 
   created() {

@@ -47,7 +47,7 @@
 
       <button
         v-else
-        class="btn btn-primary"
+        class="btn btn-primary product-card__button"
         @click="() => addToCart(product.id)"
       >
         В корзину
@@ -77,6 +77,10 @@ export default class ProductCardVue extends mixins(ProductMixin) {
 
 <style lang="scss" scoped>
 .product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
   &__image {
     position: relative;
     padding: 120% 0 0;
@@ -144,6 +148,8 @@ export default class ProductCardVue extends mixins(ProductMixin) {
   &__add {
     display: flex;
     justify-content: stretch;
+    // margin-top: auto;
+    justify-self: flex-end;
 
     .btn {
       width: 100%;
@@ -167,6 +173,13 @@ export default class ProductCardVue extends mixins(ProductMixin) {
         width: auto;
         border-radius: $border-radius-sm !important;
       }
+    }
+  }
+
+  &::v-deep {
+    .price{
+      margin-top: auto;
+      justify-self: flex-end;
     }
   }
 }

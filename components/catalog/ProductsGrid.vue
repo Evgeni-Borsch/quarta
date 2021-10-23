@@ -65,6 +65,10 @@ export default class ProductsGridVue extends Vue {
     return filters.asString
   }
 
+  get priceRange() {
+    return filters.priceRange
+  }
+
   created() {
     this.fetchData()
   }
@@ -75,6 +79,7 @@ export default class ProductsGridVue extends Vue {
   @Watch('onlyAvailable')
   @Watch('category')
   @Watch('filtersAsString')
+  @Watch('priceRange')
   async fetchData() {
     if (!this.category) return
 
@@ -85,7 +90,8 @@ export default class ProductsGridVue extends Vue {
       sort: this.sort,
       count: this.itemsPerPage,
       available: this.onlyAvailable,
-      filters: this.filtersAsString
+      filters: this.filtersAsString,
+      priceRange: this.priceRange
     })
 
     this.itemsTotal = parseInt(categoryResponse.ELEMENT_COUNT)

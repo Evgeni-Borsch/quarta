@@ -9,6 +9,7 @@ import {
 } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
+import { Range } from '~/store/filters'
 
 export * from './model'
 
@@ -30,6 +31,7 @@ export async function getCategory(
     available?: boolean
     sort?: CatalogSortType
     filters?: string
+    priceRange?: Range
   }
 ): Promise<CatalogCategory> {
   const { $axios } = getStore()
@@ -39,11 +41,15 @@ export async function getCategory(
   const available = options?.available ?? false
   const sort = options?.sort ?? CatalogSort.popularity
   const filters = options?.filters ? encodeURIComponent(options.filters) : ''
+  const priceMin = options!.priceRange ? options!.priceRange[0] : null
+  const priceMax = options!.priceRange ? options!.priceRange[1] : null
 
   return await $axios.$get(
     `${API_BASE_URL}/api/catalog/?SECTION_ID=${id}&ELEMENT_COUNT=${count}&PAGEN_1=${page}&SORT=${sort}` +
       (available ? `&AVAILABLE=true` : '') +
-      (filters ? `&FILTERS=${filters}` : '')
+      (filters ? `&FILTERS=${filters}` : '') +
+      (priceMin ? `&PRICE_MIN=${priceMin}` : '') +
+      (priceMax ? `&PRICE_MAX=${priceMax}` : '')
   )
 }
 

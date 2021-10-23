@@ -85,6 +85,10 @@ export default class CategoryPathResolver extends Vue {
     return filters.activeFilters
   }
 
+  get priceRange() {
+    return filters.priceRange
+  }
+
   get breadcrumbs(): Array<Page> {
     const prepared = [
       {

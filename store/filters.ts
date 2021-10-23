@@ -8,7 +8,7 @@ export enum FilterType {
   range = 'range',
 }
 
-export type FilterInstance = Filter | CheckboxFilter | RangeFilter
+export type FilterInstance = Filter | CheckboxFilter | PriceFilter
 
 export interface FiltersOptions {
   name: string
@@ -18,7 +18,7 @@ export interface FiltersOptions {
 
 export interface FiltersSectionOptions {
   title: string
-  children: Array<Filter> | Array<FiltersSection>
+  children: Array<Filter | PriceFilter> | Array<FiltersSection>
 }
 
 export abstract class Filter {
@@ -41,21 +41,19 @@ export interface Range extends Array<number | null> {
   0: number | null
   1: number | null
 }
-export class RangeFilter extends Filter {
-  value: Range = [null, null]
-
-  setMin(value: number | null) {
-    this.value[0] = value
-  }
-
-  setMax(value: number | null) {
-    this.value[1] = value
+export class PriceFilter extends Filter {
+  constructor() {
+    super({
+      name: 'price',
+      title: 'Цена',
+      value: null,
+    })
   }
 }
 
 export class FiltersSection {
   title!: string
-  children!: Array<Filter> | Array<FiltersSection>
+  children!: Array<Filter | PriceFilter> | Array<FiltersSection>
 
   constructor(options: FiltersSectionOptions) {
     this.title = options.title
@@ -70,6 +68,7 @@ export class FiltersSection {
 })
 export default class FiltersModule extends VuexModule {
   activeFilters: Map<string, Array<string>> = new Map()
+  priceRange: Range = [null, null]
 
   get isChecked() {
     return (payload: { name: string; value: string }) => {
@@ -83,6 +82,11 @@ export default class FiltersModule extends VuexModule {
 
   get asString() {
     return JSON.stringify(Object.fromEntries(this.activeFilters))
+  }
+
+  @Mutation
+  setPriceRange(range: Range) {
+    this.priceRange = Array.from(range) as Range
   }
 
   @Mutation

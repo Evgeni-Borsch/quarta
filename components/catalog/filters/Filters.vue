@@ -1,31 +1,33 @@
 <template>
-  <div v-if="filters.length" class="filters">
+  <div class="filters">
     <section class="filters__header">
       <h6>Фильтры</h6>
       <div class="filters__clear" @click="clear">Сбросить</div>
     </section>
-    <FiltersSectionVue
-      v-for="(section, index) of filters"
-      :key="index"
-      :title="section.title"
-    >
-      <div v-for="(item, childIndex) of section.children" :key="childIndex">
-        <FiltersSectionVue
-          v-if="isItSection(item)"
-          :title="item.title"
-          :compact="true"
-        >
-          <div
-            v-for="(subSectionItem, subSectionChildIndex) of item.children"
-            :key="subSectionChildIndex"
+    <span v-if="filters.length">
+      <FiltersSectionVue
+        v-for="(section, index) of filters"
+        :key="index"
+        :title="section.title"
+      >
+        <div v-for="(item, childIndex) of section.children" :key="childIndex">
+          <FiltersSectionVue
+            v-if="isItSection(item)"
+            :title="item.title"
+            :compact="true"
           >
-            <FiltersItem :item="subSectionItem" />
-          </div>
-        </FiltersSectionVue>
+            <div
+              v-for="(subSectionItem, subSectionChildIndex) of item.children"
+              :key="subSectionChildIndex"
+            >
+              <FiltersItem :item="subSectionItem" />
+            </div>
+          </FiltersSectionVue>
 
-        <FiltersItem v-else :item="item" />
-      </div>
-    </FiltersSectionVue>
+          <FiltersItem v-else :item="item" />
+        </div>
+      </FiltersSectionVue>
+    </span>
   </div>
 </template>
 
@@ -34,7 +36,7 @@ import { Vue, Component, InjectReactive, Watch } from 'vue-property-decorator'
 import CheckboxVue from '../../inputs/Checkbox.vue'
 import FiltersSectionVue from './FiltersSection.vue'
 import FiltersItem from './FiltersItem.vue'
-import { CheckboxFilter, FiltersSection } from '~/store/filters'
+import { CheckboxFilter, FiltersSection, PriceFilter } from '~/store/filters'
 import { Category, filters } from '~/store'
 import { getFilters } from '~/services/api/catalog'
 
@@ -50,6 +52,8 @@ export default class FiltersVue extends Vue {
     return filters.activeFilters
   }
 
+  // ~~ Methods ~~
+
   isItSection(item: unknown) {
     return item instanceof FiltersSection
   }
@@ -58,26 +62,17 @@ export default class FiltersVue extends Vue {
     filters.clearActiveFilters()
   }
 
-  created() {
-    const filtersAsString = this.$route.query?.filters
-
-    if (typeof filtersAsString === 'string') {
-      const filtersParsed = JSON.parse(filtersAsString)
-      filters.restoreFilters(filtersParsed)
-    } else {
-      this.clear()
-    }
-
-    this.init()
-  }
-
+  /**
+   * Наполняет структуру фильтров при создании компонента или при обновлении категории
+   */
   @Watch('category')
-  init() {
+  populate() {
     if (!this.category) return
 
     return getFilters(this.category.id).then((filtersResponse) => {
       this.filters = []
 
+      // Производитель
       if (filtersResponse.P_MANIFACTURER) {
         this.filters.push(
           new FiltersSection({
@@ -93,6 +88,7 @@ export default class FiltersVue extends Vue {
         )
       }
 
+      // Бренд
       if (filtersResponse.P_BRAND) {
         this.filters.push(
           new FiltersSection({
@@ -108,6 +104,7 @@ export default class FiltersVue extends Vue {
         )
       }
 
+      // Свойства
       if (filtersResponse.P_PROPERTIES) {
         this.filters.push(
           new FiltersSection({
@@ -127,7 +124,30 @@ export default class FiltersVue extends Vue {
           })
         )
       }
+
+      // Цена
+      this.filters.push(
+        new FiltersSection({
+          title: 'Цена',
+          children: [new PriceFilter()]
+        })
+      )
     })
+  }
+
+  // ~~ Hooks ~~
+
+  created() {
+    const filtersAsString = this.$route.query?.filters
+
+    if (typeof filtersAsString === 'string') {
+      const filtersParsed = JSON.parse(filtersAsString)
+      filters.restoreFilters(filtersParsed)
+    } else {
+      this.clear()
+    }
+
+    this.populate()
   }
 }
 </script>
