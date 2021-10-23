@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 import { useBreakpoints, breakpointsBootstrapV5 } from '@vueuse/core'
 import { PortalTarget } from 'portal-vue'
 
@@ -32,7 +32,7 @@ export default defineComponent({
   },
   setup() {
     const breakpoints = useBreakpoints(breakpointsBootstrapV5)
-    const isDesktop = breakpoints.greater('xl')
+    const isDesktop = process.server ? ref(true) : breakpoints.greater('xl')
 
     return {
       isDesktop

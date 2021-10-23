@@ -27,12 +27,13 @@
 <script lang="ts">
 import { Vue, Component, Prop, Ref } from 'vue-property-decorator'
 import { useBreakpoints, breakpointsBootstrapV5 } from '@vueuse/core'
+import { ref } from 'vue-demi'
 import { Category } from '~/store'
 
 @Component({
   setup() {
     const breakpoints = useBreakpoints(breakpointsBootstrapV5)
-    const isDesktop = breakpoints.greater('lg')
+    const isDesktop = process.server ? ref(true) : breakpoints.greater('lg')
 
     return {
       isDesktop
