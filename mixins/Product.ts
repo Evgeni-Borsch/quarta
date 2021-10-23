@@ -13,6 +13,10 @@ export default class ProductMixin extends Vue {
     return cart.getItem(this.product.id)?.count ?? 1
   }
 
+  get mainPhoto() {
+    return this.product.images[0]?.small
+  }
+
   addToCart() {
     cart.addItem(this.product.id)
   }

@@ -32,17 +32,7 @@
           </div>
 
           <div class="product__add">
-            <span v-if="isInCart" class="product__add-count">
-              <span class="product__add-minus" @click="decreaseCount">-</span>
-              <span class="product__add-plus" @click="increaseCount">+</span>
-
-              <input
-                :value="count"
-                type="number"
-                class="form-control"
-                @input="onCountInput"
-              />
-            </span>
+            <ProductCountVue v-if="isInCart" :product="product" />
 
             <button v-else class="btn btn-primary" @click="addToCart">
               В корзину
@@ -88,6 +78,7 @@ import { mixins } from 'vue-class-component'
 
 import ProductAboutVue from './ProductAbout.vue'
 
+import ProductCountVue from './ProductCount.vue'
 import HeartIcon from '@/assets/icons/heart.svg?icon'
 import CompareIcon from '@/assets/icons/compare.svg?icon'
 
@@ -113,7 +104,8 @@ import { ProductItem } from '~/store'
     DeliveryIcon,
     LoactionIcon,
     HeartIcon,
-    CompareIcon
+    CompareIcon,
+    ProductCountVue
   }
 })
 export default class ProductVue extends mixins(ProductMixin) {
@@ -191,46 +183,6 @@ export default class ProductVue extends mixins(ProductMixin) {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-
-    &-count {
-      position: relative;
-      display: inline-block;
-      width: 6.25rem;
-      margin-right: 0.375rem;
-
-      .form-control {
-        font-size: 1rem;
-        line-height: 130%;
-        color: $black;
-        text-align: center;
-        background-color: $gray-200;
-        border-color: $gray-200;
-      }
-    }
-
-    &-minus {
-      left: 0;
-    }
-    &-plus {
-      right: 0;
-    }
-
-    &-minus,
-    &-plus {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 2rem;
-      color: $black;
-      cursor: pointer;
-
-      &:active {
-        transform: scale(0.8);
-      }
-    }
   }
 
   &__availability {

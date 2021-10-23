@@ -88,7 +88,13 @@ export class ProductItem extends BaseStoredEntity {
 
     // response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
 
-    this.images = []
+    this.images = [
+      {
+        default: '/product-01-01.jpg',
+        small: '/product-01-01.jpg',
+        large: '/product-01-01.jpg',
+      },
+    ]
     //  response.PROPERTIES.IMAGES.SRC.map((src) => ({
     //   default: API_BASE_URL + src,
     //   small: '',
