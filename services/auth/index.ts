@@ -21,7 +21,7 @@ export async function getAuthByPassword(
   )
 }
 
-export async function getRegistration(options: any): Promise<any> {
+export async function getRegistration(options: any): Promise<LoginResponse> {
   const { $axios } = getStore()
 
   return await $axios.$post(`${API_BASE_URL}/api/registration`, options)

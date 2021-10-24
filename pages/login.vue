@@ -1,8 +1,12 @@
 <template>
   <AuthBaseVue title="Вход">
-    <div v-if="errorFromServer" class="alert alert-danger" role="alert">
-      {{ errorFromServer }}
-    </div>
+    <div
+      v-if="errorFromServer"
+      class="alert alert-danger"
+      role="alert"
+      v-html="errorFromServer"
+    ></div>
+
     <div class="row">
       <div v-if="AuthType.phone === type" class="col-5">
         <InputVue
@@ -22,33 +26,32 @@
       </div>
 
       <div v-else class="col-5">
-        <InputVue
-          v-model="email"
-          class="mb-4"
-          size="large"
-          label="Email"
-          type="email"
-          :error="$v.email.$error ? FormErrors.email : false"
-          @blur="$v.email.$touch()"
-          @focus="$v.email.$reset()"
-        />
-        <InputVue
-          v-model="password"
-          class="mb-4"
-          size="large"
-          label="Пароль"
-          type="password"
-          :error="$v.password.$error ? FormErrors.required : false"
-          @blur="$v.password.$touch()"
-          @focus="$v.password.$reset()"
-        />
+        <form @submit.prevent="submitWithPassword">
+          <InputVue
+            v-model="email"
+            class="mb-4"
+            size="large"
+            label="Email"
+            type="email"
+            :error="$v.email.$error ? FormErrors.email : false"
+            @blur="$v.email.$touch()"
+            @focus="$v.email.$reset()"
+          />
+          <InputVue
+            v-model="password"
+            class="mb-4"
+            size="large"
+            label="Пароль"
+            type="password"
+            :error="$v.password.$error ? FormErrors.required : false"
+            @blur="$v.password.$touch()"
+            @focus="$v.password.$reset()"
+          />
 
-        <button
-          class="btn btn-primary btn-lg w-100 mb-3"
-          @click="submitWithPassword"
-        >
-          Войти
-        </button>
+          <button class="btn btn-primary btn-lg w-100 mb-3" type="submit">
+            Войти
+          </button>
+        </form>
 
         <a href="/registration">Зарегистрироваться</a>
       </div>

@@ -94,9 +94,12 @@
           </button>
         </form>
 
-        <div v-if="errorFromServer" class="alert alert-danger" role="alert">
-          {{ errorFromServer }}
-        </div>
+        <div
+          v-if="errorFromServer"
+          class="alert alert-danger"
+          role="alert"
+          v-html="errorFromServer"
+        ></div>
 
         <small>
           Нажимая кнопку «Зарегистрироваться», я даю свое согласие на обработку
@@ -332,7 +335,7 @@ export default class RegistrationPage extends mixins(validationMixin) {
     if (this.checkErrorsRetail()) return null
 
     try {
-      await getRegistration({
+      const response = await getRegistration({
         type: ClientType.retail,
         phone: this.phone,
         email: this.email,
@@ -341,7 +344,12 @@ export default class RegistrationPage extends mixins(validationMixin) {
         password: this.password,
         promo: this.promo
       })
-      this.$router.push({ path: '/login' })
+
+      if (response.error) {
+        this.errorFromServer = response.message
+      } else {
+        this.$router.push({ path: '/login', hash: 'byBassword' })
+      }
     } catch (error) {
       this.errorFromServer = error!.message as string
     }
@@ -351,7 +359,7 @@ export default class RegistrationPage extends mixins(validationMixin) {
     if (this.checkErrorsWholesale()) return null
 
     try {
-      await getRegistration({
+      const response = await getRegistration({
         type: ClientType.wholesale,
 
         company: this.company,
@@ -364,7 +372,12 @@ export default class RegistrationPage extends mixins(validationMixin) {
         password: this.password,
         promo: this.promo
       })
-      this.$router.push({ path: '/login' })
+
+      if (response.error) {
+        this.errorFromServer = response.message
+      } else {
+        this.$router.push({ path: '/login', hash: 'byBassword' })
+      }
     } catch (error) {
       this.errorFromServer = error!.message as string
     }
