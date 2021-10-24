@@ -1,3 +1,4 @@
+import qs from 'qs'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
 
@@ -7,14 +8,23 @@ export async function getAuthByPassword(
 ): Promise<any> {
   const { $axios } = getStore()
 
-  return await $axios.$post(`${API_BASE_URL}/api/login/index.php`, {
-    email,
-    password,
-  })
+  return await $axios.$post(
+    `${API_BASE_URL}/api/login/index.php`,
+    qs.stringify({
+      email,
+      password,
+    }),
+    {
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }
+  )
 }
 
 export async function getRegistration(options: any): Promise<any> {
   const { $axios } = getStore()
 
-  return await $axios.$post(`${API_BASE_URL}/api/registration/index.php`, options)
+  return await $axios.$post(
+    `${API_BASE_URL}/api/registration/index.php`,
+    options
+  )
 }

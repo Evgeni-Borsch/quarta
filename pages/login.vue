@@ -113,7 +113,7 @@ export default class LoginPage extends mixins(validationMixin) {
       await getAuthByPassword(this.email, this.password)
       this.email = ''
       this.password = ''
-      this.$router.push({ path: '/' })
+      // this.$router.push({ path: '/' })
     } catch (error) {
       this.errorFromServer = error!.message as string
     }

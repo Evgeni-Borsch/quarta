@@ -31,6 +31,7 @@
     "nuxt": "^2.15.7",
     "nuxt-property-decorator": "^2.9.1",
     "portal-vue": "^2.1.7",
+    "qs": "^6.10.1",
     "swiper": "^6.8.4",
     "vue-awesome-swiper": "^4.1.1",
     "vue-cumulative-circle": "^1.0.1",
