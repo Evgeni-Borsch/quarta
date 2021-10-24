@@ -1,6 +1,7 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { addToCart, getCart } from '~/services/api/product'
-import { cart } from '~/utils/store-accessor'
+import { cart, products } from '~/utils/store-accessor'
+import { ProductItem } from '.'
 
 export interface CartItem {
   id: string
@@ -31,6 +32,22 @@ export default class CartModule extends VuexModule {
     }
 
     return total
+  }
+
+  get toArray() {
+    return () => Array.from(this.items, ([_, item]) => item)
+  }
+
+  get productsListAsync() {
+    return async () => {
+      const list: Array<ProductItem> = []
+
+      for (const item of cart.toArray()) {
+        list.push(await products.getById(item.id))
+      }
+
+      return list
+    }
   }
 
   @Action

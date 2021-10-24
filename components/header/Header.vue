@@ -60,7 +60,7 @@
         </div>
 
         <div class="header__user col">
-          <a href="#"><PersonIcon class="mx-1" />Личный кабинет</a>
+          <router-link to="/login"><PersonIcon class="mx-1" />Личный кабинет</router-link>
         </div>
       </div>
 
@@ -85,7 +85,6 @@
           <button class="btn btn-link px-2 mx-2">
             <div class="position-relative px-1">
               <HeartIcon />
-              <BageVue>3</BageVue>
             </div>
           </button>
 

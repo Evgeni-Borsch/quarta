@@ -5,7 +5,7 @@
         <div class="col-8">
           <header class="cart__header">
             <h2>Корзина</h2>
-            <small> (3 товара) </small>
+            <small> ({{ countTotal }} товара) </small>
 
             <button class="btn bg-white cart__clear">Очистить корзину</button>
           </header>
@@ -20,16 +20,18 @@
         <div class="col-8">
           <hr class="mt-0 mb-4" />
 
-          <ProductCardHorisontalVue :product="product" />
-          <ProductCardHorisontalVue :product="product" />
-          <ProductCardHorisontalVue :product="product" />
-
+          <ProductCardHorisontalVue
+            v-for="product of products"
+            :key="product.id"
+            :product="product"
+          />
         </div>
 
         <div class="col-4">
           <CabinetSectionVue class="cart__summary">
             <div class="cart__total">
-              Товары на сумму (3 шт.) <span> 30 340 ₽ </span>
+              Товары на сумму ({{ countTotal }} шт.)
+              <span> {{ numberWithSpaces(priceTotal) }} ₽ </span>
             </div>
             <div class="cart__total-bonus">
               Баллы за покупку <span> +8 663 б. </span>
@@ -70,7 +72,8 @@ import DeliveryIcon from '~/assets/icons/delivery.svg?icon'
 import CopyIcon from '~/assets/icons/copy.svg?icon'
 import CoinStackIcon from '~/assets/icons/coin-stack.svg?icon'
 import ProductCardHorisontalVue from '~/components/product/ProductCardHorisontal.vue'
-import { ProductItem, products } from '~/store'
+import { cart, ProductItem } from '~/store'
+import numberWithSpaces from '~/utils/numberWithSpaces'
 
 @Component({
   components: {
@@ -84,13 +87,31 @@ import { ProductItem, products } from '~/store'
     CoinStackIcon,
     ProductCardHorisontalVue
   },
-  setup() {}
+  setup() {},
+  fetchOnServer: false
 })
 export default class CartPage extends Vue {
-  product: ProductItem | null = null
+  products: Array<ProductItem> = []
+
+  get priceTotal() {
+    let price = 0
+
+    this.products.forEach((product) => {
+      price = price + product.price
+    })
+
+    return price
+  }
+
+  get countTotal() {
+    return cart.countTotal
+  }
+
+  numberWithSpaces = numberWithSpaces
 
   async fetch() {
-    this.product = await products.getById('4691')
+    await cart.pullState()
+    this.products = await cart.productsListAsync()
   }
 }
 </script>
