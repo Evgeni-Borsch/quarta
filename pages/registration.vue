@@ -29,6 +29,7 @@
             mask="+7 (###) ###-##-##"
             placeholder="+7 (___) ___-__-__"
             :error="$v.phone.$error ? FormErrors.phone : false"
+            :required="true"
             @blur="$v.phone.$touch()"
             @focus="$v.phone.$reset()"
           />
@@ -164,7 +165,7 @@
           />
 
           <InputVue
-            v-model="contactPhone"
+            v-model="phone"
             class="mb-4"
             size="large"
             label="Телефон для связи"
@@ -172,9 +173,9 @@
             mask="+7 (###) ###-##-##"
             placeholder="+7 (___) ___-__-__"
             :required="true"
-            :error="$v.contactPhone.$error ? FormErrors.phone : false"
-            @blur="$v.contactPhone.$touch()"
-            @focus="$v.contactPhone.$reset()"
+            :error="$v.phone.$error ? FormErrors.phone : false"
+            @blur="$v.phone.$touch()"
+            @focus="$v.phone.$reset()"
           />
 
           <InputVue
@@ -255,6 +256,7 @@ import { getRegistration } from '~/services/auth'
       required
     },
     phone: {
+      required,
       minLength: minLength(10)
     },
     password: {
@@ -277,10 +279,6 @@ import { getRegistration } from '~/services/auth'
     },
     position: {
       required
-    },
-    contactPhone: {
-      required,
-      minLength: minLength(10)
     }
   }
 })
@@ -304,7 +302,6 @@ export default class RegistrationPage extends mixins(validationMixin) {
   marketplace = ''
   contactPerson = ''
   position = ''
-  contactPhone = ''
   site = ''
 
   checkErrorsRetail() {
@@ -325,7 +322,7 @@ export default class RegistrationPage extends mixins(validationMixin) {
       this.$v.marketplace.$error ||
       this.$v.contactPerson.$error ||
       this.$v.position.$error ||
-      this.$v.contactPhone.$error ||
+      this.$v.phone.$error ||
       this.$v.email.$error ||
       this.$v.password.$error
     )
@@ -360,7 +357,7 @@ export default class RegistrationPage extends mixins(validationMixin) {
         company: this.company,
         marketplace: this.marketplace,
         contactPerson: this.contactPerson,
-        contactPhone: this.contactPhone,
+        contactPhone: this.phone,
         email: this.email,
         site: this.site,
 

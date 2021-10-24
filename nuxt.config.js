@@ -1,6 +1,16 @@
 import path from 'path'
 
 export default {
+  // proxy: {
+  //   '/api': {
+  //     target: 'https://bitrix.serenity-dev.tech',
+  //     // '^/api': '/api',
+  //     changeOrigin: true,
+  //     router: (req) => {
+  //       return 'https://bitrix.serenity-dev.tech';
+  //     }
+  //   },
+  // },
   // babelrc: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -38,6 +48,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    // '@nuxtjs/proxy',
     'portal-vue/nuxt',
   ],
 

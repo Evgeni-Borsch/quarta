@@ -1,4 +1,9 @@
-import { ProductAvailabilityResponse, ProductResponse } from './model'
+import {
+  AddToCartResponse,
+  GetCartResponseItem,
+  ProductAvailabilityResponse,
+  ProductResponse,
+} from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
 
@@ -12,5 +17,25 @@ export async function getProductAvailability(
   id: string
 ): Promise<ProductAvailabilityResponse> {
   const { $axios } = getStore()
-  return await $axios.$get(`${API_BASE_URL}/api/catalog/storeamount.php?ID=${id}`)
+  return await $axios.$get(
+    `${API_BASE_URL}/api/catalog/storeamount.php?ID=${id}`
+  )
+}
+
+export async function getCart(): Promise<Array<GetCartResponseItem>> {
+  const { $axios } = getStore()
+  return await $axios.$get(`${API_BASE_URL}/api/personal/cart`, {
+    withCredentials: true,
+  })
+}
+
+export async function addToCart(
+  id: string,
+  count = 1
+): Promise<AddToCartResponse> {
+  const { $axios } = getStore()
+  return await $axios.$get(
+    `${API_BASE_URL}/api/personal/cart/addtocart.php?PRODUCT_ID=${id}&QUANTITY=${count}`,
+    { withCredentials: true }
+  )
 }

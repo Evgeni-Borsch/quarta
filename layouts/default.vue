@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { Component, Vue } from 'vue-property-decorator'
+import { ref } from '@nuxtjs/composition-api'
 import { useBreakpoints, breakpointsBootstrapV5 } from '@vueuse/core'
 import { PortalTarget } from 'portal-vue'
 
@@ -22,8 +23,9 @@ import HeaderMobileVue from '~/components/header/HeaderMobile.vue'
 import FooterVue from '~/components/footer/Footer.vue'
 
 import '~/assets/styles/global.scss'
+import { cart } from '~/store'
 
-export default defineComponent({
+@Component({
   components: {
     HeaderVue,
     HeaderMobileVue,
@@ -37,8 +39,14 @@ export default defineComponent({
     return {
       isDesktop
     }
-  }
+  },
+  fetchOnServer: false
 })
+export default class DefaultLayout extends Vue {
+  async fetch() {
+    await cart.pullState()
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

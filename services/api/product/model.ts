@@ -71,3 +71,14 @@ export interface ProductAvailabilityResponse {
     SCHEDULE: string
   }>
 }
+
+export interface AddToCartResponse {
+  error: boolean
+  message: string
+  id: number
+}
+
+export interface GetCartResponseItem {
+  PRODUCT_ID: string
+  QUANTITY: number
+}

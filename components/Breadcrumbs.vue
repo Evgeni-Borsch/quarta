@@ -10,9 +10,9 @@
           <span v-if="isLast(index)">
             {{ page.title }}
           </span>
-          <a v-else :href="page.path">
+          <router-link v-else :to="page.path">
             {{ page.title }}
-          </a>
+          </router-link>
         </li>
       </ul>
     </div>

@@ -59,15 +59,13 @@ export class ProductItem extends BaseStoredEntity {
     this.title = response.NAME
     this.description = '' // response.PROPERTIES.DESCRIPTION['~VALUE'].TEXT
     this.configuration = '' // response.PROPERTIES.EQUIPMENT['~VALUE'].TEXT
-    this.breadcrumbs = []
-
-    // response.SECTION.PATH.map((item) => {
-    //   return {
-    //     title: item.NAME,
-    //     slug: item.CODE,
-    //     path: '/catalog/' + item.CODE,
-    //   }
-    // })
+    this.breadcrumbs = response?.SECTION?.PATH?.map((item) => {
+      return {
+        title: item.NAME,
+        slug: item.CODE,
+        path: '/catalog/' + item.CODE,
+      }
+    })
 
     this.price = response.ITEM_PRICES[0].PRICE // PRICE.DISCOUNT_VALUE || PRICE.VALUE
     this.priceOld = 0 // PRICE.VALUE
@@ -83,9 +81,6 @@ export class ProductItem extends BaseStoredEntity {
       const item = response.PROPERTIES[key]
       this.props[item.NAME] = item['~VALUE']
     })
-
-    console.log(this.props)
-
     // response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
 
     this.images = [

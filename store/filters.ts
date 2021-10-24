@@ -145,6 +145,7 @@ export default class FiltersModule extends VuexModule {
   @Action
   clearActiveFilters() {
     this.setActiveFilters(new Map())
+    this.setPriceRange([null, null])
   }
 
   // @Action

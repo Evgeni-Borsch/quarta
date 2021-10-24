@@ -3,6 +3,8 @@
     <BreadcrumbsVue :path="breadcrumbs" />
     <ProductVue :product="product" />
     <ReviewsSliderVue class="bg-white" />
+
+    <PromoCardWideVue />
     <SubscribeVue />
   </div>
 </template>
@@ -20,6 +22,7 @@ import ProductVue from '~/components/product/Product.vue'
 import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import ReviewsSliderVue from '~/components/ReviewsSlider.vue'
 import { ProductItem, products } from '~/store'
+import PromoCardWideVue from '~/components/promo/PromoCardWide.vue'
 
 export default Vue.extend({
   components: {
@@ -27,6 +30,7 @@ export default Vue.extend({
     SubscribeVue,
     BreadcrumbsVue,
     ReviewsSliderVue,
+    PromoCardWideVue
   },
   middleware: 'product',
   setup() {
@@ -38,24 +42,26 @@ export default Vue.extend({
       const [id] = get(route).params.pathMatch.split('/')
 
       await products.getById(id).then((p) => {
+        console.log(p)
+
         product.value = p
         breadcrumbs.value = [
           {
             title: 'Главная',
             slug: 'index',
-            path: '/',
+            path: '/'
           },
           ...p.breadcrumbs,
           {
             title: p.title,
             slug: p.slug,
-            path: `/product/${id}/${p.slug}`,
-          },
+            path: `/product/${id}/${p.slug}`
+          }
         ]
       })
     })
 
     return { product, breadcrumbs, fetch }
-  },
+  }
 })
 </script>

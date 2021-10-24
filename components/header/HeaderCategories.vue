@@ -3,8 +3,8 @@
     <router-link
       class="header-categories__item"
       to="/catalog"
-      @mouseenter="(e) => onMouseOver(e, '0')"
-      @mouseleave="(e) => onMouseOut(e, '0')"
+      @mouseenter.native="(e) => onMouseOver(e, '0')"
+      @mouseleave.native="(e) => onMouseOut(e, '0')"
     >
       <div class="header-categories__icon">
         <CatalogIcon />
@@ -16,8 +16,8 @@
       :key="category.id"
       class="header-categories__item"
       :to="`/catalog/${category.slug}`"
-      @mouseenter="(e) => onMouseOver(e, category.id)"
-      @mouseleave="(e) => onMouseOut(e, category.id)"
+      @mouseenter.native="(e) => onMouseOver(e, category.id)"
+      @mouseleave.native="(e) => onMouseOut(e, category.id)"
     >
       {{ category.name }}
     </router-link>

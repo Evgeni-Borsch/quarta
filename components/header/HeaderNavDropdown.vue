@@ -11,12 +11,13 @@
     >
       <ul>
         <li v-for="child of category.categories" :key="child.slug">
-          <a
-            :href="`/catalog/${child.slug}`"
-            @mouseenter="() => onMouseOverChild(child)"
-            @mouseleave="() => onMouseOutChild(child)"
-            >{{ child.name }}</a
+          <router-link
+            :to="`/catalog/${child.slug}`"
+            @mouseenter.native="() => onMouseOverChild(child)"
+            @mouseleave.native="() => onMouseOutChild(child)"
           >
+            {{ child.name }}
+          </router-link>
         </li>
       </ul>
     </div>
@@ -117,6 +118,8 @@ export default class HeaderNavDropdown extends Vue {
         align-items: center;
         padding: 1rem 1.875rem;
         cursor: pointer;
+        text-decoration: none;
+        color: $gray-800;
 
         &:hover,
         &:focus {

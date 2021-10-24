@@ -1,4 +1,5 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
+import { addToCart, getCart } from '~/services/api/product'
 import { cart } from '~/utils/store-accessor'
 
 export interface CartItem {
@@ -32,14 +33,31 @@ export default class CartModule extends VuexModule {
     return total
   }
 
-  @Mutation
-  setCount(payload: { id: string; count: number }) {
-    const { id, count } = payload
-    if (count <= 0) return cart.removeItem(id)
+  @Action
+  async addItem(id: string) {
+    await addToCart(id)
+    await this.pullState()
+  }
 
-    const items = new Map(this.items)
-    items.set(id, { id, count })
-    this.items = items
+  @Action
+  async removeItem(id: string) {
+    // await addToCart(id)
+    await this.pullState()
+  }
+
+  @Action
+  async pullState() {
+    const cart = await getCart()
+    const items = new Map<string, CartItem>()
+
+    cart.forEach((item) => {
+      items.set(item.PRODUCT_ID, {
+        id: item.PRODUCT_ID,
+        count: item.QUANTITY,
+      })
+    })
+
+    this.setItems(items)
   }
 
   @Mutation
@@ -47,17 +65,12 @@ export default class CartModule extends VuexModule {
     this.items = items
   }
 
-  @Action
-  addItem(id: string) {
-    const items = new Map(this.items)
-    items.set(id, { id, count: 1 })
-    cart.setItems(items)
-  }
-
-  @Action
-  removeItem(id: string) {
-    const items = new Map(this.items)
-    items.delete(id)
-    cart.setItems(items)
+  @Mutation
+  setCount(payload: { id: string; count: number }) {
+    // const { id, count } = payload
+    // if (count <= 0) return cart.removeItem(id)
+    // const items = new Map(this.items)
+    // items.set(id, { id, count })
+    // this.items = items
   }
 }
