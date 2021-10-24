@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <div v-if="product" class="row">
+      <div v-if="products.length" class="row">
         <div class="col-8">
           <hr class="mt-0 mb-4" />
 
