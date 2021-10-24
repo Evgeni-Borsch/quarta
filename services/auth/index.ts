@@ -1,11 +1,12 @@
 import qs from 'qs'
+import { LoginResponse } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
 
 export async function getAuthByPassword(
   email: string,
   password: string
-): Promise<any> {
+): Promise<LoginResponse> {
   const { $axios } = getStore()
 
   return await $axios.$post(
@@ -23,8 +24,5 @@ export async function getAuthByPassword(
 export async function getRegistration(options: any): Promise<any> {
   const { $axios } = getStore()
 
-  return await $axios.$post(
-    `${API_BASE_URL}/api/registration`,
-    options
-  )
+  return await $axios.$post(`${API_BASE_URL}/api/registration`, options)
 }

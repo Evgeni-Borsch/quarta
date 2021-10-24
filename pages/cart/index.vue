@@ -1,6 +1,10 @@
 <template>
   <div class="cart">
-    <div class="container">
+    <div v-if="!isFetch" class="container">
+      <LoadingVue />
+    </div>
+
+    <div v-else-if="products.length" class="container">
       <div class="row">
         <div class="col-8">
           <header class="cart__header">
@@ -16,7 +20,7 @@
         </div>
       </div>
 
-      <div v-if="products.length" class="row">
+      <div class="row">
         <div class="col-8">
           <hr class="mt-0 mb-4" />
 
@@ -34,7 +38,8 @@
               <span> {{ numberWithSpaces(priceTotal) }} ₽ </span>
             </div>
             <div class="cart__total-bonus">
-              Баллы за покупку <span> +8 663 б. </span>
+              Баллы за покупку
+              <span> +{{ numberWithSpaces(bonusTotal) }} б. </span>
             </div>
             <hr />
             <p>
@@ -56,11 +61,21 @@
         </div>
       </div>
     </div>
+
+    <div v-else class="container">
+      <div class="cart__empty">
+        <h2>Ваша корзина пуста</h2>
+        <p>Воспользуйтесь поиском, чтобы найти всё, что нужно.</p>
+        <router-link class="btn btn-lg btn-primary" to="/catalog"
+          >Продолжить покупки</router-link
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import AuthBaseVue from '~/components/auth/AuthBase.vue'
 import CabinetSectionVue from '~/components/cabinet/CabinetSection.vue'
@@ -74,6 +89,7 @@ import CoinStackIcon from '~/assets/icons/coin-stack.svg?icon'
 import ProductCardHorisontalVue from '~/components/product/ProductCardHorisontal.vue'
 import { cart, ProductItem } from '~/store'
 import numberWithSpaces from '~/utils/numberWithSpaces'
+import LoadingVue from '~/components/Loading.vue'
 
 @Component({
   components: {
@@ -85,22 +101,31 @@ import numberWithSpaces from '~/utils/numberWithSpaces'
     DeliveryIcon,
     CopyIcon,
     CoinStackIcon,
-    ProductCardHorisontalVue
+    ProductCardHorisontalVue,
+    LoadingVue
   },
   setup() {},
   fetchOnServer: false
 })
 export default class CartPage extends Vue {
+  isFetch = false
   products: Array<ProductItem> = []
+  priceTotal = 0
+  bonusTotal = 0
 
-  get priceTotal() {
+  @Watch('products')
+  calcPriceTotal() {
     let price = 0
+    let bonus = 0
 
     this.products.forEach((product) => {
-      price = price + product.price
+      const count = cart.items.get(product.id)?.count ?? 1
+      price = price + product.price * count
+      bonus = bonus + product.bonus * count
     })
 
-    return price
+    this.priceTotal = price
+    this.bonusTotal = bonus
   }
 
   get countTotal() {
@@ -112,6 +137,7 @@ export default class CartPage extends Vue {
   async fetch() {
     await cart.pullState()
     this.products = await cart.productsListAsync()
+    this.isFetch = true
   }
 }
 </script>
@@ -180,6 +206,11 @@ export default class CartPage extends Vue {
     &-text {
       font-size: 1rem;
     }
+  }
+
+  &__empty {
+    min-height: 12rem;
+    text-align: center;
   }
 }
 </style>

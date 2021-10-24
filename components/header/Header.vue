@@ -60,7 +60,9 @@
         </div>
 
         <div class="header__user col">
-          <router-link to="/login"><PersonIcon class="mx-1" />Личный кабинет</router-link>
+          <router-link to="/login"
+            ><PersonIcon class="mx-1" />Личный кабинет</router-link
+          >
         </div>
       </div>
 
@@ -89,10 +91,10 @@
           </button>
 
           <button class="btn btn-link px-2 mx-2">
-            <div class="position-relative px-1">
+            <router-link class="position-relative px-1 text-primary" to="/cart">
               <CartIcon />
               <BageVue v-if="cartCount">{{ cartCount }}</BageVue>
-            </div>
+            </router-link>
           </button>
         </div>
       </div>
