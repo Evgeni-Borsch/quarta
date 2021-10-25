@@ -60,7 +60,7 @@
         </div>
 
         <div class="header__user col">
-          <router-link to="/login"
+          <router-link :to="hasAuth ? '/cabinet' : '/login'"
             ><PersonIcon class="mx-1" />Личный кабинет</router-link
           >
         </div>
@@ -129,7 +129,7 @@ import LocationIcon from '@/assets/icons/location.svg?icon'
 import PersonIcon from '@/assets/icons/person.svg?icon'
 import ArrowSmallIcon from '@/assets/icons/arrow-small.svg?icon'
 
-import { cart, location } from '~/store'
+import { cart, location, user } from '~/store'
 
 @Component({
   name: 'Header',
@@ -178,6 +178,10 @@ import { cart, location } from '~/store'
 })
 export default class HeaderVue extends Vue {
   showSelectLoacation = false
+
+  get hasAuth() {
+    return user.hasAuth
+  }
 
   get cartCount() {
     return cart.countTotal

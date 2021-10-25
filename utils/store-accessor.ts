@@ -7,12 +7,14 @@ import ProductsModule from '~/store/products'
 import FiltersModule from '~/store/filters'
 import CartModule from '~/store/cart'
 import LocationModule from '~/store/location'
+import UserModule from '~/store/user'
 
 let categories!: CategoriesModule
 let products!: ProductsModule
 let filters!: FiltersModule
 let cart!: CartModule
 let location!: LocationModule
+let user!: UserModule
 let _store!: Store<any>
 
 function initialiseStores(store: Store<any>) {
@@ -22,6 +24,7 @@ function initialiseStores(store: Store<any>) {
   filters = getModule(FiltersModule, store)
   cart = getModule(CartModule, store)
   location = getModule(LocationModule, store)
+  user = getModule(UserModule, store)
 }
 
 function getStore() {
@@ -36,4 +39,5 @@ export {
   filters,
   cart,
   location,
+  user,
 }

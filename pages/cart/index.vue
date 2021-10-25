@@ -53,8 +53,9 @@
             <div class="cart__bonus-icon">
               <CoinStackIcon />
             </div>
-            <div class="cart__bonus-text">
-              <b>Доступно 2 800 бонусных баллов.</b> <br />
+            <div v-if="hasAuth && bonus" class="cart__bonus-text">
+              <b>Доступно {{ numberWithSpaces(bonus) }} бонусных баллов.</b>
+              <br />
               Оплачивайте ими до 50% от стоимости покупки
             </div>
           </CabinetSectionVue>
@@ -87,7 +88,7 @@ import DeliveryIcon from '~/assets/icons/delivery.svg?icon'
 import CopyIcon from '~/assets/icons/copy.svg?icon'
 import CoinStackIcon from '~/assets/icons/coin-stack.svg?icon'
 import ProductCardHorisontalVue from '~/components/product/ProductCardHorisontal.vue'
-import { cart, ProductItem } from '~/store'
+import { cart, ProductItem, user } from '~/store'
 import numberWithSpaces from '~/utils/numberWithSpaces'
 import LoadingVue from '~/components/Loading.vue'
 
@@ -113,6 +114,26 @@ export default class CartPage extends Vue {
   priceTotal = 0
   bonusTotal = 0
 
+  numberWithSpaces = numberWithSpaces
+
+  get hasAuth() {
+    return user.hasAuth
+  }
+
+  get bonus() {
+    return user.bonus
+  }
+
+  get countTotal() {
+    return cart.countTotal
+  }
+
+  async fetch() {
+    await cart.pullState()
+    this.products = await cart.productsListAsync()
+    this.isFetch = true
+  }
+
   @Watch('products')
   calcPriceTotal() {
     let price = 0
@@ -126,18 +147,6 @@ export default class CartPage extends Vue {
 
     this.priceTotal = price
     this.bonusTotal = bonus
-  }
-
-  get countTotal() {
-    return cart.countTotal
-  }
-
-  numberWithSpaces = numberWithSpaces
-
-  async fetch() {
-    await cart.pullState()
-    this.products = await cart.productsListAsync()
-    this.isFetch = true
   }
 }
 </script>

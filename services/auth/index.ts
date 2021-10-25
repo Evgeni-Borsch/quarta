@@ -1,5 +1,5 @@
 import qs from 'qs'
-import { LoginResponse } from './model'
+import { AuthResponse, LoginResponse } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
 
@@ -25,4 +25,10 @@ export async function getRegistration(options: any): Promise<LoginResponse> {
   const { $axios } = getStore()
 
   return await $axios.$post(`${API_BASE_URL}/api/registration`, options)
+}
+
+export async function checkAuth(): Promise<AuthResponse | null> {
+  const { $axios } = getStore()
+
+  return await $axios.$post(`${API_BASE_URL}/api/personal/userinfo.php`)
 }

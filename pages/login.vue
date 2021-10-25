@@ -96,7 +96,7 @@ import { getAuthByPassword } from '~/services/auth'
   }
 })
 export default class LoginPage extends mixins(validationMixin) {
-  type = AuthType.phone
+  type = AuthType.email
   FormErrors = FormErrors
 
   password = ''

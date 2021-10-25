@@ -1,6 +1,10 @@
 <template>
   <div class="cabinet">
-    <div class="container">
+    <div v-if="!hasAuth" class="container">
+      <LoadingVue />
+    </div>
+
+    <div v-else class="container">
       <h2>Личный кабинет</h2>
 
       <div class="row">
@@ -13,10 +17,10 @@
               <button class="btn btn-light bg-gray-200">Изменить</button>
             </template>
 
-            <p class="text-dark">Екатерина Иванова</p>
+            <p class="text-dark">{{ fullName }}</p>
             <p class="text-dark">
-              emailexample@gmail.com<br />
-              тел.: +7 (999) 999-99-99
+              {{ email }}<br />
+              тел.: {{ phone }}
             </p>
           </CabinetSectionVue>
 
@@ -74,6 +78,8 @@ import CabinetBonusVue from '~/components/cabinet/CabinetBonus.vue'
 import PersonIcon from '~/assets/icons/person.svg?icon'
 import DeliveryIcon from '~/assets/icons/delivery.svg?icon'
 import CopyIcon from '~/assets/icons/copy.svg?icon'
+import { user } from '~/store'
+import LoadingVue from '~/components/Loading.vue'
 
 @Component({
   components: {
@@ -84,10 +90,42 @@ import CopyIcon from '~/assets/icons/copy.svg?icon'
     PersonIcon,
     DeliveryIcon,
     CopyIcon,
+    LoadingVue
   },
   setup() {},
+  fetchOnServer: false
 })
-export default class CabinetPage extends Vue {}
+export default class CabinetPage extends Vue {
+  get hasAuth() {
+    return user.hasAuth
+  }
+
+  get email() {
+    return user.email ?? ''
+  }
+
+  get phone() {
+    return user.phone ?? ''
+  }
+
+  get firstName() {
+    return user.firstName ?? ''
+  }
+
+  get secondName() {
+    return user.secondName ?? ''
+  }
+
+  get fullName() {
+    return `${this.firstName} ${this.secondName}`
+  }
+
+  fetch() {
+    if (!user.hasAuth) {
+      this.$router.replace('/login')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
