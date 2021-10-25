@@ -1,6 +1,6 @@
 <template>
   <div class="cart">
-    <div v-if="!isFetch" class="container">
+    <div v-if="!hasFetched" class="container">
       <LoadingVue />
     </div>
 
@@ -47,7 +47,11 @@
               на&nbsp;странице&nbsp;оформления&nbsp;заказа
             </p>
 
-            <button class="btn btn-primary btn-lg w-100">Оформить Заказ</button>
+            <router-link
+              to="/cart/purchase"
+              class="btn btn-primary btn-lg w-100"
+              >Оформить Заказ</router-link
+            >
           </CabinetSectionVue>
           <CabinetSectionVue class="cart__bonus">
             <div class="cart__bonus-icon">
@@ -76,8 +80,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 
+import { mixins } from 'vue-class-component'
 import AuthBaseVue from '~/components/auth/AuthBase.vue'
 import CabinetSectionVue from '~/components/cabinet/CabinetSection.vue'
 import InputVue from '~/components/inputs/Input.vue'
@@ -88,9 +93,9 @@ import DeliveryIcon from '~/assets/icons/delivery.svg?icon'
 import CopyIcon from '~/assets/icons/copy.svg?icon'
 import CoinStackIcon from '~/assets/icons/coin-stack.svg?icon'
 import ProductCardHorisontalVue from '~/components/product/ProductCardHorisontal.vue'
-import { cart, ProductItem, user } from '~/store'
-import numberWithSpaces from '~/utils/numberWithSpaces'
 import LoadingVue from '~/components/Loading.vue'
+
+import CartMixin from '~/mixins/Cart'
 
 @Component({
   components: {
@@ -108,47 +113,7 @@ import LoadingVue from '~/components/Loading.vue'
   setup() {},
   fetchOnServer: false
 })
-export default class CartPage extends Vue {
-  isFetch = false
-  products: Array<ProductItem> = []
-  priceTotal = 0
-  bonusTotal = 0
-
-  numberWithSpaces = numberWithSpaces
-
-  get hasAuth() {
-    return user.hasAuth
-  }
-
-  get bonus() {
-    return user.bonus
-  }
-
-  get countTotal() {
-    return cart.countTotal
-  }
-
-  async fetch() {
-    await cart.pullState()
-    this.products = await cart.productsListAsync()
-    this.isFetch = true
-  }
-
-  @Watch('products')
-  calcPriceTotal() {
-    let price = 0
-    let bonus = 0
-
-    this.products.forEach((product) => {
-      const count = cart.items.get(product.id)?.count ?? 1
-      price = price + product.price * count
-      bonus = bonus + product.bonus * count
-    })
-
-    this.priceTotal = price
-    this.bonusTotal = bonus
-  }
-}
+export default class CartPage extends mixins(CartMixin) {}
 </script>
 
 <style lang="scss" scoped>

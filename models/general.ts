@@ -18,3 +18,9 @@ export enum ClientType {
   retail = 'retail',
   wholesale = 'wholesale',
 }
+
+export interface SelectOption {
+  title: string
+  value: string
+  disabled?: boolean
+}
