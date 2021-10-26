@@ -1,3 +1,4 @@
+import QueryString from 'qs'
 import {
   AddToCartResponse,
   GetCartResponseItem,
@@ -37,5 +38,17 @@ export async function addToCart(
   return await $axios.$get(
     `${API_BASE_URL}/api/personal/cart/addtocart.php?PRODUCT_ID=${id}&QUANTITY=${count}`,
     { withCredentials: true }
+  )
+}
+
+export async function makeOrder(payload: any): Promise<any> {
+  const { $axios } = getStore()
+  return await $axios.$post(
+    `${API_BASE_URL}/api/personal/order/make/`,
+    QueryString.stringify(payload),
+    {
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      withCredentials: true,
+    }
   )
 }

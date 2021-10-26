@@ -42,6 +42,8 @@
         @focus="(e) => $emit('focus', e)"
       />
 
+      <slot />
+
       <div v-if="typeof error === 'string'" class="invalid-feedback">
         {{ error }}
       </div>

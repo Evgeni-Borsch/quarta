@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
-import SelectVue, { SelectOption } from '../Select.vue'
+import SelectVue, { SelectOption } from '../inputs/Select.vue'
 import StarsVue from '../stars'
 import ReviewVue from './Review.vue'
 

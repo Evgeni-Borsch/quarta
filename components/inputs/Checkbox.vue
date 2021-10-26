@@ -36,8 +36,8 @@ export default class CheckboxVue extends mixins(Sizable, HasUid) {
   @Watch('innerValue')
   @Emit('change')
   @Emit('input')
-  onChange(value: boolean) {
-    return value
+  onChange() {
+    return this.innerValue
   }
 }
 </script>

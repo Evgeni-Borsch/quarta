@@ -14,8 +14,11 @@
         type="radio"
         :name="`i_${uid}`"
         :checked="innerValue === option.value"
+        @click="innerValue = option.value"
       />
-      <label :for="`i_${uid}_${index}`">{{ option.title }}</label>
+      <label :for="`i_${uid}_${index}`" @click="innerValue = option.value">{{
+        option.title
+      }}</label>
     </div>
   </div>
 </template>

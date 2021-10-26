@@ -37,12 +37,12 @@ export default class RadioCardsVue extends mixins(RadioInputMixin) {
   @Prop({ required: true }) options!: Array<RadioCardOptions>
 
   /**
-   * 3 or 4
+   * 2 or 3
    */
   @Prop({ default: 3 }) columns!: number
 
   get columnClass() {
-    if (this.columns === 4) return 'col-3'
+    if (this.columns === 2) return 'col-6'
     return 'col-4'
   }
 }
@@ -55,9 +55,13 @@ export default class RadioCardsVue extends mixins(RadioInputMixin) {
     margin-bottom: 0.75rem;
   }
 
+  [class*='col-'] {
+    margin-bottom: 20px;
+  }
+
   &__card {
     position: relative;
-    padding: 1.25rem;
+    padding: 1.25rem 1.25rem 2.125rem;
     border: 1px solid;
     border-color: $gray-200;
     transition: border-color 0.3s;

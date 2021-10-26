@@ -6,6 +6,7 @@
     <SelectVue
       :options="sortOptions"
       :value="sort"
+      size="small"
       label="Сортировать:"
       @change="setSort"
     />
@@ -30,13 +31,12 @@
 import {
   Vue,
   Component,
-  Prop,
   InjectReactive,
   Inject
 } from 'vue-property-decorator'
 import ProductsGridVue from '../ProductsGrid.vue'
 import CheckboxVue from '~/components/inputs/Checkbox.vue'
-import SelectVue, { SelectOption } from '~/components/Select.vue'
+import SelectVue, { SelectOption } from '~/components/inputs/Select.vue'
 import CategoryPathResolver from '~/pages/catalog/_.vue'
 import {
   CatalogCount,

@@ -24,7 +24,13 @@ export async function getAuthByPassword(
 export async function getRegistration(options: any): Promise<LoginResponse> {
   const { $axios } = getStore()
 
-  return await $axios.$post(`${API_BASE_URL}/api/registration`, options)
+  return await $axios.$post(
+    `${API_BASE_URL}/api/registration`,
+    qs.stringify(options),
+    {
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }
+  )
 }
 
 export async function checkAuth(): Promise<AuthResponse | null> {
