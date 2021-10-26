@@ -18,9 +18,10 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
-import SelectVue, { SelectOption } from '../inputs/Select.vue'
+import SelectVue from '../inputs/Select.vue'
 import StarsVue from '../stars'
 import ReviewVue from './Review.vue'
+import { SelectOption } from '~/models/general'
 
 export default defineComponent({
   components: { SelectVue, StarsVue, ReviewVue },
@@ -28,18 +29,18 @@ export default defineComponent({
     const orderOptions: Array<SelectOption> = [
       {
         title: 'Высокие оценки',
-        value: 'high',
+        value: 'high'
       },
       {
         title: 'Низкие оценки',
-        value: 'low',
-      },
+        value: 'low'
+      }
     ]
 
     return {
-      orderOptions,
+      orderOptions
     }
-  },
+  }
 })
 </script>
 
