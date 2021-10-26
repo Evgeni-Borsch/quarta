@@ -28,15 +28,10 @@
 </template>
 
 <script lang="ts">
-import {
-  Vue,
-  Component,
-  InjectReactive,
-  Inject
-} from 'vue-property-decorator'
+import { Vue, Component, InjectReactive, Inject } from 'vue-property-decorator'
 import ProductsGridVue from '../ProductsGrid.vue'
 import CheckboxVue from '~/components/inputs/Checkbox.vue'
-import SelectVue, { SelectOption } from '~/components/inputs/Select.vue'
+import SelectVue from '~/components/inputs/Select.vue'
 import CategoryPathResolver from '~/pages/catalog/_.vue'
 import {
   CatalogCount,
@@ -44,6 +39,7 @@ import {
   CatalogSort,
   CatalogSortType
 } from '~/services/api/catalog'
+import { SelectOption } from '~/models/general'
 
 @Component({
   components: {

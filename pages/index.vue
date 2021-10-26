@@ -159,8 +159,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ref, useFetch, Ref } from '@nuxtjs/composition-api'
+import { Vue, Component } from 'vue-property-decorator'
 
 import AdvantagesVue from '~/components/Advantages.vue'
 import BaseSliderVue from '~/components/BaseSlider.vue'

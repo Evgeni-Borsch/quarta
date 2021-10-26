@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import CategoryCardVue from '~/components/CategoryCard.vue'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'

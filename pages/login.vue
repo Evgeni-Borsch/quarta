@@ -69,10 +69,10 @@
 
 <script lang="ts">
 import { mixins } from 'vue-class-component'
-import { Vue, Component } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 
 import { validationMixin } from 'vuelidate'
-import { required, email, minLength } from 'vuelidate/lib/validators'
+import { required, email } from 'vuelidate/lib/validators'
 
 import AuthBaseVue from '~/components/auth/AuthBase.vue'
 import AuthSocialNetworksVue from '~/components/auth/AuthSocialNetworks.vue'
