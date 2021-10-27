@@ -946,6 +946,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
     &::v-deep > div {
       display: flex;
+      flex-direction: row;
     }
 
     &-title {
@@ -970,6 +971,10 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
+      }
+
+      small {
+        text-decoration: line-through;
       }
 
       &:not(:last-child) {
