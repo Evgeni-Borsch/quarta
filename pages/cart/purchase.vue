@@ -944,11 +944,6 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     background-color: $gray-200;
     color: $gray-800;
 
-    &::v-deep > div {
-      display: flex;
-      flex-direction: row;
-    }
-
     &-title {
       font-size: 1rem;
       font-weight: 500;
