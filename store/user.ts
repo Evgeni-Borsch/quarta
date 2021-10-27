@@ -11,10 +11,14 @@ export default class UserModule extends VuexModule {
   hasAuth = false
   id: string | null = null
   bonus: number | null = null
-  firstName: string | null = null
-  secondName: string | null = null
+  firstName: string = ''
+  secondName: string = ''
   email: string | null = null
   phone: string | null = null
+
+  get fullName() {
+    return `${this.firstName} ${this.secondName}`
+  }
 
   @Action
   async init() {

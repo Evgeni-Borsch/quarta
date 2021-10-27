@@ -6,7 +6,7 @@
 
     <div
       v-for="(option, index) of options"
-      :key="option"
+      :key="index"
       class="radio-group__option"
     >
       <input

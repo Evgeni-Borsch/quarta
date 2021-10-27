@@ -1,6 +1,6 @@
 <template>
   <div class="purchase">
-    <div v-if="!hasFetch && false" class="container">
+    <div v-if="!hasFetched && !isRestored" class="container">
       <LoadingVue />
     </div>
 
@@ -12,8 +12,10 @@
           </header>
         </div>
 
-        <div class="col-4">
-          <router-link to="/cart">Вернуться в корзину</router-link>
+        <div class="col-4 d-flex">
+          <router-link to="/cart" class="purchase__back"
+            >Вернуться в корзину</router-link
+          >
         </div>
       </div>
 
@@ -84,16 +86,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- <SelectVue
-              :search="true"
-              :options="[
-                {
-                  value: '123',
-                  title: 'dffsd'
-                },
-              ]"
-            /> -->
           </section>
 
           <section class="purchase__section">
@@ -105,6 +97,18 @@
               :columns="2"
               class="my-4"
               @change="(value) => (selectedPaymentOption = value)"
+            />
+
+            <!--
+              Оплата при доставке
+            -->
+
+            <RadioGroupVue
+              v-if="selectedPaymentOption === PaymentOptions.onReceiving"
+              class="my-4"
+              :options="payOnRecive"
+              :value="paymentOnRecive"
+              @change="(value) => (paymentOnRecive = value)"
             />
 
             <!--
@@ -141,35 +145,171 @@
                 Укажите данные, на которые нужно выставить счет:
               </h6>
 
-              <InputVue label="ИНН" class="my-4" />
-              <InputVue label="КПП" class="my-4" />
-              <InputVue label="ОГРН" class="my-4" />
-              <InputVue label="Расчетный счет" class="my-4" />
-              <InputVue label="Банк" class="my-4" />
-              <InputVue label="БИК" class="my-4" />
-              <InputVue label="Корр. счет" class="my-4" />
               <InputVue
+                v-model="inn"
+                label="ИНН"
+                class="my-4"
+                :required="true"
+                :error="$v.inn.$error ? FormErrors.required : false"
+                @blur="$v.inn.$touch()"
+                @focus="$v.inn.$reset()"
+              />
+              <InputVue
+                v-model="kpp"
+                label="КПП"
+                class="my-4"
+                :required="true"
+                :error="$v.kpp.$error ? FormErrors.required : false"
+                @blur="$v.kpp.$touch()"
+                @focus="$v.kpp.$reset()"
+              />
+              <InputVue
+                v-model="ogrn"
+                label="ОГРН"
+                class="my-4"
+                :required="true"
+                :error="$v.ogrn.$error ? FormErrors.required : false"
+                @blur="$v.ogrn.$touch()"
+                @focus="$v.ogrn.$reset()"
+              />
+              <InputVue
+                v-model="paymentAccount"
+                label="Расчетный счет"
+                class="my-4"
+                :required="true"
+                :error="$v.paymentAccount.$error ? FormErrors.required : false"
+                @blur="$v.paymentAccount.$touch()"
+                @focus="$v.paymentAccount.$reset()"
+              />
+              <InputVue
+                v-model="bank"
+                label="Банк"
+                class="my-4"
+                :required="true"
+                :error="$v.bank.$error ? FormErrors.required : false"
+                @blur="$v.bank.$touch()"
+                @focus="$v.bank.$reset()"
+              />
+              <InputVue
+                v-model="bik"
+                label="БИК"
+                class="my-4"
+                :required="true"
+                :error="$v.bik.$error ? FormErrors.required : false"
+                @blur="$v.bik.$touch()"
+                @focus="$v.bik.$reset()"
+              />
+              <InputVue
+                v-model="correspondentAccount"
+                label="Корр. счет"
+                class="my-4"
+                :required="true"
+                :error="
+                  $v.correspondentAccount.$error ? FormErrors.required : false
+                "
+                @blur="$v.correspondentAccount.$touch()"
+                @focus="$v.correspondentAccount.$reset()"
+              />
+              <InputVue
+                v-model="bankPhone"
                 label="Телефон"
                 placeholder="+7 (___) _______"
                 class="my-4"
+                :required="true"
+                :error="$v.bankPhone.$error ? FormErrors.required : false"
+                @blur="$v.bankPhone.$touch()"
+                @focus="$v.bankPhone.$reset()"
               />
-              <InputVue label="Генеральный директор" class="my-4" />
+              <InputVue
+                v-model="bankCEO"
+                label="Генеральный директор"
+                class="my-4"
+                :required="true"
+                :error="$v.bankCEO.$error ? FormErrors.required : false"
+                @blur="$v.bankCEO.$touch()"
+                @focus="$v.bankCEO.$reset()"
+              />
             </div>
           </section>
 
           <section class="purchase__section">
             <h3>3. Скидка к заказу</h3>
 
-            <RadioGroupVue class="my-4" :options="discountType" />
+            <RadioGroupVue
+              v-if="appliedPoints === null && appliedPromocode === null"
+              class="my-4"
+              :options="discountType"
+              :value="selectedDiscountType"
+              @change="(value) => (selectedDiscountType = value)"
+            />
 
-            <div class="row">
+            <!--
+              Промокод
+            -->
+
+            <form
+              v-if="
+                selectedDiscountType === DiscountTypes.code &&
+                appliedPromocode === null
+              "
+              class="row"
+              @submit.prevent="applyPromoCode"
+            >
               <div class="col-6">
-                <InputVue />
+                <InputVue v-model="promoCodeToUse" :error="promoCodeError" />
               </div>
               <div class="col-6">
                 <button class="btn btn-primary">Применить</button>
               </div>
-            </div>
+            </form>
+
+            <p v-if="appliedPromocode !== null" class="mt-4 text-secondary">
+              <b> Применен промокод: {{ appliedPromocode }} </b>
+            </p>
+
+            <button
+              v-if="appliedPromocode !== null"
+              class="btn btn-primary"
+              @click="clearPromoCode"
+            >
+              Сбросить
+            </button>
+
+            <!--
+              Бонусы
+            -->
+
+            <form
+              v-if="
+                selectedDiscountType === DiscountTypes.points &&
+                appliedPoints === null
+              "
+              class="row"
+              @submit.prevent="applyBonus"
+            >
+              <div class="col-6">
+                <InputVue
+                  v-model="pointsToUse"
+                  :error="bonusError"
+                  type="number"
+                />
+              </div>
+              <div class="col-2">
+                <button class="btn btn-primary w-100">Списать</button>
+              </div>
+            </form>
+
+            <p v-if="appliedPoints !== null" class="mt-4 text-secondary">
+              <b> Применено {{ appliedPoints }} бонусов </b>
+            </p>
+
+            <button
+              v-if="appliedPoints !== null"
+              class="btn btn-primary"
+              @click="clearBonus"
+            >
+              Сбросить
+            </button>
           </section>
 
           <section class="purchase__section">
@@ -268,13 +408,11 @@
 
         <div class="col-4">
           <CabinetSectionVue class="purchase__bonus">
-            <div class="purchase__bonus-icon">
-              <CoinStackIcon />
-            </div>
-            <div v-if="hasAuth && bonus" class="purchase__bonus-text">
-              <b>Доступно {{ numberWithSpaces(bonus) }} бонусных баллов.</b>
-              <br />
-              Оплачивайте ими до 50% от стоимости покупки
+            В заказе {{ countTotal }} товара на сумму {{ priceTotal }} ₽
+
+            <div v-for="product of products" :key="product.id" class="">
+              {{ product.title }}
+              {{ getProductCount(product.id) }}
             </div>
           </CabinetSectionVue>
         </div>
@@ -317,10 +455,13 @@ import {
   DiscountTypes,
   OnlinePaymentType,
   PaymentOptions,
-  BankPaymentType
+  BankPaymentType,
+  PayOnRecive
 } from '~/models/purchase'
 import { FormErrors } from '~/services/errors'
 import { makeOrder } from '~/services/api/product'
+import { checkPromoCode } from '~/services/api/order'
+import { cart, user } from '~/store'
 
 @Component({
   components: {
@@ -343,33 +484,91 @@ import { makeOrder } from '~/services/api/product'
     email: {
       required,
       email
+    },
+
+    inn: {
+      required
+    },
+    kpp: {
+      required
+    },
+    ogrn: {
+      required
+    },
+    paymentAccount: {
+      required
+    },
+    bank: {
+      required
+    },
+    bik: {
+      required
+    },
+    correspondentAccount: {
+      required
+    },
+    bankPhone: {
+      required
+    },
+    bankCEO: {
+      required
     }
   }
 })
 export default class PurchasePage extends mixins(CartMixin, validationMixin) {
+  priceTotal!: number
+
+  isRestored = false
+
   storeStateTimeout: NodeJS.Timeout | null = null
   errorFromServer: string | null = null
+  bonusError: string | null = null
+  promoCodeError: string | null = null
 
   locality = ''
   fio = ''
   email = ''
   phone = ''
 
-  pointsToUse = 0
-  promocode: string | null = null
-  isPromocodeValid = false
+  pointsToUse = ''
+  promoCodeToUse = ''
+  appliedPoints: number | null = null
+  appliedPromocode: string | null = null
 
   selectedDeliveryOption = DeliveryOptions.pickup
   selectedDiscountType = DiscountTypes.points
   selectedPaymentOption = PaymentOptions.online
   onlinePaymentType = OnlinePaymentType.card
   bankPaymentType = BankPaymentType.receipt
+  paymentOnRecive = PayOnRecive.cash
+
+  // Bank Account
+
+  inn = ''
+  kpp = ''
+  ogrn = ''
+  paymentAccount = ''
+  bank = ''
+  bik = ''
+  correspondentAccount = ''
+  bankPhone = ''
+  bankCEO = ''
 
   managerCall = true
+
+  // ~~ Getters ~~
+
+  get user() {
+    return user.bonus
+  }
 
   // ~~ Methods ~~
 
   async submit() {
+    if (!this.validateInput()) {
+      return window.scrollTo(0, 0)
+    }
+
     const payload = this.toPlainObject()
 
     try {
@@ -385,14 +584,26 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
       fio: this.fio,
       email: this.email,
       phone: this.phone,
-      pointsToUse: this.pointsToUse,
-      promocode: this.promocode,
+      appliedPoints: this.appliedPoints,
+      appliedPromocode: this.appliedPromocode,
       selectedDeliveryOption: this.selectedDeliveryOption,
       selectedDiscountType: this.selectedDiscountType,
       selectedPaymentOption: this.selectedPaymentOption,
       onlinePaymentType: this.onlinePaymentType,
       bankPaymentType: this.bankPaymentType,
-      managerCall: this.managerCall
+      managerCall: this.managerCall,
+
+      paymentOnRecive: this.paymentOnRecive,
+
+      inn: this.inn,
+      kpp: this.kpp,
+      ogrn: this.ogrn,
+      paymentAccount: this.paymentAccount,
+      bank: this.bank,
+      bik: this.bik,
+      correspondentAccount: this.correspondentAccount,
+      bankPhone: this.bankPhone,
+      bankCEO: this.bankCEO
     }
   }
 
@@ -400,14 +611,27 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   @Watch('fio')
   @Watch('email')
   @Watch('phone')
-  @Watch('pointsToUse')
-  @Watch('promocode')
+  @Watch('managerCall')
+  // bonus
+  @Watch('appliedPoints')
+  @Watch('appliedPromocode')
+  // delivery & payment
   @Watch('selectedDeliveryOption')
   @Watch('selectedDiscountType')
   @Watch('selectedPaymentOption')
   @Watch('onlinePaymentType')
   @Watch('bankPaymentType')
-  @Watch('managerCall')
+  @Watch('paymentOnRecive')
+  // bank account
+  @Watch('inn')
+  @Watch('kpp')
+  @Watch('ogrn')
+  @Watch('paymentAccount')
+  @Watch('bank')
+  @Watch('bik')
+  @Watch('correspondentAccount')
+  @Watch('bankPhone')
+  @Watch('bankCEO')
   storeState() {
     clearTimeout(this.storeStateTimeout as NodeJS.Timeout)
 
@@ -416,16 +640,20 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     }, 1000)
   }
 
+  getProductCount(id: string) {
+    return cart.getItem(id)?.count ?? 0
+  }
+
   restoreState() {
     const restored = storage.get('purchaseState') || {}
 
     this.locality = restored.locality ?? this.locality
-    this.fio = restored.fio ?? this.fio
-    this.email = restored.email ?? this.email
-    this.locality = restored.phone ?? this.locality
+    this.fio = restored.fio ?? user.fullName
+    this.email = restored.email ?? user.email
+    this.phone = restored.phone ?? user.phone
 
-    this.pointsToUse = restored.pointsToUse ?? this.pointsToUse
-    this.promocode = restored.promocode ?? this.promocode
+    this.appliedPoints = restored.appliedPoints ?? this.appliedPoints
+    this.appliedPromocode = restored.appliedPromocode ?? this.appliedPromocode
 
     this.selectedDeliveryOption =
       restored.selectedDeliveryOption ?? this.selectedDeliveryOption
@@ -436,14 +664,105 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     this.onlinePaymentType =
       restored.onlinePaymentType ?? this.onlinePaymentType
     this.bankPaymentType = restored.bankPaymentType ?? this.bankPaymentType
+    this.paymentOnRecive = restored.paymentOnRecive ?? this.paymentOnRecive
+
+    this.inn = restored.inn ?? this.inn
+    this.kpp = restored.kpp ?? this.kpp
+    this.ogrn = restored.ogrn ?? this.ogrn
+    this.paymentAccount = restored.paymentAccount ?? this.paymentAccount
+    this.bank = restored.bank ?? this.bank
+    this.bik = restored.bik ?? this.bik
+    this.correspondentAccount =
+      restored.correspondentAccount ?? this.correspondentAccount
+    this.bankPhone = restored.bankPhone ?? this.bankPhone
+    this.bankCEO = restored.bankCEO ?? this.bankCEO
 
     this.managerCall = restored.managerCall ?? this.managerCall
   }
 
+  applyBonus() {
+    const points = Math.abs(parseInt(this.pointsToUse))
+    const halfPrice = Math.floor(this.priceTotal / 2)
+
+    if (isNaN(points)) {
+      return (this.bonusError = `Введите число`)
+    }
+
+    if (points > (user.bonus ?? 0)) {
+      return (this.bonusError = `Доступно ${user.bonus ?? 0} б.`)
+    }
+
+    if (points > (halfPrice ?? 0)) {
+      return (this.bonusError = `Не более 50% стоимости товара! Можно применить ${
+        halfPrice ?? 0
+      } б.`)
+    }
+
+    this.appliedPoints = points
+    this.pointsToUse = ''
+    this.bonusError = null
+  }
+
+  clearBonus() {
+    this.appliedPoints = null
+  }
+
+  async applyPromoCode() {
+    const code = this.promoCodeToUse
+
+    try {
+      const response = await checkPromoCode(code)
+
+      if (response.error) {
+        this.promoCodeError = response.message
+      } else {
+        this.appliedPromocode = code
+        this.promoCodeToUse = ''
+        this.promoCodeError = null
+      }
+    } catch (e) {
+      this.promoCodeError = e!.message
+    }
+  }
+
+  clearPromoCode() {
+    this.appliedPromocode = null
+  }
+
+  validateInput() {
+    if (!this.$v) return false
+
+    this.$v.$touch()
+
+    if (this.$v.fio.$error) return false
+    if (this.$v.email.$error) return false
+    if (this.$v.phone.$error) return false
+
+    if (
+      this.selectedPaymentOption === PaymentOptions.bankAccount &&
+      this.bankPaymentType === BankPaymentType.account
+    ) {
+      if (this.$v.inn.$error) return false
+      if (this.$v.kpp.$error) return false
+      if (this.$v.ogrn.$error) return false
+      if (this.$v.paymentAccount.$error) return false
+      if (this.$v.bank.$error) return false
+      if (this.$v.bik.$error) return false
+      if (this.$v.correspondentAccount.$error) return false
+      if (this.$v.bankPhone.$error) return false
+      if (this.$v.bankCEO.$error) return false
+    }
+
+    return true
+  }
+
   // ~~ Hooks ~~
 
-  fetch() {
+  mounted() {
     this.restoreState()
+    setTimeout(() => {
+      this.isRestored = true
+    })
   }
 
   // ~~ Enums ~~
@@ -455,6 +774,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   DeliveryProvider = DeliveryProvider
   PaymentOptions = PaymentOptions
   BankPaymentType = BankPaymentType
+  PayOnRecive = PayOnRecive
 
   // ~~ Option lists ~~
 
@@ -464,7 +784,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
       value: DeliveryOptions.pickup,
       description:
         'из магазина в Санкт-Петербурге (Московский проспект, д.222А, +7 (800) 775-03-04)'
-    },
+    }
     // {
     //   title: 'Почта России',
     //   value: DeliveryOptions.post
@@ -529,9 +849,9 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     { title: 'Выставить счет', value: BankPaymentType.account }
   ]
 
-  payOnHandingType: Array<SelectOption> = [
-    { title: 'Оплата квитанции в банке', value: BankPaymentType.receipt },
-    { title: 'Выставить счет', value: BankPaymentType.account }
+  payOnRecive: Array<SelectOption> = [
+    { title: 'Наличными', value: PayOnRecive.cash },
+    { title: 'Банковской картой', value: PayOnRecive.card }
   ]
 
   discountType: Array<SelectOption> = [
@@ -551,6 +871,21 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 .purchase {
   padding: 5.625rem 0;
   background-color: $gray-100;
+
+  &__back {
+    justify-self: flex-end;
+    margin-left: auto;
+    margin-top: 1rem;
+
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 7px;
+      margin-left: 0.5rem;
+      background-image: url("data:image/svg+xml,%3Csvg width='5' height='7' viewBox='0 0 5 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.58905e-07 0.81823L2.48446 3.30269L1.07309e-07 5.78715L0.818315 6.60547L4.12109 3.30269L0.818316 -8.66771e-05L7.58905e-07 0.81823Z' fill='%23004989'/%3E%3C/svg%3E%0A");
+    }
+  }
 
   &__header {
     display: flex;

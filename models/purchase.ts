@@ -32,7 +32,7 @@ export enum BankPaymentType {
   account = 'account',
 }
 
-export enum PayOnHanding {
+export enum PayOnRecive {
   cash = 'cash',
   card = 'card',
 }
