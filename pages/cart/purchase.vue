@@ -369,18 +369,22 @@
 
             <div class="purchase__price-line">
               <span> Скидка </span>
-              <div class="purchase__price--bonus">0 ₽</div>
+              <div class="purchase__price--bonus">
+                {{ numberWithSpaces(discountTotal) }} ₽
+              </div>
             </div>
 
             <div class="purchase__price-line">
               <span> Стоимость доставки </span>
-              <div class="purchase__price">0 ₽</div>
+              <div class="purchase__price">
+                {{ numberWithSpaces(priceTotal) }} ₽
+              </div>
             </div>
 
             <div class="purchase__price-line">
               <span> <b>Итого к оплате</b> </span>
               <div class="purchase__price--final">
-                {{ numberWithSpaces(priceTotal) }} ₽
+                {{ numberWithSpaces(priceTotal + deliveryPrice) }} ₽
               </div>
             </div>
           </div>
@@ -399,20 +403,31 @@
               <button class="btn btn-primary btn-lg px-5" @click="submit">
                 Оформить заказ
               </button>
-              <CheckboxVue v-model="managerCall" class="mt-2"
-                >Нужен звонок менеджера</CheckboxVue
-              >
+              <CheckboxVue v-model="managerCall" class="mt-2">
+                Нужен звонок менеджера
+              </CheckboxVue>
             </div>
           </div>
         </div>
 
         <div class="col-4">
-          <CabinetSectionVue class="purchase__bonus">
-            В заказе {{ countTotal }} товара на сумму {{ priceTotal }} ₽
+          <CabinetSectionVue class="purchase__summary">
+            <div class="purchase__summary-title">
+              В заказе {{ countTotal }} товара на сумму {{ priceTotal }} ₽
+            </div>
 
-            <div v-for="product of products" :key="product.id" class="">
-              {{ product.title }}
-              {{ getProductCount(product.id) }}
+            <div
+              v-for="product of products"
+              :key="product.id"
+              class="purchase__summary-product"
+            >
+              <div class="purchase__summary-product-title">
+                {{ product.title }}
+              </div>
+              {{ getProductCount(product.id) }} шт. x {{ product.price }} ₽
+              <small v-if="product.priceOld">
+                {{ product.priceOld }}
+              </small>
             </div>
           </CabinetSectionVue>
         </div>
@@ -524,6 +539,8 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   errorFromServer: string | null = null
   bonusError: string | null = null
   promoCodeError: string | null = null
+
+  deliveryPrice = 500
 
   locality = ''
   fio = ''
@@ -908,12 +925,6 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     margin-left: auto;
   }
 
-  &__summary {
-    p {
-      font-size: 0.75rem;
-    }
-  }
-
   &__total,
   &__total-bonus {
     font-size: 1rem;
@@ -929,22 +940,41 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     font-weight: 500;
   }
 
-  &__bonus {
+  &__summary {
     background-color: $gray-200;
     color: $gray-800;
 
     &::v-deep > div {
       display: flex;
-      flex-direction: row;
     }
 
-    &-icon {
-      color: $primary;
-      padding-right: 0.75rem;
-    }
-
-    &-text {
+    &-title {
       font-size: 1rem;
+      font-weight: 500;
+      color: $gray-600;
+      margin-bottom: 1rem;
+    }
+
+    &-product {
+      font-size: 1rem;
+      color: $gray-600;
+
+      &-title {
+        margin-bottom: 0.5rem;
+        color: $gray-800;
+
+        max-width: 90%;
+        height: 2.6rem;
+        overflow: hidden;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 1.25rem;
+      }
     }
   }
 

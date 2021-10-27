@@ -10,6 +10,7 @@ export default class CartMixin extends Vue {
   products: Array<ProductItem> = []
   priceTotal = 0
   bonusTotal = 0
+  discountTotal = 0
 
   numberWithSpaces = numberWithSpaces
 
@@ -34,12 +35,14 @@ export default class CartMixin extends Vue {
   @Watch('products')
   calcPriceTotal() {
     let price = 0
+    let discount = 0
     let bonus = 0
 
     this.products.forEach((product) => {
       const count = cart.items.get(product.id)?.count ?? 1
       price = price + product.price * count
       bonus = bonus + product.bonus * count
+      discount = discount - (product.priceOld ?? 0) * count
     })
 
     this.priceTotal = price
