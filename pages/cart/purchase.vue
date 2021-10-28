@@ -259,17 +259,17 @@
                 <InputVue v-model="promoCodeToUse" :error="promoCodeError" />
               </div>
               <div class="col-6">
-                <button class="btn btn-primary">Применить</button>
+                <button class="btn btn-primary px-5">Применить</button>
               </div>
             </form>
 
             <p v-if="appliedPromocode !== null" class="mt-4 text-secondary">
-              <b> Применен промокод: {{ appliedPromocode }} </b>
+              Применен промокод:<b> {{ appliedPromocode }} </b>
             </p>
 
             <button
               v-if="appliedPromocode !== null"
-              class="btn btn-primary"
+              class="btn btn-primary px-5"
               @click="clearPromoCode"
             >
               Сбросить
@@ -287,25 +287,32 @@
               class="row"
               @submit.prevent="applyBonus"
             >
+              <p>
+                <span class="text-dark"
+                  >Доступно {{ numberWithSpaces(bonusTotal) }} баллов.</span
+                >
+                Оплачивайте ими до 50% от стоимости покупки
+              </p>
               <div class="col-6">
                 <InputVue
                   v-model="pointsToUse"
                   :error="bonusError"
                   type="number"
+                  label="Сумма"
                 />
               </div>
-              <div class="col-2">
-                <button class="btn btn-primary w-100">Списать</button>
+              <div class="col-6" style="padding-top: 1.95rem">
+                <button class="btn btn-primary px-5">Применить</button>
               </div>
             </form>
 
             <p v-if="appliedPoints !== null" class="mt-4 text-secondary">
-              <b> Применено {{ appliedPoints }} бонусов </b>
+              Применено {{ appliedPoints }} бонусов
             </p>
 
             <button
               v-if="appliedPoints !== null"
-              class="btn btn-primary"
+              class="btn btn-primary px-5"
               @click="clearBonus"
             >
               Сбросить
@@ -703,6 +710,10 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
     if (isNaN(points)) {
       return (this.bonusError = `Введите число`)
+    }
+
+    if (points <= 0) {
+      return (this.bonusError = `Введите положительное число`)
     }
 
     if (points > (user.bonus ?? 0)) {
