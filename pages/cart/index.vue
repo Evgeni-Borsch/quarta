@@ -1,5 +1,7 @@
 <template>
   <div class="cart">
+    <BreadcrumbsVue :path="breadcrumbs" />
+
     <div v-if="!hasFetched" class="container">
       <LoadingVue />
     </div>
@@ -15,8 +17,10 @@
           </header>
         </div>
 
-        <div class="col-4">
-          <router-link to="/catalog">Продолжить покупки</router-link>
+        <div class="col-4 d-flex">
+          <router-link to="/catalog" class="cart__back">
+            Продолжить покупки
+          </router-link>
         </div>
       </div>
 
@@ -94,8 +98,10 @@ import CopyIcon from '~/assets/icons/copy.svg?icon'
 import CoinStackIcon from '~/assets/icons/coin-stack.svg?icon'
 import ProductCardHorisontalVue from '~/components/product/ProductCardHorisontal.vue'
 import LoadingVue from '~/components/Loading.vue'
+import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 
 import CartMixin from '~/mixins/Cart'
+import { Page } from '~/models/general'
 
 @Component({
   components: {
@@ -108,18 +114,47 @@ import CartMixin from '~/mixins/Cart'
     CopyIcon,
     CoinStackIcon,
     ProductCardHorisontalVue,
-    LoadingVue
+    LoadingVue,
+    BreadcrumbsVue
   },
   setup() {},
   fetchOnServer: false
 })
-export default class CartPage extends mixins(CartMixin) {}
+export default class CartPage extends mixins(CartMixin) {
+  breadcrumbs: Array<Page> = [
+    {
+      title: 'Главная',
+      slug: 'index',
+      path: '/'
+    },
+    {
+      title: 'Корзина',
+      slug: 'cart',
+      path: '/cart'
+    }
+  ]
+}
 </script>
 
 <style lang="scss" scoped>
 .cart {
-  padding: 5.625rem 0;
+  padding: 0 0 8.4375rem;
   background-color: $gray-100;
+
+  &__back {
+    justify-self: flex-end;
+    margin-left: auto;
+    margin-top: 1rem;
+
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 7px;
+      margin-left: 0.5rem;
+      background-image: url("data:image/svg+xml,%3Csvg width='5' height='7' viewBox='0 0 5 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.58905e-07 0.81823L2.48446 3.30269L1.07309e-07 5.78715L0.818315 6.60547L4.12109 3.30269L0.818316 -8.66771e-05L7.58905e-07 0.81823Z' fill='%23004989'/%3E%3C/svg%3E%0A");
+    }
+  }
 
   &__header {
     display: flex;
@@ -183,7 +218,11 @@ export default class CartPage extends mixins(CartMixin) {}
   }
 
   &__empty {
-    min-height: 12rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 15rem;
     text-align: center;
   }
 }

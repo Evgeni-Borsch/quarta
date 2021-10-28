@@ -1,5 +1,7 @@
 <template>
   <div class="purchase">
+    <BreadcrumbsVue :path="breadcrumbs" />
+
     <div v-if="!hasFetched && !isRestored" class="container">
       <LoadingVue />
     </div>
@@ -319,6 +321,10 @@
             </button>
           </section>
 
+          <!--
+            4. Укажите данные получателя заказа
+          -->
+
           <section class="purchase__section">
             <h3>4. Укажите данные получателя заказа</h3>
 
@@ -366,7 +372,11 @@
 
           <hr class="my-4" />
 
-          <div class="purchase__prices pt-2">
+          <!--
+            Сумма к оплате
+          -->
+
+          <div class="purchase__prices py-2">
             <div class="purchase__price-line">
               <span> Товары на сумму </span>
               <div class="purchase__price">
@@ -467,10 +477,11 @@ import RadioCardsVue, {
 import RadioGroupVue from '~/components/inputs/RadioGroup.vue'
 import CheckboxVue from '~/components/inputs/Checkbox.vue'
 import SelectVue from '~/components/inputs/Select.vue'
+import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 
 // ~~ Types etc. ~~
 
-import { SelectOption } from '~/models/general'
+import { Page, SelectOption } from '~/models/general'
 import {
   DeliveryOptions,
   DeliveryProvider,
@@ -483,7 +494,7 @@ import {
 import { FormErrors } from '~/services/errors'
 import { makeOrder } from '~/services/api/product'
 import { checkPromoCode } from '~/services/api/order'
-import { cart, user } from '~/store'
+import { cart, ProductItem, user } from '~/store'
 
 @Component({
   components: {
@@ -492,7 +503,8 @@ import { cart, user } from '~/store'
     RadioCardsVue,
     RadioGroupVue,
     CheckboxVue,
-    SelectVue
+    SelectVue,
+    BreadcrumbsVue
   },
   fetchOnServer: false,
   validations: {
@@ -539,8 +551,26 @@ import { cart, user } from '~/store'
 })
 export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   priceTotal!: number
+  products!: Array<ProductItem>
 
   isRestored = false
+  breadcrumbs: Array<Page> = [
+    {
+      title: 'Главная',
+      slug: 'index',
+      path: '/'
+    },
+    {
+      title: 'Корзина',
+      slug: 'cart',
+      path: '/cart'
+    },
+    {
+      title: 'Оформление заказа',
+      slug: 'purchase',
+      path: '/cart/purchase'
+    }
+  ]
 
   storeStateTimeout: NodeJS.Timeout | null = null
   errorFromServer: string | null = null
@@ -786,6 +816,11 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
   // ~~ Hooks ~~
 
+  @Watch('hasFetched')
+  afterFetch() {
+    if (!this.products.length) this.$router.replace('/cart')
+  }
+
   mounted() {
     this.restoreState()
     setTimeout(() => {
@@ -897,7 +932,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
 <style lang="scss" scoped>
 .purchase {
-  padding: 5.625rem 0;
+  padding: 0 0 8.4375rem;
   background-color: $gray-100;
 
   &__back {
