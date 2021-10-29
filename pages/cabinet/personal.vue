@@ -8,59 +8,62 @@
       <div class="row">
         <div class="col-8">
           <div class="address__card">
-            <h2><DeliveryIcon class="icon" />Адрес доставки</h2>
+            <h2><PersonIcon class="icon" />Личные данные</h2>
 
             <form @submit.prevent="onSubmit">
-              <div
-                v-if="errorFromServer"
-                class="alert alert-danger my-4"
-                role="alert"
-                v-html="errorFromServer"
-              ></div>
-
-              <InputVue
-                v-model="locality"
-                label="Город"
-                class="my-4"
-                :required="true"
-                :error="$v.locality.$error ? FormErrors.required : false"
-                @blur="$v.locality.$touch()"
-                @focus="$v.locality.$reset()"
-              />
-              <InputVue
-                v-model="street"
-                label="Улица"
-                class="my-4"
-                :required="true"
-                :error="$v.street.$error ? FormErrors.required : false"
-                @blur="$v.street.$touch()"
-                @focus="$v.street.$reset()"
-              />
-
               <div class="row">
-                <div class="col-6">
+                <div class="col-8">
+                  <div
+                    v-if="errorFromServer"
+                    class="alert alert-danger my-4"
+                    role="alert"
+                    v-html="errorFromServer"
+                  ></div>
+
                   <InputVue
-                    v-model="house"
-                    label="Дом"
-                    class="mb-4"
+                    v-model="phone"
+                    label="Номер телефона"
+                    class="my-4"
+                    placeholder="+7 (___)___-__-__"
+                    mask="+7 (###) ###-##-##"
                     :required="true"
-                    :error="$v.house.$error ? FormErrors.required : false"
-                    @blur="$v.house.$touch()"
-                    @focus="$v.house.$reset()"
+                    :error="$v.phone.$error ? FormErrors.phone : false"
+                    @blur="$v.phone.$touch()"
+                    @focus="$v.phone.$reset()"
+                  />
+                  <InputVue
+                    v-model="firstName"
+                    label="Имя"
+                    class="my-4"
+                    placeholder="Екатерина"
+                    :required="true"
+                    :error="$v.firstName.$error ? FormErrors.required : false"
+                    @blur="$v.firstName.$touch()"
+                    @focus="$v.firstName.$reset()"
+                  />
+                  <InputVue
+                    v-model="secondName"
+                    label="Фамилия"
+                    class="my-4"
+                    placeholder="Иванова"
+                    :required="true"
+                    :error="$v.secondName.$error ? FormErrors.required : false"
+                    @blur="$v.secondName.$touch()"
+                    @focus="$v.secondName.$reset()"
+                  />
+                  <InputVue
+                    v-model="email"
+                    label="Email"
+                    class="my-4"
+                    placeholder="example@gmail.com"
+                    :required="true"
+                    :error="$v.email.$error ? FormErrors.email : false"
+                    @blur="$v.email.$touch()"
+                    @focus="$v.email.$reset()"
                   />
                 </div>
-                <div class="col-6">
-                  <InputVue
-                    v-model="apartment"
-                    label="Квартира"
-                    class="mb-4"
-                    :required="true"
-                    :error="$v.apartment.$error ? FormErrors.required : false"
-                    @blur="$v.apartment.$touch()"
-                    @focus="$v.apartment.$reset()"
-                  />
-                </div>
-                <div class="col-6">
+
+                <div class="col-8">
                   <button type="submit" class="btn btn-primary w-100">
                     Сохранить изменения
                   </button>
@@ -80,7 +83,7 @@
 import { Component } from 'vue-property-decorator'
 import { validationMixin } from 'vuelidate'
 import { mixins } from 'vue-class-component'
-import { required } from 'vuelidate/lib/validators'
+import { required, email, minLength } from 'vuelidate/lib/validators'
 import { RawLocation } from 'vue-router'
 import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
@@ -92,10 +95,11 @@ import LoadingVue from '~/components/Loading.vue'
 import PrivatePage from '~/mixins/PrivatePage'
 import PeparedRedirect from '~/mixins/PeparedRedirect'
 
-import { setAddress } from '~/services/api/cabinet'
+import {  setPersonalData } from '~/services/api/cabinet'
 
-import DeliveryIcon from '~/assets/icons/delivery.svg?icon'
+import PersonIcon from '~/assets/icons/person.svg?icon'
 import pageTitle from '~/utils/pageTitle'
+import { user } from '~/store'
 
 @Component({
   components: {
@@ -103,25 +107,30 @@ import pageTitle from '~/utils/pageTitle'
     SubscribeVue,
     InputVue,
     LoadingVue,
-    DeliveryIcon
+    PersonIcon
   },
   head() {
     return {
-      title: pageTitle('Адрес доставки')
+      title: pageTitle('Личные данные')
     }
   },
+  fetchOnServer: false,
   validations: {
-    locality: {
+    phone: {
+      required,
+      minLength: minLength(10)
+    },
+    firstName: {
       required
     },
-    street: {
+
+    secondName: {
       required
     },
-    house: {
-      required
-    },
-    apartment: {
-      required
+
+    email: {
+      required,
+      email
     }
   }
 })
@@ -153,21 +162,28 @@ export default class AddressPage extends mixins(
   FormErrors = FormErrors
   errorFromServer: string | null = null
 
-  locality = ''
-  street = ''
-  house = ''
-  apartment = ''
+  phone = ''
+  firstName = ''
+  secondName = ''
+  email = ''
+
+  fetch() {
+    this.phone = user.phone ?? ''
+    this.firstName = user.firstName ?? ''
+    this.secondName = user.secondName ?? ''
+    this.email = user.email ?? ''
+  }
 
   async onSubmit() {
     this.$v.$touch()
     if (this.$v.$error) return null
 
     try {
-      const response = await setAddress({
-        locality: this.locality,
-        street: this.street,
-        house: this.house,
-        apartment: this.apartment
+      const response = await setPersonalData({
+        phone: this.phone,
+        firstName: this.firstName,
+        secondName: this.secondName,
+        email: this.email
       })
 
       if (response.error) {
@@ -186,8 +202,14 @@ export default class AddressPage extends mixins(
 .address {
   background: $gray-100;
 
+  h2 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
   h2 .icon {
-    transform: scale(1.75);
+    transform: scale(1.75) translateY(-0.05rem);
     margin: 0 1rem;
     color: $gray-600;
   }

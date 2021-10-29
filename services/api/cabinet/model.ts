@@ -4,3 +4,10 @@ export interface AddressOptions {
   house: string
   apartment: string
 }
+
+export interface PersonalDataOptions {
+  phone: string
+  firstName: string
+  secondName: string
+  email: string
+}

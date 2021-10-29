@@ -14,7 +14,11 @@
               <PersonIcon class="icon" />
               <h6>Личные данные</h6>
 
-              <button class="btn btn-light bg-gray-200">Изменить</button>
+              <router-link
+                to="/cabinet/personal"
+                class="btn btn-light bg-gray-200"
+                >Изменить</router-link
+              >
             </template>
 
             <p class="text-dark">{{ fullName }}</p>
@@ -40,7 +44,11 @@
               <DeliveryIcon class="icon" />
               <h6>Адрес доставки</h6>
 
-              <button class="btn btn-light bg-gray-200">Добавить</button>
+              <router-link
+                to="/cabinet/address"
+                class="btn btn-light bg-gray-200"
+                >Добавить</router-link
+              >
             </template>
 
             <p class="text-dark">
@@ -68,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 
 import { mixins } from 'vue-class-component'
 import AuthBaseVue from '~/components/auth/AuthBase.vue'
@@ -82,6 +90,7 @@ import CopyIcon from '~/assets/icons/copy.svg?icon'
 import { user } from '~/store'
 import LoadingVue from '~/components/Loading.vue'
 import PrivatePage from '~/mixins/PrivatePage'
+import pageTitle from '~/utils/pageTitle'
 
 @Component({
   components: {
@@ -94,7 +103,11 @@ import PrivatePage from '~/mixins/PrivatePage'
     CopyIcon,
     LoadingVue
   },
-  setup() {},
+  head() {
+    return {
+      title: pageTitle('Личный кабинет')
+    }
+  },
   fetchOnServer: false
 })
 export default class CabinetPage extends mixins(PrivatePage) {
