@@ -34,12 +34,8 @@ export default class UserModule extends VuexModule {
   @Action
   async init() {
     const response = await checkAuth()
-    if (response) {
-      this.setUserPromResponse(response)
-      resolver()
-    } else {
-      rejecter()
-    }
+    if (response) this.setUserPromResponse(response)
+    resolver()
   }
 
   @Mutation
