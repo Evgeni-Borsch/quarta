@@ -1,7 +1,7 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
+import { ProductItem } from '.'
 import { addToCart, getCart } from '~/services/api/product'
 import { cart, products } from '~/utils/store-accessor'
-import { ProductItem } from '.'
 
 export interface CartItem {
   id: string

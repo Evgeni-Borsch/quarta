@@ -493,7 +493,7 @@ import {
 } from '~/models/purchase'
 import { FormErrors } from '~/services/errors'
 import { makeOrder } from '~/services/api/product'
-import { checkPromoCode } from '~/services/api/order'
+import { checkPromoCode } from '~/services/api/personal'
 import { cart, ProductItem, user } from '~/store'
 
 @Component({

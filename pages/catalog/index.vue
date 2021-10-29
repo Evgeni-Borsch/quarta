@@ -62,6 +62,7 @@ import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
 import { Page } from '~/models/general'
 import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
+import pageTitle from '~/utils/pageTitle'
 
 @Component({
   components: {
@@ -69,6 +70,11 @@ import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
     CategoryCardVue,
     BreadcrumbsVue,
     SubscribeVue
+  },
+  head() {
+    return {
+      title: pageTitle('Каталог')
+    }
   }
 })
 export default class CategoryPage extends Vue {

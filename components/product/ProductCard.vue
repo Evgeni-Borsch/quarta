@@ -3,7 +3,10 @@
     <div class="product-card__image">
       <div class="product-card__image-actions">
         <CompareIcon />
-        <HeartIcon />
+        <component
+          :is="isInFavs ? `HeartFillIcon` : `HeartIcon`"
+          @click="toggleFavs"
+        />
       </div>
 
       <router-link :to="`/product/${product.id}/${product.slug}`">
@@ -64,11 +67,18 @@ import StarsVue from '../stars/Stars.vue'
 import ProductPriceVue from './ProductPrice.vue'
 import CompareIcon from '~/assets/icons/compare.svg?icon'
 import HeartIcon from '~/assets/icons/heart.svg?icon'
+import HeartFillIcon from '@/assets/icons/heart-fill.svg?icon'
 
 import ProductMixin from '~/mixins/Product'
 
 @Component({
-  components: { StarsVue, ProductPriceVue, CompareIcon, HeartIcon }
+  components: {
+    StarsVue,
+    ProductPriceVue,
+    CompareIcon,
+    HeartIcon,
+    HeartFillIcon
+  }
 })
 export default class ProductCardVue extends mixins(ProductMixin) {
   @Prop({ default: 'default' }) size!: string
@@ -177,7 +187,7 @@ export default class ProductCardVue extends mixins(ProductMixin) {
   }
 
   &::v-deep {
-    .price{
+    .price {
       margin-top: auto;
       justify-self: flex-end;
     }

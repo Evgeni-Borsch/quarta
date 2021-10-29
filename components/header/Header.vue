@@ -84,18 +84,19 @@
             </div>
           </button>
 
-          <button class="btn btn-link px-2 mx-2">
-            <div class="position-relative px-1">
+          <router-link to="/favourites" class="btn btn-link px-2 mx-2">
+            <div class="position-relative px-1 text-primary">
               <HeartIcon />
+              <BageVue v-if="favsCount">{{ favsCount }}</BageVue>
             </div>
-          </button>
+          </router-link>
 
-          <button class="btn btn-link px-2 mx-2">
-            <router-link class="position-relative px-1 text-primary" to="/cart">
+          <router-link to="/cart" class="btn btn-link px-2 mx-2">
+            <div class="position-relative px-1 text-primary">
               <CartIcon />
               <BageVue v-if="cartCount">{{ cartCount }}</BageVue>
-            </router-link>
-          </button>
+            </div>
+          </router-link>
         </div>
       </div>
 
@@ -129,7 +130,7 @@ import LocationIcon from '@/assets/icons/location.svg?icon'
 import PersonIcon from '@/assets/icons/person.svg?icon'
 import ArrowSmallIcon from '@/assets/icons/arrow-small.svg?icon'
 
-import { cart, location, user } from '~/store'
+import { cart, favourites, location, user } from '~/store'
 
 @Component({
   name: 'Header',
@@ -185,6 +186,10 @@ export default class HeaderVue extends Vue {
 
   get cartCount() {
     return cart.countTotal
+  }
+
+  get favsCount() {
+    return favourites.items.length
   }
 
   get currentLocation() {

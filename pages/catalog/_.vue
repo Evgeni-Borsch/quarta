@@ -46,6 +46,7 @@ import PaginationVue from '~/components/Pagination.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
 import ProductsGridVue from '~/components/catalog/ProductsGrid.vue'
 import { CatalogCount, CatalogSort } from '~/services/api/catalog'
+import pageTitle from '~/utils/pageTitle'
 
 @Component({
   components: {
@@ -59,7 +60,14 @@ import { CatalogCount, CatalogSort } from '~/services/api/catalog'
     SubscribeVue,
     ProductsGridVue
   },
-  middleware: ['category']
+  middleware: ['category'],
+  head(this: CategoryPathResolver) {
+    return {
+      title: pageTitle(
+        this.category ? `${this.category?.name} - Каталог` : 'Каталог'
+      )
+    }
+  }
 })
 export default class CategoryPathResolver extends Vue {
   product: ProductItem | null = null
