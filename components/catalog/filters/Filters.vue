@@ -70,60 +70,27 @@ export default class FiltersVue extends Vue {
     if (!this.category) return
 
     return getFilters(this.category.id).then((filtersResponse) => {
+      const filtersKeys = Object.keys(filtersResponse)
       this.filters = []
 
-      // Производитель
-      if (filtersResponse.P_MANIFACTURER) {
-        this.filters.push(
-          new FiltersSection({
-            title: 'Производитель',
-            children: filtersResponse.P_MANIFACTURER?.VALUE2?.map((filter) => {
-              return new CheckboxFilter({
-                name: filtersResponse.P_MANIFACTURER.ID,
-                value: filter.ID,
-                title: filter.NAME
-              })
-            })
-          })
-        )
-      }
+      filtersKeys.forEach((key) => {
+        if (key === 'PRICE') return null
 
-      // Бренд
-      if (filtersResponse.P_BRAND) {
-        this.filters.push(
-          new FiltersSection({
-            title: 'Бренд',
-            children: filtersResponse.P_BRAND.VALUE2?.map((filter) => {
-              return new CheckboxFilter({
-                name: filtersResponse.P_BRAND.ID,
-                value: filter.ID,
-                title: filter.NAME
-              })
-            })
-          })
-        )
-      }
+        const filterData = filtersResponse[key]
 
-      // Свойства
-      if (filtersResponse.P_PROPERTIES) {
         this.filters.push(
           new FiltersSection({
-            title: 'Характеристики',
-            children: filtersResponse.P_PROPERTIES.VALUE2.map((prop) => {
-              return new FiltersSection({
-                title: prop.NAME,
-                children: prop.P_VALUE.VALUE.map((value) => {
-                  return new CheckboxFilter({
-                    name: prop.ID,
-                    value,
-                    title: value
-                  })
-                })
+            title: filterData.NAME,
+            children: filterData.VALUE.map((value) => {
+              return new CheckboxFilter({
+                name: filterData.NAME,
+                value,
+                title: value
               })
             })
           })
         )
-      }
+      })
 
       // Цена
       this.filters.push(

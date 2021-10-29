@@ -41,28 +41,12 @@ export interface CatalogCategory extends CatalogSection {
 }
 
 export interface FiltersResponse {
-  P_BRAND: {
-    ID: string
-    VALUE2: Array<{
-      ID: string
-      NAME: string
-    }>
+  PRICE: {
+    MIN: number
+    MAX: number
   }
-  P_MANIFACTURER: {
-    ID: string
-    VALUE2: Array<{
-      ID: string
-      NAME: string
-    }>
-  }
-  P_PROPERTIES: {
-    ID: string
-    VALUE2: Array<{
-      ID: string
-      NAME: string
-      P_VALUE: {
-        VALUE: Array<string>
-      }
-    }>
+  [key: string]: {
+    NAME: string
+    VALUE: Array<string>
   }
 }
