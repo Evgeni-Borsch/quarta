@@ -41,10 +41,6 @@ export interface CatalogCategory extends CatalogSection {
 }
 
 export interface FiltersResponse {
-  PRICE: {
-    MIN: number
-    MAX: number
-  }
   [key: string]: {
     NAME: string
     VALUE: Array<string>
