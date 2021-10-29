@@ -9,7 +9,8 @@ export default class PrivatePage extends Vue {
     return user.hasAuth
   }
 
-  fetch() {
+  async fetch() {
+    await user.waitInitiation()
     if (!user.hasAuth) {
       this.$router.replace('/login')
     }

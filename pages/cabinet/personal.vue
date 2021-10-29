@@ -95,7 +95,7 @@ import LoadingVue from '~/components/Loading.vue'
 import PrivatePage from '~/mixins/PrivatePage'
 import PeparedRedirect from '~/mixins/PeparedRedirect'
 
-import {  setPersonalData } from '~/services/api/cabinet'
+import { setPersonalData } from '~/services/api/cabinet'
 
 import PersonIcon from '~/assets/icons/person.svg?icon'
 import pageTitle from '~/utils/pageTitle'
@@ -153,9 +153,9 @@ export default class AddressPage extends mixins(
       path: '/cabinet'
     },
     {
-      title: 'Адрес доставки',
+      title: 'Личные данные',
       slug: 'address',
-      path: '/cabinet/address'
+      path: '/cabinet/personal'
     }
   ]
 

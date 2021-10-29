@@ -2,6 +2,13 @@ import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { checkAuth } from '~/services/auth'
 import { AuthResponse } from '~/services/auth/model'
 
+let resolver: (value?: unknown) => void
+let rejecter: (reason?: any) => void
+const waitInitiation = new Promise((resolve, reject) => {
+  resolver = resolve
+  rejecter = reject
+})
+
 @Module({
   name: 'user',
   stateFactory: true,
@@ -20,10 +27,19 @@ export default class UserModule extends VuexModule {
     return `${this.firstName} ${this.secondName}`
   }
 
+  get waitInitiation() {
+    return () => waitInitiation
+  }
+
   @Action
   async init() {
     const response = await checkAuth()
-    if (response) this.setUserPromResponse(response)
+    if (response) {
+      this.setUserPromResponse(response)
+      resolver()
+    } else {
+      rejecter()
+    }
   }
 
   @Mutation
