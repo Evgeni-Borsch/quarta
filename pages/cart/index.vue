@@ -6,7 +6,7 @@
       <LoadingVue />
     </div>
 
-    <div v-else-if="products.length" class="container">
+    <div v-else-if="products.length || true" class="container">
       <div class="row">
         <div class="col-8">
           <header class="cart__header">

@@ -70,6 +70,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 
+import { mixins } from 'vue-class-component'
 import AuthBaseVue from '~/components/auth/AuthBase.vue'
 import CabinetSectionVue from '~/components/cabinet/CabinetSection.vue'
 import InputVue from '~/components/inputs/Input.vue'
@@ -80,6 +81,7 @@ import DeliveryIcon from '~/assets/icons/delivery.svg?icon'
 import CopyIcon from '~/assets/icons/copy.svg?icon'
 import { user } from '~/store'
 import LoadingVue from '~/components/Loading.vue'
+import PrivatePage from '~/mixins/PrivatePage'
 
 @Component({
   components: {
@@ -95,11 +97,7 @@ import LoadingVue from '~/components/Loading.vue'
   setup() {},
   fetchOnServer: false
 })
-export default class CabinetPage extends Vue {
-  get hasAuth() {
-    return user.hasAuth
-  }
-
+export default class CabinetPage extends mixins(PrivatePage) {
   get email() {
     return user.email ?? ''
   }
@@ -118,12 +116,6 @@ export default class CabinetPage extends Vue {
 
   get fullName() {
     return `${this.firstName} ${this.secondName}`
-  }
-
-  fetch() {
-    if (!user.hasAuth) {
-      this.$router.replace('/login')
-    }
   }
 }
 </script>

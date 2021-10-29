@@ -2,7 +2,7 @@
   <div class="purchase">
     <BreadcrumbsVue :path="breadcrumbs" />
 
-    <div v-if="!hasFetched && !isRestored" class="container">
+    <div v-if="!hasFetched && !isRestored && false" class="container">
       <LoadingVue />
     </div>
 
@@ -22,7 +22,7 @@
       </div>
 
       <div class="row">
-        <div class="col-8">
+        <div class="col-12 col-lg-8">
           <div
             v-if="errorFromServer"
             class="alert alert-danger mb-4"
@@ -291,7 +291,7 @@
             >
               <p>
                 <span class="text-dark"
-                  >Доступно {{ numberWithSpaces(bonusTotal) }} баллов.</span
+                  >Доступно {{ numberWithSpaces(bonus || 0) }} баллов.</span
                 >
                 Оплачивайте ими до 50% от стоимости покупки
               </p>
@@ -369,65 +369,9 @@
               специальных предложений
             </small>
           </section>
-
-          <hr class="my-4" />
-
-          <!--
-            Сумма к оплате
-          -->
-
-          <div class="purchase__prices py-2">
-            <div class="purchase__price-line">
-              <span> Товары на сумму </span>
-              <div class="purchase__price">
-                {{ numberWithSpaces(priceTotal) }} ₽
-              </div>
-            </div>
-
-            <div class="purchase__price-line">
-              <span> Скидка </span>
-              <div class="purchase__price--bonus">
-                {{ numberWithSpaces(discountTotal) }} ₽
-              </div>
-            </div>
-
-            <div class="purchase__price-line">
-              <span> Стоимость доставки </span>
-              <div class="purchase__price">
-                {{ numberWithSpaces(priceTotal) }} ₽
-              </div>
-            </div>
-
-            <div class="purchase__price-line">
-              <span> <b>Итого к оплате</b> </span>
-              <div class="purchase__price--final">
-                {{ numberWithSpaces(priceTotal + deliveryPrice) }} ₽
-              </div>
-            </div>
-          </div>
-
-          <div class="row mt-5">
-            <div class="col-7">
-              <p>
-                Нажимая кнопку «Оформить заказ», я даю свое согласие на
-                обработку моих персональных данных, в соответствии с Федеральным
-                законом от 27.07.2006 года №152-ФЗ «О персональных данных», на
-                условиях и для целей, определенных в Согласии на обработку
-                персональных данных
-              </p>
-            </div>
-            <div class="col purchase__submit-block">
-              <button class="btn btn-primary btn-lg px-5" @click="submit">
-                Оформить заказ
-              </button>
-              <CheckboxVue v-model="managerCall" class="mt-2">
-                Нужен звонок менеджера
-              </CheckboxVue>
-            </div>
-          </div>
         </div>
 
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
           <CabinetSectionVue class="purchase__summary">
             <div class="purchase__summary-title">
               В заказе {{ countTotal }} товара на сумму {{ priceTotal }} ₽
@@ -447,6 +391,62 @@
               </small>
             </div>
           </CabinetSectionVue>
+        </div>
+      </div>
+      <div class="col-12 col-lg-8">
+        <!--
+          Сумма к оплате
+        -->
+
+        <hr class="my-4" />
+
+        <div class="purchase__prices py-2">
+          <div class="purchase__price-line">
+            <span> Товары на сумму </span>
+            <div class="purchase__price">
+              {{ numberWithSpaces(priceTotal) }} ₽
+            </div>
+          </div>
+
+          <div class="purchase__price-line">
+            <span> Скидка </span>
+            <div class="purchase__price--bonus">
+              {{ numberWithSpaces(discountTotal) }} ₽
+            </div>
+          </div>
+
+          <div class="purchase__price-line">
+            <span> Стоимость доставки </span>
+            <div class="purchase__price">
+              {{ numberWithSpaces(priceTotal) }} ₽
+            </div>
+          </div>
+
+          <div class="purchase__price-line">
+            <span> <b>Итого к оплате</b> </span>
+            <div class="purchase__price--final">
+              {{ numberWithSpaces(priceTotal + deliveryPrice) }} ₽
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-7">
+            <p>
+              Нажимая кнопку «Оформить заказ», я даю свое согласие на обработку
+              моих персональных данных, в соответствии с Федеральным законом от
+              27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для
+              целей, определенных в Согласии на обработку персональных данных
+            </p>
+          </div>
+          <div class="col purchase__submit-block">
+            <button class="btn btn-primary btn-lg px-5" @click="submit">
+              Оформить заказ
+            </button>
+            <CheckboxVue v-model="managerCall" class="mt-2">
+              Нужен звонок менеджера
+            </CheckboxVue>
+          </div>
         </div>
       </div>
     </div>
@@ -818,7 +818,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
   @Watch('hasFetched')
   afterFetch() {
-    if (!this.products.length) this.$router.replace('/cart')
+    // if (!this.products.length) this.$router.replace('/cart')
   }
 
   mounted() {
