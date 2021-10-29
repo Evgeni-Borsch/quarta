@@ -42,12 +42,18 @@ export interface Range extends Array<number | null> {
   1: number | null
 }
 export class PriceFilter extends Filter {
-  constructor() {
+  min = 0
+  max = 1000000
+
+  constructor(min: number, max: number) {
     super({
       name: 'price',
       title: 'Цена',
       value: null,
     })
+
+    this.min = min
+    this.max = max
   }
 }
 

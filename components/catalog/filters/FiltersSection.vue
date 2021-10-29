@@ -3,7 +3,7 @@
     class="filters-section"
     :class="{
       'filters-section--expanded': expanded,
-      'filters-section--compact': compact,
+      'filters-section--compact': compact
     }"
   >
     <div class="filters-section__header">
@@ -38,6 +38,7 @@ export default class FiltersSectionVue extends Vue {
 
   &--compact {
     padding: 0;
+    margin: 1.25rem 0;
     overflow: visible;
   }
 

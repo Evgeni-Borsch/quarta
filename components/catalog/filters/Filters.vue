@@ -69,19 +69,38 @@ export default class FiltersVue extends Vue {
   populate() {
     if (!this.category) return
 
+    const fixed = ['BREND', 'PRICE', 'CML2_MANUFACTURER']
+
     return getFilters(this.category.id).then((filtersResponse) => {
       const filtersKeys = Object.keys(filtersResponse)
       this.filters = []
 
+      if (filtersResponse.CML2_MANUFACTURER) {
+        this.filters.push(
+          new FiltersSection({
+            title: filtersResponse.CML2_MANUFACTURER.NAME,
+            children: filtersResponse.CML2_MANUFACTURER.VALUE.map((value) => {
+              return new CheckboxFilter({
+                name: filtersResponse.CML2_MANUFACTURER!.NAME,
+                value,
+                title: value
+              })
+            })
+          })
+        )
+      }
+
+      const props: Array<FiltersSection> = []
+
       filtersKeys.forEach((key) => {
-        if (key === 'PRICE') return null
+        if (fixed.includes(key)) return null
 
         const filterData = filtersResponse[key]
 
-        this.filters.push(
+        props.push(
           new FiltersSection({
             title: filterData.NAME,
-            children: filterData.VALUE.map((value) => {
+            children: filterData.VALUE.map((value: string) => {
               return new CheckboxFilter({
                 name: filterData.NAME,
                 value,
@@ -92,11 +111,40 @@ export default class FiltersVue extends Vue {
         )
       })
 
+      if (props.length) {
+        this.filters.push(
+          new FiltersSection({
+            title: 'Характеристики',
+            children: props
+          })
+        )
+      }
+
+      if (filtersResponse.BREND) {
+        this.filters.push(
+          new FiltersSection({
+            title: filtersResponse.BREND.NAME,
+            children: filtersResponse.BREND.VALUE.map((value) => {
+              return new CheckboxFilter({
+                name: filtersResponse.BREND!.NAME,
+                value,
+                title: value
+              })
+            })
+          })
+        )
+      }
+
       // Цена
       this.filters.push(
         new FiltersSection({
           title: 'Цена',
-          children: [new PriceFilter()]
+          children: [
+            new PriceFilter(
+              filtersResponse.PRICE.MIN,
+              filtersResponse.PRICE.MAX
+            )
+          ]
         })
       )
     })
@@ -128,6 +176,8 @@ export default class FiltersVue extends Vue {
   padding: 0.3125rem 0;
   background-color: $white;
   border-radius: $border-radius-lg;
+  max-height: 95vh;
+  overflow-y: auto;
 
   &__header {
     display: flex;

@@ -14,7 +14,7 @@
           <InputVue
             type="number"
             label="мин."
-            placeholder="0"
+            :placeholder="item.min"
             :value="range[0]"
             @change="(value) => onRangeChange(value, null)"
           />
@@ -23,7 +23,7 @@
           <InputVue
             type="number"
             label="макс."
-            placeholder="100000"
+            :placeholder="item.max"
             :value="range[1]"
             @change="(value) => onRangeChange(null, value)"
           />

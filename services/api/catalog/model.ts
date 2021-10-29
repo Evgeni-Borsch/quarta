@@ -40,9 +40,17 @@ export interface CatalogCategory extends CatalogSection {
   ITEMS?: Array<ProductResponse>
 }
 
+export interface FiltersResponseItem {
+  NAME: string
+  VALUE: Array<string>
+}
+
 export interface FiltersResponse {
-  [key: string]: {
-    NAME: string
-    VALUE: Array<string>
+  BREND?: FiltersResponseItem
+  CML2_MANUFACTURER?: FiltersResponseItem
+  PRICE: {
+    MIN: number
+    MAX: number
   }
+  [key: string]: FiltersResponseItem | any
 }
