@@ -23,7 +23,7 @@ import HeaderMobileVue from '~/components/header/HeaderMobile.vue'
 import FooterVue from '~/components/footer/Footer.vue'
 
 import '~/assets/styles/global.scss'
-import { cart, user } from '~/store'
+import { cart, favourites, user } from '~/store'
 
 @Component({
   components: {
@@ -46,6 +46,7 @@ export default class DefaultLayout extends Vue {
   async fetch() {
     await user.init()
     await cart.pullState()
+    await favourites.pullState()
   }
 }
 </script>
