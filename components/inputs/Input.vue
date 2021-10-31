@@ -132,6 +132,10 @@ export default class Textarea extends mixins(TextInput, Sizable) {
     }
   }
 
+  label {
+    font-size: 1rem;
+  }
+
   .info {
     position: relative;
     top: -2px;

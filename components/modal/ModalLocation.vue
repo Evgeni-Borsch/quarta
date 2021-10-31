@@ -41,7 +41,7 @@ import levenshteinFilter from '~/utils/levenshteinFilter'
     InputVue,
   },
 })
-export default class ModalLocation extends Vue {
+export default class ModalLocationVue extends Vue {
   search = ''
 
   @Ref('modal') modalRef!: ModalVue

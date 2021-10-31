@@ -1,3 +1,5 @@
+import QueryString from 'qs'
+
 import {
   CatalogSectionsResponse,
   CatalogCategory,
@@ -58,5 +60,19 @@ export async function getFilters(categoryId: string): Promise<FiltersResponse> {
 
   return await $axios.$get(
     `${API_BASE_URL}/api/catalog/sectionfilter.php?SECTION_ID=${categoryId}`
+  )
+}
+
+export async function requestAvailabilityInform(
+  productId: string
+): Promise<any> {
+  const { $axios } = getStore()
+
+  return await $axios.$post(
+    `${API_BASE_URL}/api/catalog/availabilityInform.php`,
+    QueryString.stringify({ productId }),
+    {
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }
   )
 }

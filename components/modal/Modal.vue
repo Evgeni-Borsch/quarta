@@ -7,7 +7,9 @@
         </div>
         <div class="modal-content">
           <div class="modal-body">
-            <h4 v-if="title" class="modal-title">{{ title }}</h4>
+            <component :is="titleTag" v-if="title" class="modal-title">{{
+              title
+            }}</component>
             <slot />
           </div>
         </div>
@@ -22,7 +24,7 @@ import { Portal } from 'portal-vue'
 import CloseIcon from '~/assets/icons/close.svg?icon'
 
 @Component({
-  components: { Portal, CloseIcon },
+  components: { Portal, CloseIcon }
 })
 export default class ModalVue extends Vue {
   instance!: any
@@ -30,6 +32,7 @@ export default class ModalVue extends Vue {
 
   @Ref('modal') modalRef!: HTMLElement
   @Prop({ default: null }) title!: string
+  @Prop({ default: 'h4' }) titleTag!: string
 
   show() {
     const { Modal } = require('bootstrap')
