@@ -1,5 +1,8 @@
 <template>
-  <div class="add-review card mt-4">
+  <div
+    class="add-review card mt-4"
+    :class="{ 'add-review--reviews-page': reviewsPage }"
+  >
     <div class="card-body">
       <span>Ваша оценка</span>
 
@@ -10,7 +13,7 @@
           :size="StarSize.large"
           :class="{
             'star--active': isStarActive(star.points),
-            'star--hovered': isStarHovered(star.points),
+            'star--hovered': isStarHovered(star.points)
           }"
           @click.native="() => rate(star.points)"
           @mouseenter.native="() => setHoverRating(star.points)"
@@ -46,36 +49,34 @@ import StarVue, { StarSize } from '../stars/Star.vue'
   components: {
     StarVue,
     TextareaVue,
-    InputFileVue,
-  },
-  setup() {
-    return {
-      StarSize,
-    }
-  },
+    InputFileVue
+  }
 })
 export default class ProductAddReview extends Vue {
+  @Prop({ default: false }) reviewsPage!: boolean
+
+  StarSize = StarSize
   stars = [
     {
       points: 1,
-      description: 'Ужасно',
+      description: 'Ужасно'
     },
     {
       points: 2,
-      description: 'Плохо',
+      description: 'Плохо'
     },
     {
       points: 3,
-      description: 'Нормально',
+      description: 'Нормально'
     },
     {
       points: 4,
-      description: 'Хорошо',
+      description: 'Хорошо'
     },
     {
       points: 5,
-      description: 'Отлично',
-    },
+      description: 'Отлично'
+    }
   ]
 
   rating: number | null = null
@@ -108,6 +109,10 @@ export default class ProductAddReview extends Vue {
 
 <style lang="scss" scoped>
 .add-review {
+  &--reviews-page {
+    border-color: transparent;
+  }
+
   &__stars {
     display: flex;
     align-items: center;

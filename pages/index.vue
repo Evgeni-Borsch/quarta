@@ -163,7 +163,6 @@ import { Vue, Component } from 'vue-property-decorator'
 
 import AdvantagesVue from '~/components/Advantages.vue'
 import BaseSliderVue from '~/components/BaseSlider.vue'
-import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import CategoryCardVue from '~/components/CategoryCard.vue'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import PromoCardVue from '~/components/promo/PromoCard.vue'
@@ -182,11 +181,16 @@ import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
 import { API_BASE_URL } from '~/services/constants'
 import { BannerResponse, getBanner } from '~/services/api/sections'
 
+export const INDEX_PAGE: Page = {
+  title: 'Главная',
+  slug: 'index',
+  path: '/'
+}
+
 @Component({
   components: {
     MainSliderVue,
     CategoryCardVue,
-    BreadcrumbsVue,
     SubscribeVue,
     BaseSliderVue,
     AdvantagesVue,
@@ -204,18 +208,6 @@ export default class IndexPage extends Vue {
   mainSlider: Array<MainSliderSlide> = []
   products: Array<ProductItem> = []
   largeCards: Array<BannerResponse> = []
-  breadcrumbs: Array<Page> = [
-    {
-      title: 'Главная',
-      slug: 'index',
-      path: '/'
-    },
-    {
-      title: 'Каталог',
-      slug: 'catalog',
-      path: '/catalog'
-    }
-  ]
 
   get firstLargeCard() {
     return this.getLargeCard(0)

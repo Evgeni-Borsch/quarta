@@ -45,7 +45,7 @@ export default class CabinetSectionVue extends Vue {
       }
 
       .icon {
-        margin-right: 1.5rem;
+        margin-right: 1rem;
       }
     }
   }
