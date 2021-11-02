@@ -9,8 +9,16 @@
         </p>
         <div class="card">
           <div class="card-body">
-            <TextareaVue label="Введите вопрос" class="mb-4" />
-            <button class="btn btn-primary">Отправить</button>
+            <form>
+              <TextareaVue v-model="text" label="Введите вопрос" class="mb-4" />
+              <button
+                class="btn btn-primary"
+                type="submit"
+                :disabled="buttonDisabled"
+              >
+                Отправить
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -24,10 +32,16 @@ import TextareaVue from '../inputs/Textarea.vue'
 
 @Component({
   components: {
-    TextareaVue,
-  },
+    TextareaVue
+  }
 })
-export default class ProductAsk extends Vue {}
+export default class ProductAsk extends Vue {
+  text = ''
+
+  get buttonDisabled() {
+    return this.text.length < 10
+  }
+}
 </script>
 
 <style lang="scss" scoped>

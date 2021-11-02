@@ -21,14 +21,18 @@
 <script lang="ts">
 import { Vue, Component, Prop, Ref } from 'vue-property-decorator'
 import { Portal } from 'portal-vue'
+import { mixins } from 'vue-class-component'
 import CloseIcon from '~/assets/icons/close.svg?icon'
+import Sizable, { Sizes } from '~/mixins/Sizable'
 
 @Component({
   components: { Portal, CloseIcon }
 })
-export default class ModalVue extends Vue {
+export default class ModalVue extends mixins(Sizable) {
   instance!: any
   disabled: boolean = true
+
+  Sizes = Sizes
 
   @Ref('modal') modalRef!: HTMLElement
   @Prop({ default: null }) title!: string

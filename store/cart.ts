@@ -1,10 +1,16 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { ProductItem } from '.'
-import { addToCart, getCart } from '~/services/api/product'
+import {
+  addToCart,
+  clearCart,
+  getCart,
+  removeCartItem,
+} from '~/services/api/product'
 import { cart, products } from '~/utils/store-accessor'
 
 export interface CartItem {
   id: string
+  cartId: string
   count: number
 }
 
@@ -58,7 +64,23 @@ export default class CartModule extends VuexModule {
 
   @Action
   async removeItem(id: string) {
-    // await addToCart(id)
+    const cartItemId = this.items.get(id)!.cartId
+    await removeCartItem(cartItemId)
+    await this.pullState()
+  }
+
+  @Action
+  async clear() {
+    await clearCart()
+    await this.pullState()
+  }
+
+  @Action
+  async setCount(payload: { id: string; count: number }) {
+    const { id, count } = payload
+    if (count <= 0) return cart.removeItem(id)
+
+    await addToCart(id, count)
     await this.pullState()
   }
 
@@ -70,6 +92,7 @@ export default class CartModule extends VuexModule {
     cart.forEach((item) => {
       items.set(item.PRODUCT_ID, {
         id: item.PRODUCT_ID,
+        cartId: item.ID,
         count: item.QUANTITY,
       })
     })
@@ -80,14 +103,5 @@ export default class CartModule extends VuexModule {
   @Mutation
   setItems(items: Map<string, CartItem>) {
     this.items = items
-  }
-
-  @Mutation
-  setCount(payload: { id: string; count: number }) {
-    // const { id, count } = payload
-    // if (count <= 0) return cart.removeItem(id)
-    // const items = new Map(this.items)
-    // items.set(id, { id, count })
-    // this.items = items
   }
 }

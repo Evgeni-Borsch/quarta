@@ -30,6 +30,23 @@ export async function getCart(): Promise<Array<GetCartResponseItem>> {
   })
 }
 
+export async function removeCartItem(cartItemId: string): Promise<any> {
+  const { $axios } = getStore()
+  return await $axios.$get(
+    `${API_BASE_URL}//api/personal/cart/removefromcart.php?CART_ITEM_ID=${cartItemId}`,
+    {
+      withCredentials: true,
+    }
+  )
+}
+
+export async function clearCart(): Promise<any> {
+  const { $axios } = getStore()
+  return await $axios.$get(`${API_BASE_URL}/api/personal/cart/clearcart.php`, {
+    withCredentials: true,
+  })
+}
+
 export async function addToCart(
   id: string,
   count = 1

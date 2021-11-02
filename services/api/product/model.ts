@@ -79,6 +79,7 @@ export interface AddToCartResponse {
 }
 
 export interface GetCartResponseItem {
+  ID: string
   PRODUCT_ID: string
   QUANTITY: number
 }

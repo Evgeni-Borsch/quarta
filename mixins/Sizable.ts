@@ -2,6 +2,7 @@ import { Prop, Component, Vue } from 'vue-property-decorator'
 
 export enum Sizes {
   small = 'default',
+  medium = 'medium',
   default = 'small',
   large = 'large',
 }
@@ -16,5 +17,9 @@ export default class Sizable extends Vue {
 
   get isLarge() {
     return this.size === Sizes.large
+  }
+
+  get isMedium() {
+    return this.size === Sizes.medium
   }
 }
