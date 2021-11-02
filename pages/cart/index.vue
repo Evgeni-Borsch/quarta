@@ -13,7 +13,9 @@
             <h2>Корзина</h2>
             <small> ({{ countTotal }} товара) </small>
 
-            <button class="btn bg-white cart__clear">Очистить корзину</button>
+            <button class="btn bg-white cart__clear" @click="clearCart">
+              Очистить корзину
+            </button>
           </header>
         </div>
 
@@ -102,6 +104,7 @@ import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 
 import CartMixin from '~/mixins/Cart'
 import { Page } from '~/models/general'
+import { cart } from '~/store'
 
 @Component({
   components: {

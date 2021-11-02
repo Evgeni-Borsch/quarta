@@ -37,6 +37,12 @@ export default class ProductMixin extends Vue {
     cart.setCount({ id: this.product.id, count })
   }
 
+  removeFromCart() {
+    if (confirm('Вы действительно хотите удалить товар из корзины?')) {
+      cart.removeItem(this.product.id)
+    }
+  }
+
   increaseCount() {
     this.setCount(this.count + 1)
   }
@@ -44,6 +50,8 @@ export default class ProductMixin extends Vue {
   decreaseCount() {
     if (this.count > 0) {
       this.setCount(this.count - 1)
+    } else {
+      this.removeFromCart()
     }
   }
 

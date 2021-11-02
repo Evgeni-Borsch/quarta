@@ -26,10 +26,23 @@ export default class CartMixin extends Vue {
     return cart.countTotal
   }
 
+  get cartRaw() {
+    return cart.items
+  }
+
   async fetch() {
     await cart.pullState()
     this.products = await cart.productsListAsync()
     this.hasFetched = true
+  }
+
+  async clearCart() {
+    await cart.clear()
+  }
+
+  @Watch('cartRaw')
+  async onCartItemsChange() {
+    this.products = await cart.productsListAsync()
   }
 
   @Watch('products')
