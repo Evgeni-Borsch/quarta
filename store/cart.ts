@@ -78,11 +78,10 @@ export default class CartModule extends VuexModule {
   @Action
   async setCount(payload: { id: string; count: number }) {
     const { id, count } = payload
-    const initialCount = cart.items.get(id)!.count
 
     if (count <= 0) return cart.removeItem(id)
 
-    await addToCart(id, count - initialCount)
+    await addToCart(id, count)
     await this.pullState()
   }
 

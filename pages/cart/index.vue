@@ -6,7 +6,7 @@
       <LoadingVue />
     </div>
 
-    <div v-else-if="products.length || true" class="container">
+    <div v-else-if="products.length" class="container">
       <div class="row">
         <div class="col-8">
           <header class="cart__header">
@@ -77,9 +77,9 @@
       <div class="cart__empty">
         <h2>Ваша корзина пуста</h2>
         <p>Воспользуйтесь поиском, чтобы найти всё, что нужно.</p>
-        <router-link class="btn btn-lg btn-primary" to="/catalog"
-          >Продолжить покупки</router-link
-        >
+        <router-link class="btn btn-lg btn-primary" to="/catalog">
+          Продолжить покупки
+        </router-link>
       </div>
     </div>
   </div>

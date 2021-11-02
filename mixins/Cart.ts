@@ -37,7 +37,9 @@ export default class CartMixin extends Vue {
   }
 
   async clearCart() {
-    await cart.clear()
+    if (confirm('Отчистить корзину?')) {
+      await cart.clear()
+    }
   }
 
   @Watch('cartRaw')
