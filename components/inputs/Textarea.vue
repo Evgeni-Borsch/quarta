@@ -8,8 +8,14 @@
       ref="textarea"
       v-model="innerValue"
       class="form-control"
+      :class="{
+        'is-invalid': error
+      }"
       rows="3"
     />
+    <div v-if="typeof error === 'string'" class="invalid-feedback">
+      {{ error }}
+    </div>
   </div>
 </template>
 
@@ -32,7 +38,7 @@ import TextInput from '~/mixins/TextInput'
     onBeforeUnmount(() => {
       autosize.destroy(textarea.value)
     })
-  },
+  }
 })
 export default class Textarea extends mixins(TextInput) {
   @Ref('textarea') textarea!: HTMLTextAreaElement

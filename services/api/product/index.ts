@@ -69,3 +69,15 @@ export async function makeOrder(payload: any): Promise<any> {
     }
   )
 }
+
+export async function askQuestion(text: any): Promise<any> {
+  const { $axios } = getStore()
+  return await $axios.$post(
+    `${API_BASE_URL}/api/personal/order/make/`,
+    QueryString.stringify({ text }),
+    {
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      withCredentials: true,
+    }
+  )
+}

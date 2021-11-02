@@ -6,7 +6,7 @@
       </div>
       <div class="col-6 reviews-list__meta">
         <StarsVue :rating="3.8" :reviews="8" count />
-        <SelectVue :options="orderOptions" label="Сортировать:" />
+        <SelectVue :options="orderOptions" size="small" label="Сортировать:" />
       </div>
     </div>
 

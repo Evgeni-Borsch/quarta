@@ -93,6 +93,14 @@ import ProductReviewsVue from './ProductReviews.vue'
 import ProductInstructionsVue from './ProductInstructions.vue'
 import { ProductItem } from '~/store'
 
+const avaibleTabs = [
+  'description',
+  'availability',
+  'documents',
+  'questions',
+  'reviews'
+]
+
 @Component({
   components: {
     ProductAvailabilityVue,
@@ -110,6 +118,8 @@ export default class ProductAboutVue extends Vue {
 
   setCurrentTab(tab: string) {
     this.currentTab = tab
+
+    this.$router.push({ hash: tab })
   }
 
   createDynamicClass(tab: string) {
@@ -118,17 +128,12 @@ export default class ProductAboutVue extends Vue {
     }
   }
 
-  setTableStyles() {
-    const table = this.tableWrapper?.querySelector('table')
-    table?.setAttribute('class', 'table table-striped')
-  }
+  beforeMount() {
+    const hash = this.$route.hash?.slice(1)
 
-  mounted() {
-    // this.setTableStyles()
-  }
-
-  updated() {
-    // this.setTableStyles()
+    if (avaibleTabs.includes(hash)) {
+      this.currentTab = hash
+    }
   }
 }
 </script>
