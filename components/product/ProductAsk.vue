@@ -1,6 +1,7 @@
 <template>
   <div class="product-ask container">
-    <div class="row">
+    <LoginToContinueVue v-if="!hasAuth" title="Войдите чтобы задать вопрос" />
+    <div v-else class="row">
       <div v-if="!hasSend" class="col-6">
         <h3>Задать вопрос</h3>
         <p>
@@ -9,6 +10,14 @@
         </p>
         <div class="card">
           <div class="card-body">
+            <div
+              v-if="errorFromServer"
+              class="alert alert-danger mb-4"
+              role="alert"
+            >
+              {{ errorFromServer }}
+            </div>
+
             <form @submit.prevent="onSubmit">
               <TextareaVue
                 v-model="text"
@@ -16,6 +25,7 @@
                 class="mb-4"
                 :error="error"
               />
+
               <button class="btn btn-primary" type="submit">Отправить</button>
             </form>
           </div>
@@ -36,11 +46,15 @@ import { mixins } from 'vue-class-component'
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
 import TextareaVue from '../inputs/Textarea.vue'
+import LoginToContinueVue from '../LoginToContinue.vue'
 import { FormErrors } from '~/services/errors'
+import { sendQuestion } from '~/services/api/product'
+import { user } from '~/store'
 
 @Component({
   components: {
-    TextareaVue
+    TextareaVue,
+    LoginToContinueVue
   },
   validations: {
     text: {
@@ -52,9 +66,14 @@ import { FormErrors } from '~/services/errors'
 export default class ProductAsk extends mixins(validationMixin) {
   text = ''
   error: string | null = ''
+  errorFromServer: string | null = ''
   hasSend = false
 
-  onSubmit() {
+  get hasAuth() {
+    return user.hasAuth
+  }
+
+  async onSubmit() {
     this.error = null
     this.$v.$touch()
 
@@ -63,7 +82,17 @@ export default class ProductAsk extends mixins(validationMixin) {
       return null
     }
 
-    this.hasSend = true
+    try {
+      const response = await sendQuestion(this.text)
+
+      if (response.error) {
+        this.errorFromServer = response.message
+      } else {
+        this.hasSend = true
+      }
+    } catch (e) {
+      this.errorFromServer = e!.message
+    }
   }
 }
 </script>

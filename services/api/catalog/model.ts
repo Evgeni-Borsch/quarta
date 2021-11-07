@@ -54,3 +54,10 @@ export interface FiltersResponse {
   }
   [key: string]: FiltersResponseItem | any
 }
+
+export interface SearchResopnse {
+  SEARCH: Array<{
+    ID: string
+    TITLE: string
+  }>
+}

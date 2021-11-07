@@ -1,7 +1,7 @@
 <template>
   <Portal to="modal" :disabled="disabled">
     <div ref="modal" class="modal" tabindex="-1">
-      <div class="modal-dialog">
+      <div class="modal-dialog" :class="{ 'modal-xl': Sizes.large }">
         <div class="modal__close" @click="hide">
           <CloseIcon />
         </div>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Ref } from 'vue-property-decorator'
+import { Component, Prop, Ref } from 'vue-property-decorator'
 import { Portal } from 'portal-vue'
 import { mixins } from 'vue-class-component'
 import CloseIcon from '~/assets/icons/close.svg?icon'

@@ -1,7 +1,7 @@
 <template>
   <div v-if="product" class="product-card">
     <div class="product-card__image">
-      <div class="product-card__image-actions">
+      <div v-if="actions" class="product-card__image-actions">
         <CompareIcon />
         <component
           :is="isInFavs ? `HeartFillIcon` : `HeartIcon`"
@@ -9,18 +9,16 @@
         />
       </div>
 
-      <router-link :to="`/product/${product.id}/${product.slug}`">
-        <figure>
-          <img src="/product-01-01.jpg" :alt="product.title" />
-        </figure>
-      </router-link>
+      <figure @click="goToProduct">
+        <img src="/product-01-01.jpg" :alt="product.title" />
+      </figure>
     </div>
 
     <div class="product-card__article">Артикул: {{ product.article }}</div>
 
-    <router-link
-      :to="`/product/${product.id}/${product.slug}`"
+    <div
       class="product-card__title"
+      @click="toggleFavs"
       v-html="product.title"
     />
 
@@ -30,9 +28,9 @@
       :discount="product.discount || null"
       size="small"
     />
-    <StarsVue :rating="4.7" :reviews="4" />
+    <StarsVue v-if="stars" :rating="4.7" :reviews="4" />
 
-    <div class="product-card__add">
+    <div v-if="addButton" class="product-card__add">
       <span v-if="isInCart" class="input-group product__add-count">
         <span class="btn btn-primary product__add-minus" @click="decreaseCount"
           >-</span
@@ -82,6 +80,15 @@ import ProductMixin from '~/mixins/Product'
 })
 export default class ProductCardVue extends mixins(ProductMixin) {
   @Prop({ default: 'default' }) size!: string
+  @Prop({ default: true }) addButton!: boolean
+  @Prop({ default: true }) stars!: boolean
+  @Prop({ default: true }) actions!: boolean
+  @Prop({ default: true }) link!: boolean
+
+  goToProduct() {
+    if (!this.link) return null
+    this.$router.push(`/product/${this.product.id}/${this.product.slug}`)
+  }
 }
 </script>
 

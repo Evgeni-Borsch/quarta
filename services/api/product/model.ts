@@ -33,6 +33,7 @@ export interface ProductResponse {
   ID: number
   NAME: string
   CODE: string
+  CAN_BUY: boolean
   DEFAULT_PICTURE: {
     SRC: string
   }

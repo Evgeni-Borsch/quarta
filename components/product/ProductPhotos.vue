@@ -12,6 +12,12 @@
       </transition>
       <img :src="images[currentImage].default" />
     </figure>
+
+    <ProductPhotosSliderVue
+      :images="images"
+      :current-index="currentImage"
+      @change="onIndexChange"
+    />
   </div>
 </template>
 
@@ -22,13 +28,16 @@ import {
   onBeforeUnmount,
   Ref,
   ref,
-  watch,
+  watch
 } from '@nuxtjs/composition-api'
 import { get, templateRef, useMouseInElement } from '@vueuse/core'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
+import ProductPhotosSliderVue from './ProductPhotosSlider.vue'
+import { ProductPhoto } from '~/store'
 
 @Component({
+  components: { ProductPhotosSliderVue },
   setup() {
     const currentImage = ref(0)
     const photoElement: Ref<HTMLElement> = templateRef('photo')
@@ -37,7 +46,7 @@ import { Prop } from 'vue-property-decorator'
     const shiftX: Ref<number> = ref(0)
     const shiftY: Ref<number> = ref(0)
     const imageStyle = computed(() => ({
-      transform: `scale(3) translate3d(${shiftX.value}%,${shiftY.value}%, 0)`,
+      transform: `scale(3) translate3d(${shiftX.value}%,${shiftY.value}%, 0)`
     }))
     const rect: Ref<DOMRect | null> = ref(null)
     const stops: Array<() => void> = []
@@ -47,7 +56,7 @@ import { Prop } from 'vue-property-decorator'
         elementX,
         elementY,
         isOutside,
-        stop: useMouseInElementStop,
+        stop: useMouseInElementStop
       } = useMouseInElement(photoElement)
 
       rect.value = get(photoElement).getBoundingClientRect()
@@ -58,7 +67,7 @@ import { Prop } from 'vue-property-decorator'
 
         zoomStyles.value = {
           top: `${elementY.value}px`,
-          left: `${elementX.value}px`,
+          left: `${elementX.value}px`
         }
       })
 
@@ -90,12 +99,18 @@ import { Prop } from 'vue-property-decorator'
       zoomStyles,
       imageStyle,
       mountMouseHandler,
-      unmountMouseHandler,
+      unmountMouseHandler
     }
-  },
+  }
 })
 export default class ProductPhotos extends Vue {
-  @Prop({ required: true }) images!: Array<any>
+  currentImage!: number
+
+  @Prop({ required: true }) images!: Array<ProductPhoto>
+
+  onIndexChange(index: number) {
+    this.currentImage = index
+  }
 }
 </script>
 

@@ -35,30 +35,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
+import { mixins } from 'vue-class-component'
 import LoadingVue from '../Loading.vue'
 import ProductAvailabilityBageVue from './ProductAvailabilityBage.vue'
 import LocationIcon from '~/assets/icons/location.svg?icon'
-import { ProductAvailability, ProductItem, products } from '~/store'
+
+import AvailabilityMixin from '~/mixins/Availability'
 
 @Component({
   components: { LocationIcon, ProductAvailabilityBageVue, LoadingVue }
 })
-export default class ProductAvailabilityVue extends Vue {
-  availability: ProductAvailability | null = null
-
-  @Prop({ required: true }) product!: ProductItem
-
-  async fetchAvailability() {
-    this.availability = (await products.getProductAvailability(
-      this.product.id
-    )) as ProductAvailability
-  }
-
-  beforeMount() {
-    this.fetchAvailability()
-  }
-}
+export default class ProductAvailabilityVue extends mixins(AvailabilityMixin) {}
 </script>
 
 <style lang="scss" scoped>

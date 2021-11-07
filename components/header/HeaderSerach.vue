@@ -1,25 +1,58 @@
 <template>
-  <div class="input-group">
-    <input
-      type="text"
-      class="form-control border-primary bg-white"
-      placeholder="Искать товары..."
-    />
-    <button class="btn btn-primary">
-      <SearchIcon />
-    </button>
-  </div>
+  <form @submit.prevent="onSubmit">
+    <div class="input-group">
+      <input
+        v-model="query"
+        type="text"
+        class="form-control border-primary bg-white"
+        placeholder="Искать товары..."
+      />
+      <button class="btn btn-primary" type="submit">
+        <SearchIcon />
+      </button>
+    </div>
+  </form>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 
 import SearchIcon from '@/assets/icons/search.svg?icon'
 
-export default defineComponent({
-  components: { SearchIcon },
-  setup() {},
-})
+@Component({ components: { SearchIcon } })
+export default class HeaderSerachVue extends Vue {
+  query = ''
+
+  get queryFromURI(): string {
+    return (this.$route.query.q as string) ?? ''
+  }
+
+  get path(): string {
+    return this.$route.path
+  }
+
+  created() {
+    this.updateQuery()
+  }
+
+  @Watch('path')
+  updateQuery() {
+    if (/^\/search/.test(this.$route.path)) {
+      if (this.queryFromURI) this.query = this.queryFromURI
+    } else {
+      this.query = ''
+    }
+  }
+
+  onSubmit() {
+    this.$router.push({
+      path: '/search',
+      query: {
+        q: this.query,
+      },
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

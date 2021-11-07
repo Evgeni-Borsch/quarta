@@ -8,6 +8,7 @@ import {
   CatalogSort,
   CatalogCount,
   CatalogCountType,
+  SearchResopnse,
 } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
@@ -74,5 +75,13 @@ export async function requestAvailabilityInform(
     {
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }
+  )
+}
+
+export async function search(query: string): Promise<SearchResopnse> {
+  const { $axios } = getStore()
+
+  return await $axios.$get(
+    `${API_BASE_URL}/api/search/?q=${encodeURIComponent(query)}`
   )
 }

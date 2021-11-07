@@ -1,14 +1,11 @@
 import { Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import product from '~/middleware/product'
 import { BaseStoredEntity, Page } from '~/models/general'
 
 import { getProduct, getProductAvailability } from '~/services/api/product'
 import {
   ProductAvailabilityResponse,
-  ProductPathItem,
   ProductResponse,
 } from '~/services/api/product/model'
-import { API_BASE_URL } from '~/services/constants'
 import { products } from '~/store'
 import isOutdated from '~/utils/isOutdated'
 
@@ -71,7 +68,7 @@ export class ProductItem extends BaseStoredEntity {
     this.priceOld = 0 // PRICE.VALUE
     this.discount = 0 // PRICE.DISCOUNT_DIFF_PERCENT
     this.bonus = 285
-    this.available = true // PRICE.CAN_BUY === 'Y'
+    this.available = response.CAN_BUY // PRICE.CAN_BUY === 'Y'
 
     this.props = {}
 
@@ -88,6 +85,26 @@ export class ProductItem extends BaseStoredEntity {
         default: '/product-01-01.jpg',
         small: '/product-01-01.jpg',
         large: '/product-01-01.jpg',
+      },
+      {
+        default: '/product-01-02.jpg',
+        small: '/product-01-02.jpg',
+        large: '/product-01-02.jpg',
+      },
+      {
+        default: '/product-01-03.jpg',
+        small: '/product-01-03.jpg',
+        large: '/product-01-03.jpg',
+      },
+      {
+        default: '/product-01-04.jpg',
+        small: '/product-01-04.jpg',
+        large: '/product-01-04.jpg',
+      },
+      {
+        default: '/product-01-05.jpg',
+        small: '/product-01-05.jpg',
+        large: '/product-01-05.jpg',
       },
     ]
     //  response.PROPERTIES.IMAGES.SRC.map((src) => ({
