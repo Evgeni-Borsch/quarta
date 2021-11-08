@@ -693,23 +693,24 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     payload.ORDER_PROP_2 = this.email
     payload.ORDER_PROP_3 = this.phone
 
-    payload.BUYER_STORE = '0'
+    // payload.BUYER_STORE = '0'
     payload.PERSON_TYPE = '1'
-    payload.PERSON_TYPE_OLD = '1'
-    payload.PROFILE_ID = '1'
+    // payload.PERSON_TYPE_OLD = '1'
+    // payload.PROFILE_ID = '1'
     payload.PAY_SYSTEM_ID = '1'
-    payload.DELIVERY_ID = '1'
+    payload.DELIVERY_ID = '2'
     payload.ORDER_PROP_4 = '101000'
     payload.ORDER_PROP_5 = 'Москва'
     payload.ORDER_PROP_6 = '0000073738'
     payload.ORDER_PROP_7 = 'Московская, 19'
     payload.ORDER_DESCRIPTION = ''
-    payload.RECENT_DELIVERY_VALUE = '0000073738'
-    payload.ZIP_PROPERTY_CHANGED = 'Y'
+    // payload.RECENT_DELIVERY_VALUE = '0000073738'
+    // payload.ZIP_PROPERTY_CHANGED = 'Y'
     payload.SITE_ID = 's1'
 
     try {
-      await makeOrder(payload)
+      const response = await makeOrder(payload)
+      console.log(response)
     } catch (error) {
       this.errorFromServer = error!.message
     }
