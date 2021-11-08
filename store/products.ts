@@ -99,13 +99,13 @@ export class ProductItem extends BaseStoredEntity {
       ]
     }
 
-    // response.PROPERTIES.MORE_PHOTO.SRC.forEach((src) => {
-    //   this.images.push({
-    //     default: API_BASE_URL + src,
-    //     small: API_BASE_URL + src,
-    //     large: API_BASE_URL + src,
-    //   })
-    // })
+    response.PROPERTIES.MORE_PHOTO.SRC.forEach((src) => {
+      this.images.push({
+        default: API_BASE_URL + src,
+        small: API_BASE_URL + src,
+        large: API_BASE_URL + src,
+      })
+    })
   }
 
   static createShort(response: ProductResponse) {

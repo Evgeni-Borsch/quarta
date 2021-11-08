@@ -22,6 +22,7 @@ export default class UserModule extends VuexModule {
   secondName: string = ''
   email: string | null = null
   phone: string | null = null
+  sessid: string | null = null
 
   get fullName() {
     return `${this.firstName} ${this.secondName}`
@@ -47,5 +48,6 @@ export default class UserModule extends VuexModule {
     this.firstName = response.NAME
     this.secondName = response.LAST_NAME
     this.bonus = parseInt(response.UF_BONUS_POINTS)
+    this.sessid = response.sessid
   }
 }

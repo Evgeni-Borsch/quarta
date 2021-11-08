@@ -688,8 +688,8 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
     const payload: any = Object.assign({}, SUBMIT_CONSTS)
 
-    const parsedCookie = cookie.parse(window.document.cookie)
-    const sessid = parsedCookie.PHPSESSID ?? ''
+    // const parsedCookie = cookie.parse(window.document.cookie)
+    const sessid = user.sessid
 
     payload.sessid = sessid
     payload.action = 'saveOrderAjax'
