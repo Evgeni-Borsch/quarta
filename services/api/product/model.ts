@@ -84,3 +84,9 @@ export interface GetCartResponseItem {
   PRODUCT_ID: string
   QUANTITY: number
 }
+
+export interface PurchaseDataResonse {
+  ORDER_PRICE: number
+  DELIVERY_PRICE: number
+  ORDER_TOTAL_PRICE: number
+}

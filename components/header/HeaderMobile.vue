@@ -1,7 +1,7 @@
 <template>
   <header ref="header" class="header" :class="{ 'header--phone': isPhone }">
     <router-link v-if="isPhone" to="/">
-      <img :src="logo" class="header__logo" alt="QUARTA" />
+      <img :src="logo" class="header__logo mb-3" alt="QUARTA" />
     </router-link>
     <div class="row">
       <div v-if="!isPhone" class="header__logo-section col">
@@ -11,21 +11,33 @@
       </div>
 
       <div class="header__search col">
-        <HeaderSerachVue />
+        <HeaderSerachVue :mobile="true" />
       </div>
 
       <div class="header__actions col">
-        <button class="btn btn-light text-primary px-2">
+        <button class="btn btn-light text-primary p-2">
           <div class="position-relative px-1">
             <BurgerIcon />
           </div>
         </button>
 
-        <button class="btn btn-link px-2 ms-2">
-          <div class="position-relative px-1">
+        <button class="btn btn-link p-2 ms-2">
+          <div
+            class="position-relative px-1"
+            @click="showContacts = !showContacts"
+          >
             <PhoneIcon />
           </div>
         </button>
+      </div>
+    </div>
+
+    <div v-if="showContacts" class="header__contacts">
+      <div class="container">
+        <h3>Контакты Санкт-Петербург</h3>
+        <a href="tel:+78007750304">+7 (800) 775-03-04</a>
+        <h4>Отдел оптовых продаж СПб</h4>
+        <a href="tel:+78123477727">+7 (812) 347-77-27</a>
       </div>
     </div>
 
@@ -76,6 +88,12 @@
 import { useBreakpoints, breakpointsBootstrapV5 } from '@vueuse/core'
 import { Component, Vue } from 'vue-property-decorator'
 
+import {
+  getCurrentInstance,
+  onBeforeMount,
+  onMounted,
+  watch
+} from '@nuxtjs/composition-api'
 import BageVue from '../Bage.vue'
 import HeaderCategoriesVue from './HeaderCategories.vue'
 import HeaderSerachVue from './HeaderSerach.vue'
@@ -90,7 +108,7 @@ import HomeIcon from '@/assets/icons/home.svg?icon'
 import CartIcon from '@/assets/icons/cart.svg?icon'
 import PersonIcon from '@/assets/icons/person-outline.svg?icon'
 
-import { cart, location } from '~/store'
+import { cart, globalModule, location } from '~/store'
 
 @Component({
   components: {
@@ -107,17 +125,25 @@ import { cart, location } from '~/store'
     PersonIcon
   },
   setup() {
+    const { proxy } = getCurrentInstance()
     const breakpoints = useBreakpoints(breakpointsBootstrapV5)
     const isPhone = breakpoints.smaller('md')
 
-    return {
-      isPhone
-    }
+    onMounted(() => {
+      proxy.isPhone = isPhone.value
+    })
+
+    watch(isPhone, () => {
+      proxy.isPhone = isPhone.value
+    })
   }
 })
 export default class HeaderMobileVue extends Vue {
   showSelectLoacation = false
   logo = logo
+  isPhone = true
+
+  showContacts = false
 
   get cartCount() {
     return cart.countTotal
@@ -131,12 +157,17 @@ export default class HeaderMobileVue extends Vue {
 
 <style lang="scss" scoped>
 .header {
+  &__wrapper {
+    // position: relative;
+    height: 100%;
+  }
+
   position: sticky;
   top: 0;
   padding: 0.75rem;
   background-color: $white;
-  z-index: $zindex-sticky;
   transition: transform 0.3s;
+  z-index: $zindex-sticky;
 
   &--phone {
     top: -2rem;
@@ -167,7 +198,7 @@ export default class HeaderMobileVue extends Vue {
     display: flex;
     justify-content: center;
 
-    position: absolute;
+    position: fixed;
     height: 3.75rem;
     top: calc(100vh - 3.75rem);
     left: 0;
@@ -181,6 +212,7 @@ export default class HeaderMobileVue extends Vue {
     justify-content: center;
     align-items: center;
     margin: 4px 50px 0;
+    width: 50px;
     height: 100%;
 
     &:hover svg {
@@ -218,6 +250,15 @@ export default class HeaderMobileVue extends Vue {
     border-radius: 10.5px;
     color: $white;
     line-height: 1;
+  }
+
+  &__contacts {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: calc(100vh - 100%);
+    background-color: $gray-100;
   }
 
   a {

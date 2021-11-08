@@ -2,8 +2,11 @@
   <div class="wrapper">
     <PortalTarget name="modal" />
 
-    <HeaderVue v-if="isDesktop" />
-    <HeaderMobileVue v-else />
+    <client-only>
+      <HeaderVue v-if="isDesktop" />
+      <HeaderMobileVue v-else />
+    </client-only>
+
     <main>
       <Nuxt />
     </main>
@@ -23,7 +26,7 @@ import HeaderMobileVue from '~/components/header/HeaderMobile.vue'
 import FooterVue from '~/components/footer/Footer.vue'
 
 import '~/assets/styles/global.scss'
-import { cart, favourites, user } from '~/store'
+import { cart, favourites, globalModule, user } from '~/store'
 
 @Component({
   components: {
@@ -34,19 +37,26 @@ import { cart, favourites, user } from '~/store'
   },
   setup() {
     const breakpoints = useBreakpoints(breakpointsBootstrapV5)
-    const isDesktop = process.server ? ref(true) : breakpoints.greater('xl')
+    const isDesktop = process.server
+      ? ref(!globalModule.isMobileUserAgent)
+      : breakpoints.greater('xl')
 
     return {
       isDesktop
     }
   },
-  fetchOnServer: false
+  fetchOnServer: false,
+  middleware: ['isMobile']
 })
 export default class DefaultLayout extends Vue {
   async fetch() {
     await user.init()
     await cart.pullState()
     await favourites.pullState()
+  }
+
+  beforeMount() {
+    console.log(globalModule.isMobileUserAgent)
   }
 }
 </script>

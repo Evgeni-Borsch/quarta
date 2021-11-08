@@ -108,8 +108,6 @@ export default class CategoriesModule extends VuexModule {
   @Action
   async fetch() {
     await getSectionList(2).then((response) => {
-      console.log(response)
-
       const itemsByParent = new Map()
       const items = new Map(this.items)
 

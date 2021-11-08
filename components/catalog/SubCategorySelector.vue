@@ -53,8 +53,6 @@ export default class SubCategorySelectorVue extends Vue {
     setTimeout(() => {
       this.$el.scrollLeft = scroll
     }, 500)
-
-    // console.log(e.target.getBoundingClientRect().left, this.$el.scrollLeft)
   }
 
   get spaceLeft() {

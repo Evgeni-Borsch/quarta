@@ -23,6 +23,7 @@ import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import ReviewsSliderVue from '~/components/ReviewsSlider.vue'
 import { ProductItem, products } from '~/store'
 import PromoCardWideVue from '~/components/promo/PromoCardWide.vue'
+import { INDEX_PAGE } from '../index.vue'
 
 export default Vue.extend({
   components: {
@@ -42,15 +43,9 @@ export default Vue.extend({
       const [id] = get(route).params.pathMatch.split('/')
 
       await products.getById(id).then((p) => {
-        console.log(p)
-
         product.value = p
         breadcrumbs.value = [
-          {
-            title: 'Главная',
-            slug: 'index',
-            path: '/'
-          },
+          INDEX_PAGE,
           ...p.breadcrumbs,
           {
             title: p.title,

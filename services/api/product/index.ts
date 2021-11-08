@@ -4,6 +4,7 @@ import {
   GetCartResponseItem,
   ProductAvailabilityResponse,
   ProductResponse,
+  PurchaseDataResonse,
 } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
@@ -58,10 +59,15 @@ export async function addToCart(
   )
 }
 
+export async function getPurchaseData(): Promise<PurchaseDataResonse> {
+  const { $axios } = getStore()
+  return await $axios.$get(`${API_BASE_URL}/api/personal/order/make/`)
+}
+
 export async function makeOrder(payload: any): Promise<any> {
   const { $axios } = getStore()
   return await $axios.$post(
-    `${API_BASE_URL}/api/personal/order/make/`,
+    `${API_BASE_URL}/api/personal/order/make/ajax.php`,
     QueryString.stringify(payload),
     {
       headers: { 'content-type': 'application/x-www-form-urlencoded' },

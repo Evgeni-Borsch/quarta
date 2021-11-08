@@ -14,11 +14,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({})
-export default class CabinetSectionVue extends Vue {
-  mounted() {
-    // console.log(this.$slots)
-  }
-}
+export default class CabinetSectionVue extends Vue {}
 </script>
 
 <style lang="scss" scoped>

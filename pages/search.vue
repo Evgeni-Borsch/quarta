@@ -61,8 +61,6 @@ export default class SearchPage extends Vue {
     for (const item of response.SEARCH) {
       this.results.push(await products.getById(item.ID))
     }
-
-    console.log(this.results)
   }
 
   @Watch('query')

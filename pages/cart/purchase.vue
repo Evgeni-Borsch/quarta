@@ -498,7 +498,7 @@ import {
   PayOnRecive
 } from '~/models/purchase'
 import { FormErrors } from '~/services/errors'
-import { makeOrder } from '~/services/api/product'
+import { getPurchaseData, makeOrder } from '~/services/api/product'
 import { checkPromoCode } from '~/services/api/personal'
 import { cart, ProductItem, user } from '~/store'
 import storage from '~/services/storage'
@@ -555,8 +555,6 @@ const SUBMIT_MAP = {
 
 const SUBMIT_CONSTS = {
   BUYER_STORE: '0',
-  PERSON_TYPE: '1',
-  PERSON_TYPE_OLD: '1',
   SITE_ID: 's1'
 }
 
@@ -687,7 +685,13 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
       return window.scrollTo(0, 0)
     }
 
-    const payload = this.toPlainObject()
+    const payload: any = Object.assign({}, SUBMIT_CONSTS)
+
+    payload.action = 'saveOrderAjax'
+    payload['soa-action'] = 'saveOrderAjax'
+    payload.ORDER_PROP_1 = this.fio
+    payload.ORDER_PROP_2 = this.email
+    payload.ORDER_PROP_3 = this.phone
 
     try {
       await makeOrder(payload)
@@ -838,6 +842,10 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   @Watch('hasFetched')
   afterFetch() {
     // if (!this.products.length) this.$router.replace('/cart')
+  }
+
+  async fetch() {
+    const data = await getPurchaseData()
   }
 
   mounted() {

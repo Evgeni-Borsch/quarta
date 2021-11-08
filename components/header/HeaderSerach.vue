@@ -5,9 +5,14 @@
         v-model="query"
         type="text"
         class="form-control border-primary bg-white"
+        :class="{ 'py-2': mobile }"
         placeholder="Искать товары..."
       />
-      <button class="btn btn-primary" type="submit">
+      <button
+        class="btn btn-primary"
+        :class="{ 'py-2 px-2': mobile }"
+        type="submit"
+      >
         <SearchIcon />
       </button>
     </div>
@@ -15,12 +20,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 import SearchIcon from '@/assets/icons/search.svg?icon'
 
 @Component({ components: { SearchIcon } })
 export default class HeaderSerachVue extends Vue {
+  @Prop({ default: false }) mobile!: boolean
+
   query = ''
 
   get queryFromURI(): string {
@@ -48,8 +55,8 @@ export default class HeaderSerachVue extends Vue {
     this.$router.push({
       path: '/search',
       query: {
-        q: this.query,
-      },
+        q: this.query
+      }
     })
   }
 }
