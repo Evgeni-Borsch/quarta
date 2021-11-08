@@ -695,7 +695,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
     payload.BUYER_STORE = '0'
     payload.PERSON_TYPE = '1'
-    payload.RSON_TYPE_OLD = '1'
+    payload.PERSON_TYPE_OLD = '1'
     payload.PROFILE_ID = '1'
     payload.PAY_SYSTEM_ID = '1'
     payload.DELIVERY_ID = '1'
