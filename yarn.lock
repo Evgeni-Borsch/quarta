@@ -3227,6 +3227,11 @@ convert-source-map@^1.7.0:
   dependencies:
     safe-buffer "~5.1.1"
 
+cookie-tray@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cookie-tray/-/cookie-tray-1.0.2.tgz#726ca48a487b20114c198d62e2915b5f45968cb5"
+  integrity sha512-RgYYyuEauMTtyvJYzm7ioFLdCzChpXpt5iu8EQlHWNsmfDKxQxjJ/YNZzgf3dCcIyn1eMIH8Ef5iaZR6NdXWYg==
+
 cookie@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"

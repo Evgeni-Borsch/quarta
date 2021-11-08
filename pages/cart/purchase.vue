@@ -471,6 +471,7 @@ import { required, email, minLength } from 'vuelidate/lib/validators'
 // ~~ Mixins ~~
 
 import { validationMixin } from 'vuelidate'
+import cookie from 'cookie-tray'
 import CartMixin from '~/mixins/Cart'
 
 // ~~ Components ~
@@ -687,6 +688,10 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
     const payload: any = Object.assign({}, SUBMIT_CONSTS)
 
+    const parsedCookie = cookie.parse(window.document.cookie)
+    const sessid = parsedCookie.PHPSESSID ?? ''
+
+    payload.sessid = sessid
     payload.action = 'saveOrderAjax'
     payload['soa-action'] = 'saveOrderAjax'
     payload.ORDER_PROP_1 = this.fio

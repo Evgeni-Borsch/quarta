@@ -6,6 +6,7 @@ import {
   ProductAvailabilityResponse,
   ProductResponse,
 } from '~/services/api/product/model'
+import { API_BASE_URL } from '~/services/constants'
 import { products } from '~/store'
 import isOutdated from '~/utils/isOutdated'
 
@@ -80,38 +81,31 @@ export class ProductItem extends BaseStoredEntity {
     })
     // response.PROPERTIES.CHARACTERISTICS['~VALUE'].TEXT
 
-    this.images = [
-      {
-        default: '/product-01-01.jpg',
-        small: '/product-01-01.jpg',
-        large: '/product-01-01.jpg',
-      },
-      {
-        default: '/product-01-02.jpg',
-        small: '/product-01-02.jpg',
-        large: '/product-01-02.jpg',
-      },
-      {
-        default: '/product-01-03.jpg',
-        small: '/product-01-03.jpg',
-        large: '/product-01-03.jpg',
-      },
-      {
-        default: '/product-01-04.jpg',
-        small: '/product-01-04.jpg',
-        large: '/product-01-04.jpg',
-      },
-      {
-        default: '/product-01-05.jpg',
-        small: '/product-01-05.jpg',
-        large: '/product-01-05.jpg',
-      },
-    ]
-    //  response.PROPERTIES.IMAGES.SRC.map((src) => ({
-    //   default: API_BASE_URL + src,
-    //   small: '',
-    //   large: '',
-    // }))
+    if (response.DETAIL_PICTURE) {
+      this.images = [
+        {
+          default: API_BASE_URL + response.DETAIL_PICTURE.SRC,
+          small: API_BASE_URL + response.DETAIL_PICTURE.SRC,
+          large: API_BASE_URL + response.DETAIL_PICTURE.SRC,
+        },
+      ]
+    } else {
+      this.images = [
+        {
+          default: '/no-image.svg',
+          small: '/no-image.svg',
+          large: '/no-image.svg',
+        },
+      ]
+    }
+
+    // response.PROPERTIES.MORE_PHOTO.SRC.forEach((src) => {
+    //   this.images.push({
+    //     default: API_BASE_URL + src,
+    //     small: API_BASE_URL + src,
+    //     large: API_BASE_URL + src,
+    //   })
+    // })
   }
 
   static createShort(response: ProductResponse) {

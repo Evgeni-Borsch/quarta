@@ -10,7 +10,7 @@
       </div>
 
       <figure @click="goToProduct">
-        <img src="/product-01-01.jpg" :alt="product.title" />
+        <img :src="product.images[0].small" :alt="product.title" />
       </figure>
     </div>
 

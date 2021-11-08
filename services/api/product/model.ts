@@ -30,6 +30,9 @@ export interface Photo {
 }
 
 export interface ProductResponse {
+  DETAIL_PICTURE: {
+    SRC: string
+  }
   ID: number
   NAME: string
   CODE: string
@@ -43,7 +46,7 @@ export interface ProductResponse {
     DESCRIPTION: ProductProperty
     EQUIPMENT: ProductProperty
     INSTRUCTIONS: ProductFileProperty
-    IMAGES: ProductFileProperty
+    MORE_PHOTO: ProductFileProperty
     [key: string]: ProductProperty
   }
   SECTION: {

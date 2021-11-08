@@ -134,6 +134,10 @@ export default class ProductVue extends mixins(ProductMixin) {
       await ProductItem.updateToFull(this.product)
     }
   }
+
+  mounted() {
+    console.log(this.product)
+  }
 }
 </script>
 
