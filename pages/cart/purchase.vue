@@ -454,8 +454,15 @@
 </template>
 
 <script lang="ts">
+/*
+- А ваша собака не кусается?
+- Нет, она делает больно по другому...
+
+СОБАКА:
+*/
+
 import { mixins } from 'vue-class-component'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 
 // ~~ Validators ~~
 
@@ -464,7 +471,6 @@ import { required, email, minLength } from 'vuelidate/lib/validators'
 // ~~ Mixins ~~
 
 import { validationMixin } from 'vuelidate'
-import storage from '~/services/storage'
 import CartMixin from '~/mixins/Cart'
 
 // ~~ Components ~
@@ -495,6 +501,64 @@ import { FormErrors } from '~/services/errors'
 import { makeOrder } from '~/services/api/product'
 import { checkPromoCode } from '~/services/api/personal'
 import { cart, ProductItem, user } from '~/store'
+import storage from '~/services/storage'
+
+const OPTIONS_TO_STORE: Array<string> = [
+  'locality',
+  'fio',
+  'email',
+  'phone',
+  'appliedPoints',
+  'appliedPromocode',
+  'selectedDeliveryOption',
+  'selectedDiscountType',
+  'selectedPaymentOption',
+  'onlinePaymentType',
+  'bankPaymentType',
+  'managerCall',
+  'paymentOnRecive',
+  'inn',
+  'kpp',
+  'ogrn',
+  'paymentAccount',
+  'bank',
+  'bik',
+  'correspondentAccount',
+  'bankPhone',
+  'bankCEO'
+]
+
+const SUBMIT_MAP = {
+  locality: '',
+  fio: 'ORDER_PROP_1',
+  email: 'ORDER_PROP_2',
+  phone: 'ORDER_PROP_3',
+  appliedPoints: '',
+  appliedPromocode: '',
+  selectedDeliveryOption: '',
+  selectedDiscountType: '',
+  selectedPaymentOption: '',
+  onlinePaymentType: '',
+  bankPaymentType: '',
+  managerCall: '',
+  paymentOnRecive: '',
+  inn: '',
+  kpp: '',
+  ogrn: '',
+  paymentAccount: '',
+  bank: '',
+  bik: '',
+  correspondentAccount: '',
+  bankPhone: '',
+  bankCEO: ''
+}
+
+const SUBMIT_CONSTS = {
+  BUYER_STORE: '0',
+  PERSON_TYPE: '1',
+  PERSON_TYPE_OLD: '1',
+  SITE_ID: 's1'
+}
 
 @Component({
   components: {
@@ -632,33 +696,14 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     }
   }
 
-  toPlainObject() {
-    return {
-      locality: this.locality,
-      fio: this.fio,
-      email: this.email,
-      phone: this.phone,
-      appliedPoints: this.appliedPoints,
-      appliedPromocode: this.appliedPromocode,
-      selectedDeliveryOption: this.selectedDeliveryOption,
-      selectedDiscountType: this.selectedDiscountType,
-      selectedPaymentOption: this.selectedPaymentOption,
-      onlinePaymentType: this.onlinePaymentType,
-      bankPaymentType: this.bankPaymentType,
-      managerCall: this.managerCall,
+  toPlainObject(this: any) {
+    const plainObject: any = {}
 
-      paymentOnRecive: this.paymentOnRecive,
+    OPTIONS_TO_STORE.forEach((option) => {
+      plainObject[option] = this[option]
+    })
 
-      inn: this.inn,
-      kpp: this.kpp,
-      ogrn: this.ogrn,
-      paymentAccount: this.paymentAccount,
-      bank: this.bank,
-      bik: this.bik,
-      correspondentAccount: this.correspondentAccount,
-      bankPhone: this.bankPhone,
-      bankCEO: this.bankCEO
-    }
+    return plainObject
   }
 
   @Watch('locality')
@@ -698,40 +743,14 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     return cart.getItem(id)?.count ?? 0
   }
 
-  restoreState() {
-    const restored = storage.get('purchaseState') || {}
+  restoreState(this: any) {
+    const restored: any = storage.get('purchaseState') || {}
 
-    this.locality = restored.locality ?? this.locality
-    this.fio = restored.fio ?? user.fullName
-    this.email = restored.email ?? user.email
-    this.phone = restored.phone ?? user.phone
-
-    this.appliedPoints = restored.appliedPoints ?? this.appliedPoints
-    this.appliedPromocode = restored.appliedPromocode ?? this.appliedPromocode
-
-    this.selectedDeliveryOption =
-      restored.selectedDeliveryOption ?? this.selectedDeliveryOption
-    this.selectedDiscountType =
-      restored.selectedDiscountType ?? this.selectedDiscountType
-    this.selectedPaymentOption =
-      restored.selectedPaymentOption ?? this.selectedPaymentOption
-    this.onlinePaymentType =
-      restored.onlinePaymentType ?? this.onlinePaymentType
-    this.bankPaymentType = restored.bankPaymentType ?? this.bankPaymentType
-    this.paymentOnRecive = restored.paymentOnRecive ?? this.paymentOnRecive
-
-    this.inn = restored.inn ?? this.inn
-    this.kpp = restored.kpp ?? this.kpp
-    this.ogrn = restored.ogrn ?? this.ogrn
-    this.paymentAccount = restored.paymentAccount ?? this.paymentAccount
-    this.bank = restored.bank ?? this.bank
-    this.bik = restored.bik ?? this.bik
-    this.correspondentAccount =
-      restored.correspondentAccount ?? this.correspondentAccount
-    this.bankPhone = restored.bankPhone ?? this.bankPhone
-    this.bankCEO = restored.bankCEO ?? this.bankCEO
-
-    this.managerCall = restored.managerCall ?? this.managerCall
+    OPTIONS_TO_STORE.forEach((option) => {
+      if (restored[option] !== undefined) {
+        this[option] = restored[option]
+      }
+    })
   }
 
   applyBonus() {
@@ -847,15 +866,15 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
       value: DeliveryOptions.pickup,
       description:
         'из магазина в Санкт-Петербурге (Московский проспект, д.222А, +7 (800) 775-03-04)'
+    },
+    {
+      title: 'Почта России',
+      value: DeliveryOptions.post
+    },
+    {
+      title: 'Доставка',
+      value: DeliveryOptions.delivery
     }
-    // {
-    //   title: 'Почта России',
-    //   value: DeliveryOptions.post
-    // },
-    // {
-    //   title: 'Доставка',
-    //   value: DeliveryOptions.delivery
-    // }
   ]
 
   deliveryProvider: Array<SelectOption> = [

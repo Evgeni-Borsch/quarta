@@ -60,7 +60,7 @@
 
           <hr />
 
-          <div class="product__delivery">
+          <div class="product__delivery mb-5">
             <div class="product__delivery-option">
               <div class="product__delivery-icon">
                 <DeliveryIcon />
@@ -78,7 +78,7 @@
             </div>
           </div>
 
-          <ProductComboVue :parent="product.id" />
+          <ProductComboVue :parent="product" />
         </div>
       </div>
     </div>

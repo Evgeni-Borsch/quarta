@@ -1,7 +1,7 @@
 <template>
   <Portal to="modal" :disabled="disabled">
     <div ref="modal" class="modal" tabindex="-1">
-      <div class="modal-dialog" :class="{ 'modal-xl': Sizes.large }">
+      <div class="modal-dialog" :class="{ 'modal-xl': isLarge }">
         <div class="modal__close" @click="hide">
           <CloseIcon />
         </div>

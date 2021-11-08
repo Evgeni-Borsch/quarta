@@ -1,6 +1,6 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { ProductItem } from '.'
-import { products } from '~/utils/store-accessor'
+import { favourites, products } from '~/utils/store-accessor'
 import { getFavourites } from '~/services/api/personal'
 
 @Module({
@@ -35,6 +35,8 @@ export default class FavouritesModule extends VuexModule {
 
   @Action
   async addItem(id: string) {
+    if (favourites.hasItem(id)) return null
+    
     const items = Array.from(this.items)
     items.push(id)
     this.setItems(items)

@@ -3,6 +3,7 @@
     ref="modal"
     class="modal-location"
     title="Выберите город"
+    size="small"
     @hide="$emit('hide')"
   >
     <InputVue
