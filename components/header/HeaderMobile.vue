@@ -89,6 +89,7 @@ import { useBreakpoints, breakpointsBootstrapV5 } from '@vueuse/core'
 import { Component, Vue } from 'vue-property-decorator'
 
 import {
+  ComponentInternalInstance,
   getCurrentInstance,
   onBeforeMount,
   onMounted,
@@ -125,7 +126,9 @@ import { cart, globalModule, location } from '~/store'
     PersonIcon
   },
   setup() {
-    const { proxy } = getCurrentInstance()
+    const { proxy } = getCurrentInstance() as ComponentInternalInstance & {
+      proxy: HeaderMobileVue
+    }
     const breakpoints = useBreakpoints(breakpointsBootstrapV5)
     const isPhone = breakpoints.smaller('md')
 
