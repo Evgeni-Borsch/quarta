@@ -13,7 +13,7 @@ export interface PersonalDataOptions {
 }
 
 export interface OrdersResponse {
-  ITEMS: Array<{
+  ORDERS: Array<{
     BASKET_ITEMS: {
       [id: string]: {
         ID: string

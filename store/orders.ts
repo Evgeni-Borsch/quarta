@@ -23,7 +23,7 @@ export default class OrdersModule extends VuexModule {
     const response = await getOrders()
     const items: Array<Order> = []
 
-    response.ITEMS.forEach((item) => {
+    response.ORDERS.forEach((item) => {
       items.push({
         id: item.ORDER.ACCOUNT_NUMBER,
         delivery: item.SHIPMENT[0]?.DELIVERY_NAME ?? '',
