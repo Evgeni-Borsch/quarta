@@ -65,9 +65,9 @@
 
           <div v-html="product.description"></div>
 
-          <h3>Комплектация:</h3>
+          <!--h3>Комплектация:</!--h3>
 
-          <div v-html="product.configuration"></div>
+          <div-- v-html="product.configuration"></div-->
         </div>
       </div>
     </div>

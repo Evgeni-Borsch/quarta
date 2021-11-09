@@ -117,7 +117,8 @@ export default class ProductCardVue extends mixins(ProductMixin) {
     }
 
     img {
-      max-width: 100%;
+      max-width: 90%;
+      max-height: 90%;
     }
   }
 

@@ -33,11 +33,13 @@ export default class OrdersModule extends VuexModule {
       })
     })
 
+    console.log('OrdersModule', items)
+
     this.setItems(items)
   }
 
   @Mutation
   setItems(items: Array<Order>) {
-    this.items = items
+    this.items = Array.from(items)
   }
 }

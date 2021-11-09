@@ -34,6 +34,7 @@
         :id="`i_${uid}`"
         v-model="innerValue"
         :mask="mask"
+        :masked="true"
         :type="type"
         :placeholder="placeholder"
         class="form-control"
