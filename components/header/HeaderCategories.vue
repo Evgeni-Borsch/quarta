@@ -5,6 +5,7 @@
       to="/catalog"
       @mouseenter.native="(e) => onMouseOver(e, '0')"
       @mouseleave.native="(e) => onMouseOut(e, '0')"
+      @click.native="clear"
     >
       <div class="header-categories__icon">
         <CatalogIcon />
@@ -18,6 +19,7 @@
       :to="`/catalog/${category.slug}`"
       @mouseenter.native="(e) => onMouseOver(e, category.id)"
       @mouseleave.native="(e) => onMouseOut(e, category.id)"
+      @click.native="clear"
     >
       {{ category.name }}
     </router-link>
@@ -38,9 +40,9 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { ref, Ref as CompositionRef, useFetch } from '@nuxtjs/composition-api'
 
-// import HeaderNavDropdown from './HeaderNavDropdown.vue'
+import { Ref, Watch } from 'vue-property-decorator'
+import HeaderNavDropdown from './HeaderNavDropdown.vue'
 
-import { Ref } from 'vue-property-decorator'
 import CatalogIcon from '~/assets/icons/catalog.svg?icon'
 import { categories, Category } from '~/store'
 
@@ -50,7 +52,7 @@ export interface HeaderDropdownData {
 }
 
 @Component({
-  components: { CatalogIcon },
+  components: { CatalogIcon, HeaderNavDropdown },
   setup() {
     const rootCategory: CompositionRef<Array<Category>> = ref([])
 
@@ -68,6 +70,7 @@ export default class HeaderCategoriesVue extends Vue {
   protectedDropdowns: Array<string> = []
   dropdowns: Array<HeaderDropdownData> = []
   dropDownsLeft = 0
+  hideTimeout: NodeJS.Timeout | null = null
 
   @Ref('categories') categoriesRef!: HTMLElement
 
@@ -100,12 +103,18 @@ export default class HeaderCategoriesVue extends Vue {
     })
   }
 
+  clear() {
+    clearTimeout(this.hideTimeout as NodeJS.Timeout)
+    this.dropdowns = []
+    this.protectedDropdowns = []
+  }
+
   removeDropdown(categoryId: string) {
     const index = this.dropdowns.findIndex(
       (dropdown) => dropdown.id === categoryId
     )
 
-    this.dropdowns.splice(index, 1)
+    if (index !== -1) this.dropdowns.splice(index, 1)
   }
 
   removeAllUnprotacted() {
@@ -117,18 +126,27 @@ export default class HeaderCategoriesVue extends Vue {
   }
 
   protectDropdown(categoryId: string) {
+    if (this.protectedDropdowns.includes(categoryId)) return null
     this.protectedDropdowns.push(categoryId)
   }
 
   unprotectDropdown(categoryId: string) {
+    if (!this.protectedDropdowns.includes(categoryId)) return null
+
     const index = this.protectedDropdowns.indexOf(categoryId)
     this.protectedDropdowns.splice(index, 1)
   }
 
   onMouseOver(e: Event & { target: HTMLElement }, categoryId: string) {
+    this.clear()
+
     const categoriesRect = this.categoriesRef.getBoundingClientRect()
     const rect = e.target.getBoundingClientRect()
-    this.dropDownsLeft = rect.left - categoriesRect.left
+    const maxLeft = categoriesRect.width - 360
+    const preparedLeft = rect.left - categoriesRect.left
+
+    this.dropDownsLeft =
+      maxLeft < preparedLeft ? maxLeft : rect.left - categoriesRect.left
 
     setTimeout(() => {
       this.addDropdown(categoryId)

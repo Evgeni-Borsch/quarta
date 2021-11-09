@@ -65,15 +65,31 @@ export default class CategoriesModule extends VuexModule {
   }
 
   get getAllParentsAsync() {
-    return async (id: string) => {
+    return async (id: string): Promise<Array<Category>> => {
       await categories.fetchIfNotFetched()
 
       const parents = []
       let currentItem = this.items.get(id)
 
-      while (currentItem?.parent !== '0') {
+      while (currentItem && currentItem?.parent !== '0') {
         currentItem = this.items.get(currentItem?.parent as string)
-        parents.push(currentItem)
+        if (currentItem) parents.push(currentItem)
+      }
+
+      return parents.reverse()
+    }
+  }
+
+  get getAllParentIdsAsync() {
+    return async (id: string): Promise<Array<string>> => {
+      await categories.fetchIfNotFetched()
+
+      const parents = []
+      let currentItem = this.items.get(id)
+
+      while (currentItem && currentItem?.parent !== '0') {
+        currentItem = this.items.get(currentItem?.parent as string)
+        if (currentItem) parents.push(currentItem.id)
       }
 
       return parents.reverse()

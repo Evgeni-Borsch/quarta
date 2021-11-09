@@ -99,11 +99,11 @@ export class ProductItem extends BaseStoredEntity {
       ]
     }
 
-    response.PROPERTIES.MORE_PHOTO.SRC.forEach((src) => {
+    response?.MORE_PHOTO?.forEach((photo) => {
       this.images.push({
-        default: API_BASE_URL + src,
-        small: API_BASE_URL + src,
-        large: API_BASE_URL + src,
+        default: API_BASE_URL + photo.SRC,
+        small: API_BASE_URL + photo.SRC,
+        large: API_BASE_URL + photo.SRC,
       })
     })
   }

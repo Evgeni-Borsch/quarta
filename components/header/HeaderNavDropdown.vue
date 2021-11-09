@@ -15,6 +15,7 @@
             :to="`/catalog/${child.slug}`"
             @mouseenter.native="() => onMouseOverChild(child)"
             @mouseleave.native="() => onMouseOutChild(child)"
+            @click.native="$parent.clear"
           >
             {{ child.name }}
           </router-link>
@@ -29,8 +30,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 import HeaderCategories, { HeaderDropdownData } from './HeaderCategories.vue'
-import { Category, categories } from '~/store'
-import getLatest from '~/utils/getLatest'
+import { Category } from '~/store'
 
 @Component({
   setup() {}
@@ -48,14 +48,19 @@ export default class HeaderNavDropdown extends Vue {
 
   onMouseOver() {
     this.$parent.protectDropdown(this.category.id)
+    this.$parent.protectDropdown('0')
+
+    setTimeout(() => {
+      clearTimeout(this.$parent.hideTimeout as NodeJS.Timeout)
+    })
   }
 
   onMouseOut() {
-    setTimeout(() => {
-      if (!this.$parent.protectedDropdowns.includes(this.category.id)) {
-        this.$parent.removeDropdown(this.category.id)
-      }
-      this.$parent.unprotectDropdown(this.category.id)
+    this.$parent.unprotectDropdown(this.category.id)
+    this.$parent.unprotectDropdown('0')
+
+    this.$parent.hideTimeout = setTimeout(() => {
+      this.$parent.removeAllUnprotacted()
     })
   }
 

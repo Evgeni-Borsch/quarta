@@ -1,6 +1,8 @@
 <template>
   <div class="index">
-    <MainSliderVue :slides="mainSlider" />
+    <client-only>
+      <MainSliderVue :slides="mainSlider" />
+    </client-only>
 
     <section class="bg-light catalog-slider">
       <BaseSliderVue :slides-desktop="4">
@@ -236,7 +238,9 @@ export default class IndexPage extends Vue {
   }
 
   async fetchMainSlider() {
-    this.mainSlider = await getMainSlider()
+    this.mainSlider = await getMainSlider('477')
+
+    console.log(this.mainSlider)
   }
 
   async fetchBanners() {
@@ -250,6 +254,10 @@ export default class IndexPage extends Vue {
       await products.getById('4323'),
       await products.getById('4324')
     ]
+  }
+
+  beforeMount() {
+    this.$fetch()
   }
 }
 </script>

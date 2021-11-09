@@ -9,18 +9,17 @@
         />
       </div>
 
-      <figure @click="goToProduct">
-        <img :src="product.images[0].small" :alt="product.title" />
-      </figure>
+      <router-link :to="`/product/${product.id}/${product.slug}`">
+        <figure>
+          <img :src="product.images[0].small" :alt="product.title" />
+        </figure>
+      </router-link>
     </div>
 
-    <div class="product-card__article">Артикул: {{ product.article }}</div>
-
-    <div
-      class="product-card__title"
-      @click="toggleFavs"
-      v-html="product.title"
-    />
+    <router-link :to="`/product/${product.id}/${product.slug}`">
+      <div class="product-card__article">Артикул: {{ product.article }}</div>
+      <div class="product-card__title" v-html="product.title" />
+    </router-link>
 
     <ProductPriceVue
       :current="product.price"
@@ -143,6 +142,7 @@ export default class ProductCardVue extends mixins(ProductMixin) {
 
   &__article {
     margin-bottom: 0.5rem;
+    color: $gray-600;
   }
 
   &__title {
@@ -160,6 +160,10 @@ export default class ProductCardVue extends mixins(ProductMixin) {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   &__add {

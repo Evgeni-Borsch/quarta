@@ -98,7 +98,7 @@ export default class CategoryPage extends Vue {
   }
 
   async fetchMainSlider() {
-    this.mainSlider = await getMainSlider()
+    this.mainSlider = await getMainSlider('477')
   }
 }
 </script>

@@ -3,11 +3,11 @@ import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
 export * from './model'
 
-export async function getMainSlider(): Promise<Array<MainSliderSlide>> {
+export async function getMainSlider(id: string): Promise<Array<MainSliderSlide>> {
   const { $axios } = getStore()
 
   const response: MainSliderResponse = await $axios.$get(
-    `${API_BASE_URL}/api/sliders/mainslider.php`
+    `${API_BASE_URL}/api/sliders/mainslider.php?SECTION_ID=${id}`
   )
 
   return response.ITEMS.map((item) => {

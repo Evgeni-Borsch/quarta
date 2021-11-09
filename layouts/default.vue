@@ -1,5 +1,9 @@
 <template>
   <div class="wrapper">
+    <div v-if="!isLoaded" class="loader">
+      <LoadingVue />
+    </div>
+
     <PortalTarget name="modal" />
 
     <client-only>
@@ -27,13 +31,15 @@ import FooterVue from '~/components/footer/Footer.vue'
 
 import '~/assets/styles/global.scss'
 import { cart, favourites, globalModule, user } from '~/store'
+import LoadingVue from '~/components/Loading.vue'
 
 @Component({
   components: {
     HeaderVue,
     HeaderMobileVue,
     FooterVue,
-    PortalTarget
+    PortalTarget,
+    LoadingVue
   },
   setup() {
     const breakpoints = useBreakpoints(breakpointsBootstrapV5)
@@ -49,6 +55,8 @@ import { cart, favourites, globalModule, user } from '~/store'
   middleware: ['isMobile']
 })
 export default class DefaultLayout extends Vue {
+  isLoaded = false
+
   async fetch() {
     await user.init()
     await cart.pullState()
@@ -58,7 +66,27 @@ export default class DefaultLayout extends Vue {
   beforeMount() {
     console.log(globalModule.isMobileUserAgent)
   }
+
+  mounted() {
+    window.addEventListener('load', () => {
+      this.isLoaded = true
+    })
+  }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.loader {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $white;
+  z-index: $zindex-tooltip;
+}
+</style>
