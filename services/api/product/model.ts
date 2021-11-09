@@ -65,6 +65,9 @@ export interface ProductResponse {
     ALT: string
     SRC: string
   }
+  MORE_PHOTO: Array<{
+    SRC: string
+  }>
 }
 
 export interface ProductAvailabilityResponse {
