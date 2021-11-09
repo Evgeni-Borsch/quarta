@@ -1,5 +1,5 @@
 import QueryString from 'qs'
-import { AddressOptions, PersonalDataOptions } from './model'
+import { AddressOptions, OrdersResponse, PersonalDataOptions } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
 
@@ -25,4 +25,11 @@ export async function setPersonalData(
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }
   )
+}
+
+export async function getOrders(): Promise<OrdersResponse> {
+  const { $axios } = getStore()
+  return await $axios.$get(`${API_BASE_URL}/api/personal/order/`, {
+    withCredentials: true,
+  })
 }

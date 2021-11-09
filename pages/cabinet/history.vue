@@ -4,8 +4,11 @@
 
     <div class="container history__container">
       <h2><CopyIcon class="icon" /> {{ HISTORY_PAGE.title }}</h2>
-      <HistoryOrder></HistoryOrder>
-      <HistoryOrder></HistoryOrder>
+      <HistoryOrder
+        v-for="order of orders"
+        :key="order.id"
+        :order="order"
+      ></HistoryOrder>
     </div>
 
     <SubscribeVue />
@@ -21,6 +24,8 @@ import { Page } from '~/models/general'
 import CopyIcon from '~/assets/icons/copy.svg?icon'
 import HistoryOrder from '~/components/order-history/HistoryOrder.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
+import { getOrders } from '~/services/api/cabinet'
+import { orders } from '~/store'
 
 export const HISTORY_PAGE: Page = {
   title: 'История заказов',
@@ -34,11 +39,20 @@ export const HISTORY_PAGE: Page = {
     HistoryOrder,
     SubscribeVue,
     CopyIcon
-  }
+  },
+  fetchOnServer: false
 })
 export default class HistoryPage extends Vue {
   HISTORY_PAGE = HISTORY_PAGE
   breadcrumbs: Array<Page> = [INDEX_PAGE, CABINER_PAGE, HISTORY_PAGE]
+
+  get orders() {
+    return orders.items
+  }
+
+  async fetch() {
+    await orders.fetch()
+  }
 }
 </script>
 

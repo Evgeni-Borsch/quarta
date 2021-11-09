@@ -1,6 +1,6 @@
 <template>
   <div class="cabinet">
-    <div v-if="!hasAuth" class="container">
+    <div v-if="!hasAuth && false" class="container">
       <LoadingVue />
     </div>
 
@@ -42,32 +42,24 @@
               </router-link>
             </template>
 
-            <div class="cabinet__history-item">
+            <div
+              v-for="order of orders"
+              :key="order.id"
+              class="cabinet__history-item"
+            >
               <figure
                 :style="{ backgroundImage: `url('/photo-preview.jpg')` }"
               ></figure>
 
               <div class="cabinet__history-title">
                 Заказ от 26 мая <br />
-                34522846-0037
+                {{ order.id }}
               </div>
 
-              <div class="cabinet__history-price">2 005,00 ₽</div>
-            </div>
-            <div class="cabinet__history-item">
-              <figure
-                :style="{ backgroundImage: `url('/photo-preview.jpg')` }"
-              ></figure>
-
-              <div class="cabinet__history-title">
-                Заказ от 26 мая <br />
-                34522846-0037
-              </div>
-
-              <div class="cabinet__history-price">2 005,00 ₽</div>
+              <div class="cabinet__history-price">{{ order.price }} ₽</div>
             </div>
 
-            <!-- <center>История заказов пуста</center> -->
+            <center v-if="!orders.length">История заказов пуста</center>
           </CabinetSectionVue>
 
           <CabinetSectionVue>
@@ -169,7 +161,7 @@ import PersonIcon from '~/assets/icons/person.svg?icon'
 import KeyIcon from '~/assets/icons/key.svg?icon'
 import DeliveryIcon from '~/assets/icons/delivery.svg?icon'
 import CopyIcon from '~/assets/icons/copy.svg?icon'
-import { user } from '~/store'
+import { orders, user } from '~/store'
 import LoadingVue from '~/components/Loading.vue'
 import PrivatePage from '~/mixins/PrivatePage'
 import pageTitle from '~/utils/pageTitle'
@@ -213,7 +205,9 @@ export const CABINER_PAGE: Page = {
   },
   fetchOnServer: false
 })
-export default class CabinetPage extends mixins(PrivatePage, validationMixin) {
+export default class CabinetPage extends mixins(
+  /* PrivatePage, */ validationMixin
+) {
   FormErrors = FormErrors
 
   passwordServerError: string | null = null
@@ -240,6 +234,14 @@ export default class CabinetPage extends mixins(PrivatePage, validationMixin) {
 
   get fullName() {
     return `${this.firstName} ${this.secondName}`
+  }
+
+  get orders() {
+    return orders.items
+  }
+
+  async fetch() {
+    await orders.fetch()
   }
 
   async submitNewPassword() {

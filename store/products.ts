@@ -24,6 +24,7 @@ const bannedProps: Array<string> = [
   'CML2_TAXES',
   'MORE_PHOTO',
   'FILES',
+  'KOMPLEKTY_DLYA_SAYTA',
 ]
 
 export class ProductItem extends BaseStoredEntity {

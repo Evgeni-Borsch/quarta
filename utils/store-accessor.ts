@@ -10,6 +10,7 @@ import LocationModule from '~/store/location'
 import UserModule from '~/store/user'
 import FavouritesModule from '~/store/favourites'
 import GlobalModule from '~/store/global'
+import OrdersModule from '~/store/orders'
 
 let globalModule!: GlobalModule
 let categories!: CategoriesModule
@@ -19,6 +20,7 @@ let cart!: CartModule
 let location!: LocationModule
 let user!: UserModule
 let favourites!: FavouritesModule
+let orders!: OrdersModule
 let _store!: Store<any>
 
 function initialiseStores(store: Store<any>) {
@@ -31,6 +33,7 @@ function initialiseStores(store: Store<any>) {
   location = getModule(LocationModule, store)
   user = getModule(UserModule, store)
   favourites = getModule(FavouritesModule, store)
+  orders = getModule(OrdersModule, store)
 }
 
 function getStore() {
@@ -48,4 +51,5 @@ export {
   location,
   user,
   favourites,
+  orders,
 }

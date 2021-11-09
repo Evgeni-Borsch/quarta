@@ -13,9 +13,11 @@
       <div class="row">
         <div class="col-6">
           <span>
-            <b>№BL-0140888</b><br />
-            <b>Доставка:</b> CДЭК<br />
-            <b>Сумма за доставку:</b> 1500 ₽
+            <b>{{ order.id }}</b
+            ><br />
+            <b>Доставка:</b> {{ order.delivery }}<br />
+            <b>Сумма за доставку:</b>
+            {{ numberWithSpaces(order.deliveryPrice) }} ₽
           </span>
         </div>
         <div class="col-2">
@@ -25,7 +27,7 @@
         </div>
         <div class="col-2">
           <span>
-            <b> 20 100 ₽ </b>
+            <b> {{ numberWithSpaces(order.price) }} ₽ </b>
           </span>
         </div>
         <div class="col-2">
@@ -81,9 +83,15 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Order } from '~/store'
+import numberWithSpaces from '~/utils/numberWithSpaces'
 
 @Component({})
-export default class HistoryOrder extends Vue {}
+export default class HistoryOrder extends Vue {
+  @Prop({ required: true }) order!: Order
+
+  numberWithSpaces = numberWithSpaces
+}
 </script>
 
 <style lang="scss" scoped>
