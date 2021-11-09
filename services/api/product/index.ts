@@ -5,6 +5,7 @@ import {
   ProductAvailabilityResponse,
   ProductResponse,
   PurchaseDataResonse,
+  ComboResonse,
 } from './model'
 import { API_BASE_URL } from '~/services/constants'
 import { getStore } from '~/store'
@@ -86,4 +87,9 @@ export async function sendQuestion(text: any): Promise<any> {
       withCredentials: true,
     }
   )
+}
+
+export async function getCombo(id: string): Promise<ComboResonse> {
+  const { $axios } = getStore()
+  return await $axios.$get(`${API_BASE_URL}/api/catalog/kit.php?XML_ID=${id}`)
 }

@@ -9,11 +9,14 @@
         />
       </div>
 
-      <router-link :to="`/product/${product.id}/${product.slug}`">
+      <component
+        :is="link ? 'router-link' : 'span'"
+        :to="`/product/${product.id}/${product.slug}`"
+      >
         <figure>
           <img :src="product.images[0].small" :alt="product.title" />
         </figure>
-      </router-link>
+      </component>
     </div>
 
     <router-link :to="`/product/${product.id}/${product.slug}`">

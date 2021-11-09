@@ -13,9 +13,9 @@
               сочетаемые с&nbsp;фотокамерой.
             </p>
 
-            <button class="btn btn-lg btn-outline-light">
+            <router-link to="/catalog/binokli" class="btn btn-lg btn-outline-light">
               Смотреть товары
-            </button>
+            </router-link>
           </div>
 
           <div class="col-6">

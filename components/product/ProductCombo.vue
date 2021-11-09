@@ -1,5 +1,5 @@
 <template>
-  <div v-if="products.length" class="product-combo">
+  <div v-if="parent.comboId" class="product-combo">
     <h5 class="mb-4">Вместе дешевле!</h5>
     <div class="row">
       <div v-for="product of products" :key="product.id" class="col-4 px-3">
@@ -38,7 +38,9 @@
           </span>
         </div>
 
-        <div class="btn btn-primary">В корзину комплектом</div>
+        <div class="btn btn-primary" @click="addCombo">
+          В корзину комплектом
+        </div>
 
         <button
           class="btn bg-white mx-1"
@@ -61,6 +63,7 @@ import { cart, favourites, ProductItem, products } from '~/store'
 import HeartIcon from '@/assets/icons/heart.svg?icon'
 import HeartFillIcon from '@/assets/icons/heart-fill.svg?icon'
 import numberWithSpaces from '~/utils/numberWithSpaces'
+import { getCombo } from '~/services/api/product'
 
 @Component({
   components: { ProductCardVue, CheckboxVue, HeartIcon, HeartFillIcon }
@@ -76,11 +79,14 @@ export default class ProductComboVue extends Vue {
   }
 
   async fetch() {
-    this.products = [
-      await products.getById('4860'),
-      await products.getById('4861'),
-      await products.getById('4862')
-    ]
+    if (!this.parent.comboId) return null
+
+    const response = await getCombo(this.parent.comboId)
+    this.products = []
+
+    for (const id of response.ELEMENTS) {
+      this.products.push(await products.getById(id.toString()))
+    }
   }
 
   get comboPrice() {

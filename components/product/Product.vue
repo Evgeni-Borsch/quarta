@@ -74,7 +74,7 @@
               </div>
               Доступно к самовывозу:
               <span class="text-dark">бесплатно, С 10.03,</span><br />
-              <a href="#" @click="availabilityModal = true">28 магазинах</a>
+              <a href="#" @click="availabilityModal = true">1 магазине</a>
             </div>
           </div>
 

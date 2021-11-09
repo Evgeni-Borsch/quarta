@@ -44,6 +44,7 @@ export class ProductItem extends BaseStoredEntity {
   available!: boolean
   images!: Array<ProductPhoto>
   breadcrumbs!: Array<Page>
+  comboId: string | null = null
   props!: {
     [key: string]: string
   }
@@ -73,6 +74,7 @@ export class ProductItem extends BaseStoredEntity {
     this.discount = 0 // PRICE.DISCOUNT_DIFF_PERCENT
     this.bonus = 285
     this.available = response.CAN_BUY // PRICE.CAN_BUY === 'Y'
+    this.comboId = response.PROPERTIES.KOMPLEKTY_DLYA_SAYTA?.VALUE ?? null
 
     this.props = {}
 

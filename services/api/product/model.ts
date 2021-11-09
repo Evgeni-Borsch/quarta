@@ -46,6 +46,7 @@ export interface ProductResponse {
   DETAIL_TEXT: string
   PREVIEW_TEXT: string
   PROPERTIES: {
+    KOMPLEKTY_DLYA_SAYTA: ProductProperty
     CML2_ARTICLE: ProductProperty
     CHARACTERISTICS: ProductProperty
     DESCRIPTION: ProductProperty
@@ -100,4 +101,8 @@ export interface PurchaseDataResonse {
   ORDER_PRICE: number
   DELIVERY_PRICE: number
   ORDER_TOTAL_PRICE: number
+}
+
+export interface ComboResonse {
+  ELEMENTS: Array<number>
 }
