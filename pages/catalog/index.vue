@@ -11,7 +11,7 @@
               title="Оружие и патроны"
               image="/barrel-gun.png"
               to="/catalog/oruzhie_i_patrony"
-              :count="126"
+              :count="weaponCount"
             />
           </div>
           <div class="col-4">
@@ -19,7 +19,7 @@
               title="Оптика и кронштейны"
               image="/scope.png"
               to="/catalog/optika_i_kronshteyny"
-              :count="126"
+              :count="opticsCount"
             />
           </div>
           <div class="col-4">
@@ -27,7 +27,7 @@
               title="Снаряжение и одежда"
               image="/equipment.png"
               to="/catalog/snaryazhenie_i_odezhda"
-              :count="126"
+              :count="equipmentCount"
             />
           </div>
           <div class="col-4">
@@ -35,7 +35,7 @@
               title="Чистка, смазка и уход"
               image="/care.png"
               to="/catalog/sredstva_dlya_ukhoda_za_oruzhiem"
-              :count="126"
+              :count="careCount"
             />
           </div>
           <div class="col-4">
@@ -43,7 +43,7 @@
               title="Тюнинг оружия"
               image="/tunning.png"
               to="/catalog/tyuning_oruzhiya"
-              :count="126"
+              :count="tunningCount"
             />
           </div>
         </div>
@@ -62,6 +62,7 @@ import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import SubscribeVue from '~/components/Subscribe.vue'
 import { Page } from '~/models/general'
 import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
+import { categories } from '~/store'
 import pageTitle from '~/utils/pageTitle'
 
 @Component({
@@ -92,6 +93,26 @@ export default class CategoryPage extends Vue {
       path: '/catalog'
     }
   ]
+
+  get weaponCount() {
+    return categories.items.get('305')?.count ?? 0
+  }
+
+  get opticsCount() {
+    return categories.items.get('239')?.count ?? 0
+  }
+
+  get equipmentCount() {
+    return categories.items.get('305')?.count ?? 0
+  }
+
+  get careCount() {
+    return categories.items.get('427')?.count ?? 0
+  }
+
+  get tunningCount() {
+    return categories.items.get('456')?.count ?? 0
+  }
 
   async fetch() {
     await this.fetchMainSlider()

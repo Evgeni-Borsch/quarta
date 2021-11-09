@@ -7,6 +7,7 @@ export interface Category {
   name: string
   slug: string
   parent: string | null
+  count: number
 }
 
 @Module({
@@ -139,6 +140,7 @@ export default class CategoriesModule extends VuexModule {
           name: item.NAME,
           parent: parentId,
           slug: item.CODE,
+          count: parseInt(item.ELEMENT_CNT),
         }
 
         items.set(category.id, category)

@@ -4,6 +4,7 @@ export interface CatalogSection {
   ID: string
   CODE: string
   NAME: string
+  ELEMENT_CNT: string
   IBLOCK_ID: string
   IBLOCK_SECTION_ID: string | null
 }
