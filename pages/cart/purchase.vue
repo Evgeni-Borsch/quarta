@@ -715,6 +715,11 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
     try {
       const response = await makeOrder(payload)
+
+      if (response.order?.ID) {
+        this.$router.push('/cart')
+      }
+
       console.log(response)
     } catch (error) {
       this.errorFromServer = error!.message
