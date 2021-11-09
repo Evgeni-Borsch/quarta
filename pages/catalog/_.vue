@@ -1,6 +1,6 @@
 <template>
   <div class="category">
-    <!-- <MainSliderVue :compact="true" /> -->
+    <MainSliderVue :compact="true" :slides="mainSlider" />
     <BreadcrumbsVue :path="breadcrumbs" />
 
     <section class="category__header">
@@ -47,6 +47,7 @@ import SubscribeVue from '~/components/Subscribe.vue'
 import ProductsGridVue from '~/components/catalog/ProductsGrid.vue'
 import { CatalogCount, CatalogSort } from '~/services/api/catalog'
 import pageTitle from '~/utils/pageTitle'
+import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
 
 @Component({
   components: {
@@ -61,6 +62,7 @@ import pageTitle from '~/utils/pageTitle'
     ProductsGridVue
   },
   middleware: ['category'],
+  fetchOnServer: false,
   head(this: CategoryPathResolver) {
     return {
       title: pageTitle(
@@ -70,6 +72,8 @@ import pageTitle from '~/utils/pageTitle'
   }
 })
 export default class CategoryPathResolver extends Vue {
+  mainSlider: Array<MainSliderSlide> = []
+
   product: ProductItem | null = null
   descendants: Array<Category> = []
   parents: Array<Category> = []
@@ -125,6 +129,8 @@ export default class CategoryPathResolver extends Vue {
   }
 
   async fetch(this: CategoryPathResolver) {
+    await this.fetchMainSlider()
+
     const [slug, pageUnsafe] = this.$route.params.pathMatch.split('/')
     const page = pageUnsafe ? parseInt(pageUnsafe) : 1
 
@@ -141,6 +147,10 @@ export default class CategoryPathResolver extends Vue {
     this.descendants = categories.getAllDescendants(
       this.parentsWithCurrent[0].id
     )
+  }
+
+  async fetchMainSlider() {
+    this.mainSlider = await getMainSlider('477')
   }
 
   setSortSafe(value: string) {

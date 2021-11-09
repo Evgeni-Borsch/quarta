@@ -72,6 +72,7 @@ import pageTitle from '~/utils/pageTitle'
     BreadcrumbsVue,
     SubscribeVue
   },
+  fetchOnServer: false,
   head() {
     return {
       title: pageTitle('Каталог')
@@ -103,7 +104,7 @@ export default class CategoryPage extends Vue {
   }
 
   get equipmentCount() {
-    return categories.items.get('305')?.count ?? 0
+    return categories.items.get('335')?.count ?? 0
   }
 
   get careCount() {
