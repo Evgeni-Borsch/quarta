@@ -18,6 +18,7 @@ export interface OrdersResponse {
       [id: string]: {
         ID: string
         PRICE: string
+        NAME: string
       }
     }
     ORDER: {

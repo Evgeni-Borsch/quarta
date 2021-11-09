@@ -2,7 +2,7 @@
   <div v-if="product">
     <BreadcrumbsVue :path="breadcrumbs" />
     <ProductVue :product="product" />
-    <ReviewsSliderVue class="bg-white" />
+    <!-- <ReviewsSliderVue class="bg-white" /> -->
 
     <PromoCardWideVue />
     <SubscribeVue />
@@ -15,6 +15,7 @@ import { ref, Ref } from 'vue-demi'
 import { get } from '@vueuse/shared'
 import { useFetch, useRoute } from '@nuxtjs/composition-api'
 
+import { INDEX_PAGE } from '../index.vue'
 import { Page } from '~/models/general'
 
 import SubscribeVue from '~/components/Subscribe.vue'
@@ -23,7 +24,6 @@ import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import ReviewsSliderVue from '~/components/ReviewsSlider.vue'
 import { ProductItem, products } from '~/store'
 import PromoCardWideVue from '~/components/promo/PromoCardWide.vue'
-import { INDEX_PAGE } from '../index.vue'
 
 export default Vue.extend({
   components: {

@@ -41,33 +41,21 @@
 
     <div class="history-order__body">
       <h6>Состав заказа:</h6>
-      <div class="row history-order__item">
+      <div
+        v-for="product of order.products"
+        :key="product.id"
+        class="row history-order__item"
+      >
         <div class="col-6 history-order__item-card">
           <figure
-            :style="{ backgroundImage: `url('/photo-preview.jpg')` }"
+            :style="{ backgroundImage: `url('/no-image.svg')` }"
           ></figure>
           <span>
-            Винтовка пневм. Hatsan 125 (переломка, пластик), кал.4,5 мм (Хатсан
-            125)
+            {{ product.name }}
           </span>
         </div>
-        <div class="col-2">1 шт</div>
-        <div class="col-2">10 100 ₽</div>
-        <div class="col-2">543 балла</div>
-      </div>
-
-      <div class="row history-order__item">
-        <div class="col-6 history-order__item-card">
-          <figure
-            :style="{ backgroundImage: `url('/photo-preview.jpg')` }"
-          ></figure>
-          <span>
-            Винтовка пневм. Hatsan 125 (переломка, пластик), кал.4,5 мм (Хатсан
-            125)
-          </span>
-        </div>
-        <div class="col-2">1 шт</div>
-        <div class="col-2">10 100 ₽</div>
+        <div class="col-2">{{ product.count }} шт</div>
+        <div class="col-2">{{ product.price }} ₽</div>
         <div class="col-2">543 балла</div>
       </div>
 
