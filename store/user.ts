@@ -22,6 +22,12 @@ export default class UserModule extends VuexModule {
   secondName: string = ''
   email: string | null = null
   phone: string | null = null
+
+  city: string | null = null
+  street: string | null = null
+  mailbox: string | null = null
+  zip: string | null = null
+
   sessid: string | null = null
 
   get fullName() {
@@ -48,6 +54,12 @@ export default class UserModule extends VuexModule {
     this.firstName = response.NAME
     this.secondName = response.LAST_NAME
     this.bonus = parseInt(response.UF_BONUS_POINTS)
+
+    this.city = response.PERSONAL_CITY
+    this.street = response.PERSONAL_CITY
+    this.mailbox = response.PERSONAL_CITY
+    this.zip = response.PERSONAL_CITY
+
     this.sessid = response.sessid
   }
 }

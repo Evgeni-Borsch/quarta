@@ -11,4 +11,8 @@ export interface AuthResponse {
   LAST_NAME: string
   UF_BONUS_POINTS: string
   sessid: string
+  PERSONAL_STREET: string
+  PERSONAL_MAILBOX: string
+  PERSONAL_CITY: string
+  PERSONAL_ZIP: string
 }

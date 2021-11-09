@@ -27,7 +27,7 @@
       :discount="product.discount || null"
       size="small"
     />
-    <StarsVue v-if="stars" :rating="4.7" :reviews="4" />
+    <StarsVue v-if="stars" :rating="product.rating" :reviews="0" />
 
     <div v-if="addButton" class="product-card__add">
       <span v-if="isInCart" class="input-group product__add-count">

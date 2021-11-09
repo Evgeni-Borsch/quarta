@@ -42,9 +42,10 @@
               </router-link>
             </template>
 
-            <div
+            <router-link
               v-for="order of orders"
               :key="order.id"
+              to="/cabinet/history"
               class="cabinet__history-item"
             >
               <figure
@@ -57,7 +58,7 @@
               </div>
 
               <div class="cabinet__history-price">{{ order.price }} ₽</div>
-            </div>
+            </router-link>
 
             <center v-if="!orders.length">История заказов пуста</center>
           </CabinetSectionVue>
@@ -75,9 +76,12 @@
               </router-link>
             </template>
 
-            <p class="text-dark">
+            <p v-if="!city" class="text-dark">
               Укажите ваш адрес для доставки курьером или определения ближайщего
               пункта CДЭК
+            </p>
+            <p v-else class="text-dark">
+              {{ `${street}, ${mailbox}. ${city}; ${zip}` }}
             </p>
           </CabinetSectionVue>
         </div>
@@ -230,6 +234,22 @@ export default class CabinetPage extends mixins(
 
   get secondName() {
     return user.secondName ?? ''
+  }
+
+  get city() {
+    return user.city ?? ''
+  }
+
+  get street() {
+    return user.street ?? ''
+  }
+
+  get mailbox() {
+    return user.mailbox ?? ''
+  }
+
+  get zip() {
+    return user.zip ?? ''
   }
 
   get fullName() {

@@ -4,13 +4,15 @@
       <div class="col"></div>
       <div class="col-5">
         <h3 v-html="title"></h3>
-        <a :href="link" class="btn btn-outline-light">{{ buttonText }}</a>
+        <a :href="link" class="btn btn-outline-light" target="_blank">{{
+          buttonText
+        }}</a>
       </div>
     </div>
 
     <template #content-backdrop>
       <div class="backdrop">
-        <a :href="link">
+        <a :href="link" target="_blank">
           <PlayButtonSvg class="play-button" />
         </a>
       </div>
@@ -29,7 +31,7 @@ import { API_BASE_URL } from '~/services/constants'
 const YOUTUBE_PROMOTION_CACHE = 'YOUTUBE_PROMOTION_CACHE'
 
 @Component({
-  components: { PromoWide, PlayButtonSvg },
+  components: { PromoWide, PlayButtonSvg }
 })
 export default class YouTubePromotionVue extends Vue {
   response: BannerResponse | null = null

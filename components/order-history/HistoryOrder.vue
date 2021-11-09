@@ -47,9 +47,7 @@
         class="row history-order__item"
       >
         <div class="col-6 history-order__item-card">
-          <figure
-            :style="{ backgroundImage: `url('/no-image.svg')` }"
-          ></figure>
+          <figure :style="{ backgroundImage: `url('/no-image.svg')` }"></figure>
           <span>
             {{ product.name }}
           </span>
@@ -152,6 +150,7 @@ export default class HistoryOrder extends Vue {
 
   &__item-card {
     flex-direction: row !important;
+    justify-content: flex-start;
     align-items: center;
     padding-right: 10rem;
   }

@@ -5,14 +5,16 @@
         <h3>Отзывы</h3>
       </div>
       <div class="col-6 reviews-list__meta">
-        <StarsVue :rating="3.8" :reviews="8" count />
+        <StarsVue :rating="5" :reviews="0" count />
         <SelectVue :options="orderOptions" size="small" label="Сортировать:" />
       </div>
     </div>
 
     <hr />
 
-    <ReviewVue />
+    <center class="py-5">Пока нет ни одного отзыва</center>
+
+    <!-- <ReviewVue /> -->
   </div>
 </template>
 

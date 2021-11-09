@@ -143,16 +143,32 @@
         <div class="col-4 footer__social">
           Мы в социальных сетях
           <div class="footer__social-icons">
-            <a href="http://" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.facebook.com/QuartaHuntOfficial"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FacebookIcon />
             </a>
-            <a href="http://" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.instagram.com/quarta_hunt_official/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <InstagramIcon />
             </a>
-            <a href="http://" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://vk.com/quarta_hunt_official"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <VKIcon />
             </a>
-            <a href="http://" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.youtube.com/channel/UCiZRW21PB-OK1CY6Rrv88nw"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <TelegramIcon />
             </a>
           </div>
@@ -192,13 +208,13 @@ export default defineComponent({
     VKIcon,
     FacebookIcon,
     InstagramIcon,
-    TelegramIcon,
+    TelegramIcon
   },
   setup() {
     const { isDesktop } = useBreakpoints()
 
     return { isDesktop, madeInSerenity }
-  },
+  }
 })
 </script>
 

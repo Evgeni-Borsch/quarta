@@ -33,6 +33,9 @@ export interface ProductResponse {
   DETAIL_PICTURE: {
     SRC: string
   }
+  PRODUCT: {
+    MEASURE: number
+  }
   ID: number
   NAME: string
   CODE: string

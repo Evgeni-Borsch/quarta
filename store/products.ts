@@ -39,6 +39,7 @@ export class ProductItem extends BaseStoredEntity {
   discount?: number
   description!: string
   configuration!: string
+  rating: number
   bonus!: number
   available!: boolean
   images!: Array<ProductPhoto>
@@ -66,6 +67,7 @@ export class ProductItem extends BaseStoredEntity {
       }
     })
 
+    this.rating = response.PRODUCT.MEASURE || 0
     this.price = response.ITEM_PRICES[0].PRICE // PRICE.DISCOUNT_VALUE || PRICE.VALUE
     this.priceOld = 0 // PRICE.VALUE
     this.discount = 0 // PRICE.DISCOUNT_DIFF_PERCENT
