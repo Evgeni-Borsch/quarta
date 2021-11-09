@@ -56,9 +56,9 @@ export default class UserModule extends VuexModule {
     this.bonus = parseInt(response.UF_BONUS_POINTS)
 
     this.city = response.PERSONAL_CITY
-    this.street = response.PERSONAL_CITY
-    this.mailbox = response.PERSONAL_CITY
-    this.zip = response.PERSONAL_CITY
+    this.street = response.PERSONAL_STREET
+    this.mailbox = response.PERSONAL_MAILBOX
+    this.zip = response.PERSONAL_ZIP
 
     this.sessid = response.sessid
   }

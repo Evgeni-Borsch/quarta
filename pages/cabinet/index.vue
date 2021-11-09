@@ -299,6 +299,7 @@ export default class CabinetPage extends mixins(
   &__history-item {
     display: flex;
     align-items: center;
+    text-decoration: none;
 
     &:not(:last-child) {
       margin-bottom: 1.5625rem;
