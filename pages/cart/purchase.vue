@@ -872,6 +872,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   mounted() {
     this.restoreState()
     setTimeout(() => {
+      cart.pullState()
       this.isRestored = true
     })
   }
