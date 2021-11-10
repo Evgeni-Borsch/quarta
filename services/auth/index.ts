@@ -10,7 +10,7 @@ export async function getAuthByPassword(
   const { $axios } = getStore()
 
   return await $axios.$post(
-    `${API_BASE_URL}/api/login`,
+    `${API_BASE_URL}/api/login/index.php`,
     qs.stringify({
       email,
       password,
@@ -36,5 +36,9 @@ export async function getRegistration(options: any): Promise<LoginResponse> {
 export async function checkAuth(): Promise<AuthResponse | null> {
   const { $axios } = getStore()
 
-  return await $axios.$post(`${API_BASE_URL}/api/personal/userinfo.php`)
+  return await $axios.$post(
+    `${API_BASE_URL}/api/personal/userinfo.php`,
+    {},
+    { withCredentials: true }
+  )
 }

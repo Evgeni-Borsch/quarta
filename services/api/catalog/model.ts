@@ -46,14 +46,17 @@ export interface FiltersResponseItem {
   VALUE: Array<string>
 }
 
+export interface FilterValue {
+  CONTROL_ID: string
+  VALUE: string
+}
+
 export interface FiltersResponse {
-  BREND?: FiltersResponseItem
-  CML2_MANUFACTURER?: FiltersResponseItem
-  PRICE: {
-    MIN: number
-    MAX: number
+  NAME: string
+  CODE: string
+  VALUES: {
+    [id: string]: FilterValue
   }
-  [key: string]: FiltersResponseItem | any
 }
 
 export interface SearchResopnse {

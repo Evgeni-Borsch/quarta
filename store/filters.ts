@@ -11,7 +11,6 @@ export enum FilterType {
 export type FilterInstance = Filter | CheckboxFilter | PriceFilter
 
 export interface FiltersOptions {
-  name: string
   value: unknown
   title: string
 }
@@ -22,12 +21,10 @@ export interface FiltersSectionOptions {
 }
 
 export abstract class Filter {
-  name!: string
   title!: string
   value!: unknown
 
   constructor(options: FiltersOptions) {
-    this.name = options.name
     this.value = options.value
     this.title = options.title
   }
@@ -47,7 +44,6 @@ export class PriceFilter extends Filter {
 
   constructor(min: number, max: number) {
     super({
-      name: 'price',
       title: 'Цена',
       value: null,
     })
@@ -73,21 +69,17 @@ export class FiltersSection {
   namespaced: true,
 })
 export default class FiltersModule extends VuexModule {
-  activeFilters: Map<string, Array<string>> = new Map()
+  activeFilters: Array<string> = []
   priceRange: Range = [null, null]
 
   get isChecked() {
-    return (payload: { name: string; value: string }) => {
-      const { name, value } = payload
-      const filter = this.activeFilters.get(name)
-
-      if (filter === undefined) return false
-      return filter.includes(value)
+    return (id: string) => {
+      return this.activeFilters.includes(id)
     }
   }
 
   get asString() {
-    return JSON.stringify(Object.fromEntries(this.activeFilters))
+    return JSON.stringify(this.activeFilters)
   }
 
   @Mutation
@@ -96,7 +88,7 @@ export default class FiltersModule extends VuexModule {
   }
 
   @Mutation
-  setActiveFilters(activeFilters: Map<string, Array<string>>) {
+  setActiveFilters(activeFilters: Array<string>) {
     this.activeFilters = activeFilters
   }
 
@@ -106,51 +98,34 @@ export default class FiltersModule extends VuexModule {
   // }
 
   @Action
-  addCheckboxValue(payload: { name: string; value: string }) {
-    const { name, value } = payload
-    const activeFilters = new Map(this.activeFilters)
-    const checked = this.activeFilters.get(name) || []
+  addCheckboxValue(id: string) {
+    if (this.activeFilters.includes(id)) return null
 
-    if (checked.includes(value)) return null
-
-    checked.push(value)
-    activeFilters.set(name, checked)
-    this.setActiveFilters(activeFilters)
-  }
-
-  @Action
-  removeCheckboxValue(payload: { name: string; value: string }) {
-    const { name, value } = payload
-    const activeFilters = new Map(this.activeFilters)
-    const checked = this.activeFilters.get(name) || []
-
-    const index = checked.indexOf(value)
-    checked.splice(index, 1)
-
-    if (checked.length) {
-      activeFilters.set(name, checked)
-    } else {
-      activeFilters.delete(name)
-    }
+    const activeFilters = Array.from(this.activeFilters)
+    activeFilters.push(id)
 
     this.setActiveFilters(activeFilters)
   }
 
   @Action
-  restoreFilters(filters: { [key: string]: Array<string> }) {
-    const activeFilters = new Map()
+  removeCheckboxValue(id: string) {
+    if (!this.activeFilters.includes(id)) return null
 
-    for (const key in filters) {
-      const value = filters[key]
-      activeFilters.set(key, value)
-    }
+    const activeFilters = Array.from(this.activeFilters)
+    const index = activeFilters.indexOf(id)
+    activeFilters.splice(index, 1)
 
     this.setActiveFilters(activeFilters)
+  }
+
+  @Action
+  restoreFilters(filters: Array<string>) {
+    this.setActiveFilters(filters)
   }
 
   @Action
   clearActiveFilters() {
-    this.setActiveFilters(new Map())
+    this.setActiveFilters([])
     this.setPriceRange([null, null])
   }
 

@@ -33,34 +33,43 @@ export async function getCategory(
     page?: number
     available?: boolean
     sort?: CatalogSortType
-    filters?: string
+    filters?: Array<string>
     priceRange?: Range
   }
 ): Promise<CatalogCategory> {
   const { $axios } = getStore()
 
-  const count = options?.count ?? CatalogCount.twenty
-  const page = options?.page ?? 1
-  const available = options?.available ?? false
-  const sort = options?.sort ?? CatalogSort.popularity
-  const filters = options?.filters ? encodeURIComponent(options.filters) : ''
+  const count = options!.count ?? CatalogCount.twenty
+  const page = options!.page ?? 1
+  const available = options!.available ?? false
+  const sort = options!.sort ?? CatalogSort.popularity
+  const filters = options!.filters ?? []
   const priceMin = options!.priceRange ? options!.priceRange[0] : null
   const priceMax = options!.priceRange ? options!.priceRange[1] : null
+
+  let filtersString = ''
+
+  filters.forEach(filter => {
+    filtersString = filtersString + `&${filter}=Y`
+  });
 
   return await $axios.$get(
     `${API_BASE_URL}/api/catalog/?SECTION_ID=${id}&ELEMENT_COUNT=${count}&PAGEN_1=${page}&SORT=${sort}` +
       (available ? `&AVAILABLE=true` : '') +
-      (filters ? `&FILTERS=${filters}` : '') +
+      (filters.length ? `&set_filter=Y` : '') +
+      filtersString +
       (priceMin ? `&PRICE_MIN=${priceMin}` : '') +
       (priceMax ? `&PRICE_MAX=${priceMax}` : '')
   )
 }
 
-export async function getFilters(categoryId: string): Promise<FiltersResponse> {
+export async function getFilters(
+  categoryId: string
+): Promise<Array<FiltersResponse>> {
   const { $axios } = getStore()
 
   return await $axios.$get(
-    `${API_BASE_URL}/api/catalog/sectionfilter.php?SECTION_ID=${categoryId}`
+    `${API_BASE_URL}/api/catalog/catalogfilter.php?SECTION_ID=${categoryId}`
   )
 }
 

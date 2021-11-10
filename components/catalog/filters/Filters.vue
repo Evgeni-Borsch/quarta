@@ -38,7 +38,12 @@ import FiltersSectionVue from './FiltersSection.vue'
 import FiltersItem from './FiltersItem.vue'
 import { CheckboxFilter, FiltersSection, PriceFilter } from '~/store/filters'
 import { Category, filters } from '~/store'
-import { getFilters } from '~/services/api/catalog'
+import {
+  FiltersResponse,
+  FilterValue,
+  getFilters
+} from '~/services/api/catalog'
+import toArray from '~/utils/toArray'
 
 @Component({
   components: { FiltersSectionVue, CheckboxVue, FiltersItem }
@@ -72,18 +77,21 @@ export default class FiltersVue extends Vue {
     const fixed = ['BREND', 'PRICE', 'CML2_MANUFACTURER']
 
     return getFilters(this.category.id).then((filtersResponse) => {
-      const filtersKeys = Object.keys(filtersResponse)
       this.filters = []
 
-      if (filtersResponse.CML2_MANUFACTURER) {
+      const manufacturer = filtersResponse.find(
+        (filter) => filter.CODE === 'CML2_MANUFACTURER'
+      )
+      const brand = filtersResponse.find((filter) => filter.CODE === 'BREND')
+
+      if (manufacturer) {
         this.filters.push(
           new FiltersSection({
-            title: filtersResponse.CML2_MANUFACTURER.NAME,
-            children: filtersResponse.CML2_MANUFACTURER.VALUE.map((value) => {
+            title: manufacturer.NAME,
+            children: toArray(manufacturer.VALUES).map((value) => {
               return new CheckboxFilter({
-                name: filtersResponse.CML2_MANUFACTURER!.NAME,
-                value,
-                title: value
+                value: value.CONTROL_ID,
+                title: value.VALUE
               })
             })
           })
@@ -92,19 +100,16 @@ export default class FiltersVue extends Vue {
 
       const props: Array<FiltersSection> = []
 
-      filtersKeys.forEach((key) => {
-        if (fixed.includes(key)) return null
-
-        const filterData = filtersResponse[key]
+      filtersResponse.forEach((filter) => {
+        if (fixed.includes(filter.CODE)) return null
 
         props.push(
           new FiltersSection({
-            title: filterData.NAME,
-            children: filterData.VALUE.map((value: string) => {
+            title: filter.NAME,
+            children: toArray(filter.VALUES).map((value) => {
               return new CheckboxFilter({
-                name: filterData.NAME,
-                value,
-                title: value
+                value: value.CONTROL_ID,
+                title: value.VALUE
               })
             })
           })
@@ -120,15 +125,14 @@ export default class FiltersVue extends Vue {
         )
       }
 
-      if (filtersResponse.BREND) {
+      if (brand) {
         this.filters.push(
           new FiltersSection({
-            title: filtersResponse.BREND.NAME,
-            children: filtersResponse.BREND.VALUE.map((value) => {
+            title: brand.NAME,
+            children: toArray(brand.VALUES).map((value) => {
               return new CheckboxFilter({
-                name: filtersResponse.BREND!.NAME,
-                value,
-                title: value
+                value: value.CONTROL_ID,
+                title: value.VALUE
               })
             })
           })
@@ -139,12 +143,7 @@ export default class FiltersVue extends Vue {
       this.filters.push(
         new FiltersSection({
           title: 'Цена',
-          children: [
-            new PriceFilter(
-              filtersResponse.PRICE.MIN,
-              filtersResponse.PRICE.MAX
-            )
-          ]
+          children: [new PriceFilter(0, 100000)]
         })
       )
     })

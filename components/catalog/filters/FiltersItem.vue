@@ -68,10 +68,7 @@ export default class FiltersItemVue extends Vue {
 
   get valueIsInStore() {
     if (this.isItCheckbox) {
-      return filters.isChecked({
-        name: this.item.name,
-        value: this.item.value as string
-      })
+      return filters.isChecked(this.item.value as string)
     }
 
     return false
@@ -102,15 +99,9 @@ export default class FiltersItemVue extends Vue {
 
   onCheckboxChange(value: boolean) {
     if (value) {
-      filters.addCheckboxValue({
-        name: this.item.name,
-        value: this.item.value as string
-      })
+      filters.addCheckboxValue(this.item.value as string)
     } else {
-      filters.removeCheckboxValue({
-        name: this.item.name,
-        value: this.item.value as string
-      })
+      filters.removeCheckboxValue(this.item.value as string)
     }
   }
 }

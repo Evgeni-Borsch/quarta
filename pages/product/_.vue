@@ -4,6 +4,38 @@
     <ProductVue :product="product" />
     <!-- <ReviewsSliderVue class="bg-white" /> -->
 
+    <div class="reviews">
+      <BaseSliderVue :slides-desktop="2">
+        <VideoPreviewVue
+          preview="/video-preview-01.jpg"
+          link="https://www.youtube.com/watch?v=MabimrtMQ5U"
+        />
+        <VideoPreviewVue
+          preview="/video-preview-02.jpg"
+          link="https://www.youtube.com/watch?v=MabimrtMQ5U"
+        />
+        <VideoPreviewVue
+          preview="/video-preview-03.jpg"
+          link="https://www.youtube.com/watch?v=MabimrtMQ5U"
+        />
+      </BaseSliderVue>
+    </div>
+
+    <div class="recomendations">
+      <div class="container">
+        <h2 class="mb-4">С этим товаром покупают</h2>
+      </div>
+
+      <BaseSliderVue :slides-desktop="4">
+        <ProductCardVue :product="product" />
+        <ProductCardVue :product="product" />
+        <ProductCardVue :product="product" />
+        <ProductCardVue :product="product" />
+        <ProductCardVue :product="product" />
+        <ProductCardVue :product="product" />
+      </BaseSliderVue>
+    </div>
+
     <PromoCardWideVue />
     <SubscribeVue />
   </div>
@@ -24,6 +56,9 @@ import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import ReviewsSliderVue from '~/components/ReviewsSlider.vue'
 import { ProductItem, products } from '~/store'
 import PromoCardWideVue from '~/components/promo/PromoCardWide.vue'
+import BaseSliderVue from '~/components/BaseSlider.vue'
+import ProductCardVue from '~/components/product/ProductCard.vue'
+import VideoPreviewVue from '~/components/VideoPreview.vue'
 
 export default Vue.extend({
   components: {
@@ -31,7 +66,10 @@ export default Vue.extend({
     SubscribeVue,
     BreadcrumbsVue,
     ReviewsSliderVue,
-    PromoCardWideVue
+    ProductCardVue,
+    BaseSliderVue,
+    PromoCardWideVue,
+    VideoPreviewVue
   },
   middleware: 'product',
   setup() {
@@ -60,3 +98,15 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.reviews {
+  background-color: $white;
+  padding-bottom: 6rem;
+}
+
+.recomendations {
+  background-color: $gray-100;
+  padding: 6rem 0;
+}
+</style>

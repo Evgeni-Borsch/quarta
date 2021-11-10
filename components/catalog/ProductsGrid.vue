@@ -3,7 +3,9 @@
     <div v-if="category" class="products-grid">
       <FiltersSortVue />
       <transition-group name="fade">
-        <div v-if="productsList.length" key="grid" class="row">
+        <LoadingVue v-if="!isFetched" key="loading" />
+
+        <div v-else-if="productsList.length" key="grid" class="row">
           <div
             v-for="product of productsList"
             :key="product.id"
@@ -12,7 +14,13 @@
             <ProductCardVue v-if="product" :product="product" />
           </div>
         </div>
-        <LoadingVue v-else key="loading" />
+        <div v-else key="no-items">
+          <center class="my-5 py-5">
+            По Вашему запросу ничего не нашлось.<br />
+            Попробуйте
+            <a @click="clearFilters" href="#">сбросить фильтры</a>
+          </center>
+        </div>
       </transition-group>
       <PaginationVue
         v-if="productsList.length"
@@ -48,6 +56,7 @@ import CategoryPathResolver from '~/pages/catalog/_.vue'
   components: { PaginationVue, ProductCardVue, FiltersSortVue, LoadingVue }
 })
 export default class ProductsGridVue extends Vue {
+  isFetched = false
   onlyAvaible!: boolean
   itemsTotal = 0
   productsList: Array<ProductItem> = []
@@ -73,6 +82,10 @@ export default class ProductsGridVue extends Vue {
     this.fetchData()
   }
 
+  clearFilters() {
+    filters.clearActiveFilters()
+  }
+
   @Watch('page')
   @Watch('sort')
   @Watch('itemsPerPage')
@@ -83,6 +96,7 @@ export default class ProductsGridVue extends Vue {
   async fetchData() {
     if (!this.category) return
 
+    this.isFetched = false
     this.productsList = []
 
     const categoryResponse = await getCategory(this.category.id, {
@@ -90,13 +104,17 @@ export default class ProductsGridVue extends Vue {
       sort: this.sort,
       count: this.itemsPerPage,
       available: this.onlyAvailable,
-      filters: this.filtersAsString,
+      filters: filters.activeFilters,
       priceRange: this.priceRange
     })
 
+    console.log(categoryResponse)
+
     this.itemsTotal = parseInt(categoryResponse.ELEMENT_COUNT)
 
-    if (categoryResponse.ITEMS === undefined) return
+    if (categoryResponse.ITEMS === undefined) {
+      return (this.isFetched = true)
+    }
 
     for (const item of categoryResponse.ITEMS) {
       if (!products.items.has(item.ID.toString())) {
@@ -105,6 +123,8 @@ export default class ProductsGridVue extends Vue {
 
       this.productsList.push(await products.getById(item.ID.toString()))
     }
+
+    this.isFetched = true
   }
 
   setPage(value: number) {

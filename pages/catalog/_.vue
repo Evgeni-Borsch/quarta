@@ -48,6 +48,7 @@ import ProductsGridVue from '~/components/catalog/ProductsGrid.vue'
 import { CatalogCount, CatalogSort } from '~/services/api/catalog'
 import pageTitle from '~/utils/pageTitle'
 import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
+import { INDEX_PAGE } from '../index.vue'
 
 @Component({
   components: {
@@ -103,11 +104,7 @@ export default class CategoryPathResolver extends Vue {
 
   get breadcrumbs(): Array<Page> {
     const prepared = [
-      {
-        title: 'Главная',
-        slug: 'index',
-        path: '/'
-      },
+      INDEX_PAGE,
       {
         title: 'Каталог',
         slug: 'catalog',
