@@ -4,6 +4,10 @@
     <div class="container">
       <h1>Вакансии</h1>
 
+      <div class="jobs__filters">
+        <SelectVue size="small" :options="options" :multiple="true" />
+      </div>
+
       <div v-if="jobs.length">
         <div
           v-for="job of jobs"
@@ -61,9 +65,11 @@ import { getJobs } from '~/services/api/jobs'
 import { API_BASE_URL } from '~/services/constants'
 
 import LocationIcon from '~/assets/icons/location.svg?icon'
-import { Page } from '~/models/general'
+import { Page, SelectOption } from '~/models/general'
 import BreadcrumbsVue from '~/components/Breadcrumbs.vue'
 import LoadingVue from '~/components/Loading.vue'
+import { jobs } from '~/store'
+import SelectVue from '~/components/inputs/Select.vue'
 
 export const JOBS_PAGE: Page = {
   title: 'Вакансии',
@@ -72,29 +78,26 @@ export const JOBS_PAGE: Page = {
 }
 
 @Component({
-  components: { BreadcrumbsVue, LoadingVue, LocationIcon }
+  components: { BreadcrumbsVue, LoadingVue, LocationIcon, SelectVue }
 })
 export default class JobsPage extends Vue {
   breadcrumbs: Array<Page> = [INDEX_PAGE, JOBS_PAGE]
 
-  jobs: Array<{}> = []
   hasFetch = false
 
-  async fetch() {
-    this.jobs = []
-    const response = await getJobs({})
-    response.ITEMS.forEach((item) => {
-      this.jobs.push({
-        id: item.ID,
-        title: item.FIELDS.NAME,
-        text: item.FIELDS.PREVIEW_TEXT,
-        image: API_BASE_URL + item.FIELDS.PREVIEW_PICTURE.SRC,
-        tags: item.PROPERTIES.TAGS.VALUE ?? [],
-        address: item.PROPERTIES.ADDRESS.VALUE,
-        city: item.PROPERTIES.CITY.VALUE
-      })
-    })
+  options: Array<SelectOption> = [
+    {
+      value: 'rwerwerw',
+      title: 'tsets'
+    }
+  ]
 
+  get jobs() {
+    return jobs.items
+  }
+
+  async fetch() {
+    await jobs.fetch()
     this.hasFetch = true
   }
 }

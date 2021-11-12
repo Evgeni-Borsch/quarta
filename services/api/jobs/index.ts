@@ -5,7 +5,7 @@ import { getStore } from '~/store'
 
 export * from './model'
 
-export async function getJobsFilter(): Promise<JobsFilterResponse> {
+export async function getJobsFilters(): Promise<JobsFilterResponse> {
   const { $axios } = getStore()
 
   return await $axios.$get(`${API_BASE_URL}/api/about/vacanciesfilter.php`)

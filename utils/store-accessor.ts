@@ -13,6 +13,7 @@ import GlobalModule from '~/store/global'
 import OrdersModule from '~/store/orders'
 import CompareModule from '~/store/compare'
 import PromotionsModule from '~/store/promotions'
+import JobsModule from '~/store/jobs'
 
 let globalModule!: GlobalModule
 let categories!: CategoriesModule
@@ -25,6 +26,7 @@ let favourites!: FavouritesModule
 let orders!: OrdersModule
 let compare!: CompareModule
 let promotions!: PromotionsModule
+let jobs!: JobsModule
 let _store!: Store<any>
 
 function initialiseStores(store: Store<any>) {
@@ -40,6 +42,7 @@ function initialiseStores(store: Store<any>) {
   orders = getModule(OrdersModule, store)
   compare = getModule(CompareModule, store)
   promotions = getModule(PromotionsModule, store)
+  jobs = getModule(JobsModule, store)
 }
 
 function getStore() {
@@ -60,4 +63,5 @@ export {
   orders,
   compare,
   promotions,
+  jobs,
 }
