@@ -6,9 +6,10 @@
       'filters-section--compact': compact
     }"
   >
-    <div class="filters-section__header">
-      <h6 @click="expanded = !expanded">
+    <div class="filters-section__header" @click="expanded = !expanded">
+      <h6>
         {{ title }}
+        <div v-if="active" class="filters-section__header-bage"></div>
       </h6>
     </div>
 
@@ -27,7 +28,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class FiltersSectionVue extends Vue {
   expanded = false
   @Prop({ required: true }) title!: string
-  @Prop({ default: false }) compact!: string
+  @Prop({ default: false }) compact!: boolean
+  @Prop({ default: false }) active!: boolean
+
+  beforeMount() {
+    this.expanded = this.active
+  }
 }
 </script>
 
@@ -47,10 +53,14 @@ export default class FiltersSectionVue extends Vue {
     border-color: $gray-200;
   }
 
-  &:not(&--compact) > &__header > h6 {
+  &:not(&--compact) > &__header {
     position: relative;
-    margin-bottom: 0;
     cursor: pointer;
+
+    & > h6 {
+      margin-bottom: 0;
+      display: inline-block;
+    }
 
     &::after {
       content: '';
@@ -65,14 +75,17 @@ export default class FiltersSectionVue extends Vue {
     }
   }
 
-  &:not(&--compact).filters-section--expanded > &__header > h6::after {
+  &:not(&--compact).filters-section--expanded > &__header::after {
     transform: rotateZ(-180deg);
   }
 
-  &--compact > &__header > h6 {
+  &--compact > &__header {
     position: relative;
-    font-size: 0.75rem;
     cursor: pointer;
+
+    & > h6 {
+      font-size: 0.75rem;
+    }
 
     &::before {
       content: '';
@@ -99,12 +112,28 @@ export default class FiltersSectionVue extends Vue {
     }
   }
 
-  &--expanded.filters-section--compact > &__header > h6::after {
+  &--expanded.filters-section--compact > &__header::after {
     transform: rotateZ(0deg);
   }
 
   &__body {
     padding-top: 1.25rem;
+  }
+
+  h6 {
+    position: relative;
+    display: inline-block;
+    width: min-content;
+  }
+
+  &__header-bage {
+    position: absolute;
+    top: calc(0.5em - 2.5px);
+    left: -11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: $secondary;
   }
 }
 

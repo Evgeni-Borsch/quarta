@@ -9,12 +9,14 @@
         v-for="(section, index) of filters"
         :key="index"
         :title="section.title"
+        :active="hasSelectedChild(section)"
       >
         <div v-for="(item, childIndex) of section.children" :key="childIndex">
           <FiltersSectionVue
             v-if="isItSection(item)"
             :title="item.title"
             :compact="true"
+            :active="hasSelectedChild(item)"
           >
             <div
               v-for="(subSectionItem, subSectionChildIndex) of item.children"
@@ -36,7 +38,13 @@ import { Vue, Component, InjectReactive, Watch } from 'vue-property-decorator'
 import CheckboxVue from '../../inputs/Checkbox.vue'
 import FiltersSectionVue from './FiltersSection.vue'
 import FiltersItem from './FiltersItem.vue'
-import { CheckboxFilter, FiltersSection, PriceFilter } from '~/store/filters'
+import {
+  CheckboxFilter,
+  Filter,
+  FilterInstance,
+  FiltersSection,
+  PriceFilter
+} from '~/store/filters'
 import { Category, filters } from '~/store'
 import {
   FiltersResponse,
@@ -65,6 +73,21 @@ export default class FiltersVue extends Vue {
 
   clear() {
     filters.clearActiveFilters()
+  }
+
+  hasSelectedChild(section: FiltersSection) {
+    for (const item of section.children) {
+      if (
+        this.isItSection(item) &&
+        this.hasSelectedChild(item as FiltersSection)
+      ) {
+        return true
+      }
+
+      if (filters.isChecked((item as CheckboxFilter).value)) return true
+    }
+
+    return false
   }
 
   /**

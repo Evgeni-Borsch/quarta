@@ -74,7 +74,7 @@
               class="compare__col"
               :style="colunmStyle"
             >
-              <StarsVue :rating="4" :reviews="5" />
+              <StarsVue :rating="productItem.rating" :reviews="5" />
             </div>
           </div>
 
