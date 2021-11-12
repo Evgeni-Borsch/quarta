@@ -1,18 +1,9 @@
 import path from 'path'
 
 export default {
-  // proxy: {
-  //   '/api': {
-  //     target: 'https://bitrix.serenity-dev.tech',
-  //     // '^/api': '/api',
-  //     changeOrigin: true,
-  //     router: (req) => {
-  //       return 'https://bitrix.serenity-dev.tech';
-  //     }
-  //   },
-  // },
-  // babelrc: true,
-  // Global page headers: https://go.nuxtjs.dev/config-head
+  loading: {
+    color: '#004989'
+  },
   head: {
     title: 'quarta-nuxt',
     htmlAttrs: {

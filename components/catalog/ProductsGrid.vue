@@ -18,7 +18,7 @@
           <center class="my-5 py-5">
             По Вашему запросу ничего не нашлось.<br />
             Попробуйте
-            <a @click="clearFilters" href="#">сбросить фильтры</a>
+            <a href="#" @click="clearFilters">сбросить фильтры</a>
           </center>
         </div>
       </transition-group>
@@ -78,10 +78,6 @@ export default class ProductsGridVue extends Vue {
     return filters.priceRange
   }
 
-  created() {
-    this.fetchData()
-  }
-
   clearFilters() {
     filters.clearActiveFilters()
   }
@@ -93,7 +89,11 @@ export default class ProductsGridVue extends Vue {
   @Watch('category')
   @Watch('filtersAsString')
   @Watch('priceRange')
-  async fetchData() {
+  refetch() {
+    this.$fetch()
+  }
+
+  async fetch() {
     if (!this.category) return
 
     this.isFetched = false

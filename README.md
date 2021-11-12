@@ -1,11 +1,5 @@
 # quarta-nuxt
 
-## API
-
-/catalog/detail.php?ID=318  
-/catalog/storeamount.php?ID=318  
-/feedback/productfeedback.php?ID=318
-
 ## Build Setup
 
 ```bash

@@ -53,7 +53,7 @@
           </a>
           <a href="#" class="header__nav-item">О компании</a>
           <a href="#" class="header__nav-item">Новости</a>
-          <a href="#" class="header__nav-item">Акции</a>
+          <router-link to="/promo" class="header__nav-item">Акции</router-link>
           <a href="#" class="header__nav-item">Гарантии</a>
           <a href="#" class="header__nav-item">Контакты</a>
           <a href="#" class="header__nav-item">Доставка</a>
@@ -78,11 +78,12 @@
         </div>
 
         <div class="header__lists-section col">
-          <button class="btn btn-link px-2 mx-2">
+          <router-link to="/compare" class="btn btn-link px-2 mx-2">
             <div class="position-relative px-1">
               <CompareIcon />
+              <BageVue v-if="compareCount">{{ compareCount }}</BageVue>
             </div>
-          </button>
+          </router-link>
 
           <router-link to="/favourites" class="btn btn-link px-2 mx-2">
             <div class="position-relative px-1 text-primary">
@@ -130,7 +131,7 @@ import LocationIcon from '@/assets/icons/location.svg?icon'
 import PersonIcon from '@/assets/icons/person.svg?icon'
 import ArrowSmallIcon from '@/assets/icons/arrow-small.svg?icon'
 
-import { cart, favourites, location, user } from '~/store'
+import { cart, compare, favourites, location, user } from '~/store'
 
 @Component({
   name: 'Header',
@@ -186,6 +187,10 @@ export default class HeaderVue extends Vue {
 
   get cartCount() {
     return cart.countTotal
+  }
+
+  get compareCount() {
+    return compare.items.length
   }
 
   get favsCount() {

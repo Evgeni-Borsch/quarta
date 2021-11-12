@@ -19,11 +19,15 @@
               }"
             ></div>
           </div>
-          <div class="col-6">
+          <div class="col-6 promo__item-body">
             <small>с {{ promo.from }} по {{ promo.to }}</small>
             <h3>
               {{ promo.title }}
             </h3>
+
+            <p v-html="promo.text"></p>
+
+            <a class="btn btn-light px-4">Читать подробнее</a>
           </div>
         </div>
       </div>
@@ -46,6 +50,8 @@ export default class PromoPage extends Vue {
   async fetch() {
     const response = await getPromotions()
 
+    console.log(response)
+
     response.ITEMS.forEach((item) => {
       const fromParts = item.ACTIVE_FROM.split(' ')[0].split('.')
       const toParts = item.ACTIVE_TO.split(' ')[0].split('.')
@@ -55,6 +61,8 @@ export default class PromoPage extends Vue {
         id: item.ID,
         title: item.NAME,
         image: item.PREVIEW_PICTURE.SRC,
+        text: item.PREVIEW_TEXT,
+        //        annotation: item,
         from: new Date(
           `${fromParts[2]}-${fromParts[1]}-${fromParts[0]}`
         ).toLocaleDateString('RU'),
@@ -69,11 +77,32 @@ export default class PromoPage extends Vue {
 
 <style lang="scss" scoped>
 .promo {
+  padding-bottom: 1rem;
   background-color: $white;
 
   &__item {
     margin-top: 8.4375rem;
     margin-bottom: 8.4375rem;
+
+    small {
+      display: inline-block;
+      font-size: 0.75rem;
+      margin-bottom: 1.875rem;
+    }
+
+    h3 {
+      margin-bottom: 1.875rem;
+      max-width: 80%;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    &:nth-child(even) {
+      display: flex;
+      flex-direction: row-reverse;
+    }
   }
 
   &__image {
@@ -81,6 +110,21 @@ export default class PromoPage extends Vue {
     background-position: center;
     background-size: cover;
     border-radius: $border-radius-lg;
+  }
+
+  &__item-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .btn {
+      justify-self: flex-end;
+      margin-top: auto;
+    }
+  }
+
+  &__item:nth-child(odd) &__item-body {
+    padding-left: 2.5rem;
   }
 }
 </style>

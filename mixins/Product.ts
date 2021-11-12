@@ -1,5 +1,5 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { cart, favourites, ProductItem } from '~/store'
+import { cart, compare, favourites, ProductItem } from '~/store'
 
 @Component({})
 export default class ProductMixin extends Vue {
@@ -11,6 +11,10 @@ export default class ProductMixin extends Vue {
 
   get isInFavs() {
     return favourites.items.includes(this.product.id)
+  }
+
+  get isInCompare() {
+    return compare.items.includes(this.product.id)
   }
 
   get count() {
@@ -30,6 +34,14 @@ export default class ProductMixin extends Vue {
       favourites.removeItem(this.product.id)
     } else {
       favourites.addItem(this.product.id)
+    }
+  }
+
+  toggleCompare() {
+    if (this.isInCompare) {
+      compare.removeItem(this.product.id)
+    } else {
+      compare.addItem(this.product.id)
     }
   }
 

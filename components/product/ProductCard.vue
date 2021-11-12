@@ -2,9 +2,14 @@
   <div v-if="product" class="product-card">
     <div class="product-card__image">
       <div v-if="actions" class="product-card__image-actions">
-        <CompareIcon />
+        <CompareIcon
+          :class="{ 'text-primary': isInCompare }"
+          @click="toggleCompare"
+        />
         <component
           :is="isInFavs ? `HeartFillIcon` : `HeartIcon`"
+          class="product-card__fav"
+          :class="{ 'text-secondary': isInFavs }"
           @click="toggleFavs"
         />
       </div>
@@ -55,12 +60,20 @@
       >
         В корзину
       </button>
+
+      <button
+        v-if="remove"
+        class="btn btn-light ms-2 product-card__remove"
+        @click="emitRemove"
+      >
+        <TrashIcon />
+      </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Prop, Component } from 'vue-property-decorator'
+import { Prop, Component, Emit } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 
 import StarsVue from '../stars/Stars.vue'
@@ -68,6 +81,7 @@ import ProductPriceVue from './ProductPrice.vue'
 import CompareIcon from '~/assets/icons/compare.svg?icon'
 import HeartIcon from '~/assets/icons/heart.svg?icon'
 import HeartFillIcon from '@/assets/icons/heart-fill.svg?icon'
+import TrashIcon from '@/assets/icons/trash.svg?icon'
 
 import ProductMixin from '~/mixins/Product'
 
@@ -77,7 +91,8 @@ import ProductMixin from '~/mixins/Product'
     ProductPriceVue,
     CompareIcon,
     HeartIcon,
-    HeartFillIcon
+    HeartFillIcon,
+    TrashIcon
   }
 })
 export default class ProductCardVue extends mixins(ProductMixin) {
@@ -86,10 +101,16 @@ export default class ProductCardVue extends mixins(ProductMixin) {
   @Prop({ default: true }) stars!: boolean
   @Prop({ default: true }) actions!: boolean
   @Prop({ default: true }) link!: boolean
+  @Prop({ default: false }) remove!: boolean
 
   goToProduct() {
     if (!this.link) return null
     this.$router.push(`/product/${this.product.id}/${this.product.slug}`)
+  }
+
+  @Emit('remove')
+  emitRemove() {
+    return this.product
   }
 }
 </script>
@@ -125,12 +146,19 @@ export default class ProductCardVue extends mixins(ProductMixin) {
     }
   }
 
+  &__fav {
+    &:hover {
+      color: $secondary;
+    }
+  }
+
   &__image-actions {
     position: absolute;
     right: 0;
     top: 0;
     padding: 0.875rem 0.75rem;
     z-index: 1;
+    color: $gray-600;
 
     img,
     svg {
@@ -199,6 +227,15 @@ export default class ProductCardVue extends mixins(ProductMixin) {
         border-radius: $border-radius-sm !important;
       }
     }
+  }
+
+  &__remove {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4rem !important;
+    color: $gray-600;
+    padding: 0 !important;
   }
 
   &::v-deep {

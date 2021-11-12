@@ -33,6 +33,7 @@ import {
   ProvideReactive,
   Provide
 } from 'vue-property-decorator'
+import { INDEX_PAGE } from '../index.vue'
 import MainSliderVue from '~/components/main-slider/MainSlider.vue'
 import SubCategorySelectorVue from '~/components/catalog/SubCategorySelector.vue'
 
@@ -48,7 +49,6 @@ import ProductsGridVue from '~/components/catalog/ProductsGrid.vue'
 import { CatalogCount, CatalogSort } from '~/services/api/catalog'
 import pageTitle from '~/utils/pageTitle'
 import { getMainSlider, MainSliderSlide } from '~/services/api/sliders'
-import { INDEX_PAGE } from '../index.vue'
 
 @Component({
   components: {
@@ -63,7 +63,6 @@ import { INDEX_PAGE } from '../index.vue'
     ProductsGridVue
   },
   middleware: ['category'],
-  fetchOnServer: false,
   head(this: CategoryPathResolver) {
     return {
       title: pageTitle(

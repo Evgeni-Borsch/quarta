@@ -1911,6 +1911,18 @@
     "@typescript-eslint/types" "4.31.0"
     eslint-visitor-keys "^2.0.0"
 
+"@use-gesture/core@10.1.4":
+  version "10.1.4"
+  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.1.4.tgz#72a199eafcd1ef97eebab96b11ae0b2559bf7eba"
+  integrity sha512-7TcntiiON64kGPDovAbjwh2C8+qL2Ts8RaRFNTsWiWv7nOAGbvT969JHJ0zRyJYg8PlAXeCf/q0IpoMyou731Q==
+
+"@use-gesture/vanilla@^10.1.4":
+  version "10.1.4"
+  resolved "https://registry.yarnpkg.com/@use-gesture/vanilla/-/vanilla-10.1.4.tgz#7b05385f05335c775cd9911c8328c561202327eb"
+  integrity sha512-tGL+rQqI8g+g0bTZnnXj1/yf99SCtqocEm7fAAXTOPlgS3+lox19hmawQRWuErEVb/AzdO7TlLm3fFYrx4My6w==
+  dependencies:
+    "@use-gesture/core" "10.1.4"
+
 "@vue/babel-helper-vue-jsx-merge-props@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@vue/babel-helper-vue-jsx-merge-props/-/babel-helper-vue-jsx-merge-props-1.2.1.tgz#31624a7a505fb14da1d58023725a4c5f270e6a81"
