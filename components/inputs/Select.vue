@@ -42,7 +42,7 @@
             tabindex="0"
             @click="setValue(option.value)"
           >
-            <input type="checkbox" class="form-check-input" />
+            <!-- <input type="checkbox" class="form-check-input" /> -->
 
             {{ option.title }}
           </button>
