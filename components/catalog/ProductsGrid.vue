@@ -108,6 +108,8 @@ export default class ProductsGridVue extends Vue {
       priceRange: this.priceRange
     })
 
+    console.log(categoryResponse)
+
     this.itemsTotal = parseInt(categoryResponse.ELEMENT_COUNT)
 
     if (categoryResponse.ITEMS === undefined) {

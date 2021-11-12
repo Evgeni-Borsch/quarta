@@ -59,6 +59,7 @@ import PromoCardWideVue from '~/components/promo/PromoCardWide.vue'
 import BaseSliderVue from '~/components/BaseSlider.vue'
 import ProductCardVue from '~/components/product/ProductCard.vue'
 import VideoPreviewVue from '~/components/VideoPreview.vue'
+import { getProduct } from '~/services/api/product'
 
 export default Vue.extend({
   components: {
@@ -79,6 +80,8 @@ export default Vue.extend({
     const { fetch } = useFetch(async () => {
       const route = useRoute()
       const [id] = get(route).params.pathMatch.split('/')
+
+      products.addItemFull(await getProduct(id))
 
       await products.getById(id).then((p) => {
         product.value = p

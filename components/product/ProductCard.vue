@@ -2,8 +2,9 @@
   <div v-if="product" class="product-card">
     <div class="product-card__image">
       <div v-if="actions" class="product-card__image-actions">
-        <CompareIcon
-          :class="{ 'text-primary': isInCompare }"
+        <component
+          :is="isInCompare ? 'CompareFillIcon' : 'CompareIcon'"
+          :class="{ 'text-secondary': isInCompare }"
           @click="toggleCompare"
         />
         <component
@@ -79,6 +80,7 @@ import { mixins } from 'vue-class-component'
 import StarsVue from '../stars/Stars.vue'
 import ProductPriceVue from './ProductPrice.vue'
 import CompareIcon from '~/assets/icons/compare.svg?icon'
+import CompareFillIcon from '~/assets/icons/compare-fill.svg?icon'
 import HeartIcon from '~/assets/icons/heart.svg?icon'
 import HeartFillIcon from '@/assets/icons/heart-fill.svg?icon'
 import TrashIcon from '@/assets/icons/trash.svg?icon'
@@ -92,7 +94,8 @@ import ProductMixin from '~/mixins/Product'
     CompareIcon,
     HeartIcon,
     HeartFillIcon,
-    TrashIcon
+    TrashIcon,
+    CompareFillIcon
   }
 })
 export default class ProductCardVue extends mixins(ProductMixin) {

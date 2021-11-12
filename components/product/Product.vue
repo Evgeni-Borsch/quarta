@@ -53,8 +53,13 @@
               <HeartFillIcon v-if="isInFavs" /> <HeartIcon v-else />
               {{ isInFavs ? 'В избранном' : 'В избранное' }}
             </button>
-            <button class="btn bg-white mx-1">
-              <CompareIcon /> В сравнение
+            <button
+              class="btn bg-white mx-1"
+              :class="{ 'text-secondary border-secondary': isInCompare }"
+              @click="toggleCompare"
+            >
+              <CompareFillIcon v-if="isInCompare" /> <CompareIcon v-else /> В
+              сравнение
             </button>
           </div>
 
@@ -97,6 +102,7 @@ import ProductCountVue from './ProductCount.vue'
 import HeartIcon from '@/assets/icons/heart.svg?icon'
 import HeartFillIcon from '@/assets/icons/heart-fill.svg?icon'
 import CompareIcon from '@/assets/icons/compare.svg?icon'
+import CompareFillIcon from '@/assets/icons/compare-fill.svg?icon'
 import DeliveryIcon from '@/assets/icons/delivery.svg?icon'
 import LoactionIcon from '@/assets/icons/location.svg?icon'
 import StarsVue from '@/components/stars/Stars.vue'
@@ -122,6 +128,7 @@ import { ProductItem } from '~/store'
     HeartIcon,
     HeartFillIcon,
     CompareIcon,
+    CompareFillIcon,
     ProductCountVue,
     ModalAvailabilityVue
   }
@@ -130,13 +137,15 @@ export default class ProductVue extends mixins(ProductMixin) {
   availabilityModal = false
 
   async fetch() {
-    if (!this.product.isFull) {
-      await ProductItem.updateToFull(this.product)
-    }
+    // if (!this.product.isFull) {
+    // await ProductItem.updateToFull(this.product)
+    // }
   }
 
   mounted() {
     console.log(this.product)
+
+    // ProductItem.updateToFull(this.product)
   }
 }
 </script>

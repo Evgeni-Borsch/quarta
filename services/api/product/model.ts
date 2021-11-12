@@ -64,7 +64,16 @@ export interface ProductResponse {
   ITEM_PRICES: Array<{
     BASE_PRICE: number
     PRICE: number
+   // UF_BONUS_POINTS: number
   }>
+  PRICES: {
+    BASE: {
+      VALUE: number
+      DISCOUNT_VALUE: number
+      UF_BONUS_POINTS: number
+      DISCOUNT_DIFF_PERCENT: number
+    }
+  }
   META_TAGS: MetaTags
   PATH: Array<PathItem>
   PREVIEW_PICTURE: {

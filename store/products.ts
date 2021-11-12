@@ -68,11 +68,22 @@ export class ProductItem extends BaseStoredEntity {
       }
     })
 
+    const isCatalog = !response.PRICES?.BASE
+    const hasDiscount = isCatalog
+      ? false
+      : !!response.PRICES.BASE.DISCOUNT_DIFF_PERCENT
+
     this.rating = response.PRODUCT.MEASURE || 0
-    this.price = response.ITEM_PRICES[0].PRICE // PRICE.DISCOUNT_VALUE || PRICE.VALUE
-    this.priceOld = 0 // PRICE.VALUE
-    this.discount = 0 // PRICE.DISCOUNT_DIFF_PERCENT
-    this.bonus = 285
+    this.price = isCatalog
+      ? response.ITEM_PRICES[0].PRICE
+      : hasDiscount
+      ? response.PRICES.BASE.DISCOUNT_VALUE
+      : response.PRICES.BASE.VALUE
+    this.priceOld = isCatalog ? 0 : hasDiscount ? response.PRICES.BASE.VALUE : 0
+    this.discount = isCatalog ? 0 : response.PRICES.BASE.DISCOUNT_DIFF_PERCENT
+    this.bonus = isCatalog
+      ? 0
+      : Math.round(response.PRICES.BASE.UF_BONUS_POINTS)
     this.available = response.CAN_BUY // PRICE.CAN_BUY === 'Y'
     this.comboId = response.PROPERTIES.KOMPLEKTY_DLYA_SAYTA?.VALUE ?? null
 
