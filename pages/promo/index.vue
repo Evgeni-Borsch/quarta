@@ -5,6 +5,21 @@
     </JumbotronVue>
 
     <div class="container">
+      <div class="promo__select-type">
+        Показать:
+        <router-link to="/promo" :class="{ disabled: showActive }" class="ms-1">
+          Актуальные акции</router-link
+        >
+
+        <router-link
+          to="/promo?type=ended"
+          :class="{ disabled: !showActive }"
+          class="ms-1"
+        >
+          Завершенные акции
+        </router-link>
+      </div>
+
       <div v-if="promotions.length">
         <div
           v-for="promo of promotions"
@@ -15,7 +30,7 @@
             <div
               class="promo__image"
               :style="{
-                backgroundImage: `url('${API_BASE_URL + promo.image}')`
+                backgroundImage: `url('${promo.image}')`
               }"
             ></div>
           </div>
@@ -27,9 +42,22 @@
 
             <p v-html="promo.text"></p>
 
-            <a class="btn btn-light px-4">Читать подробнее</a>
+            <router-link
+              :to="`/promo/${promo.code}`"
+              class="btn btn-light px-4 bg-gray-200"
+            >
+              Читать подробнее
+            </router-link>
           </div>
         </div>
+      </div>
+
+      <div v-else class="pb-5 mb-5">
+        <p>На данный момент акций нет</p>
+
+        <router-link to="/" class="btn btn-primary px-4 mb-5">
+          Вернуться на главную
+        </router-link>
       </div>
     </div>
   </div>
@@ -38,39 +66,21 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import JumbotronVue from '~/components/Jumbotron.vue'
-import { getPromotions } from '~/services/api/promo'
-import { API_BASE_URL } from '~/services/constants'
+import { promotions } from '~/store'
 
 @Component({ components: { JumbotronVue } })
 export default class PromoPage extends Vue {
-  promotions: Array<{}> = []
+  get showActive() {
+    return this.$route.query.type !== 'ended'
+  }
 
-  API_BASE_URL = API_BASE_URL
+  get promotions() {
+    if (this.showActive) return promotions.active
+    return promotions.ended
+  }
 
   async fetch() {
-    const response = await getPromotions()
-
-    console.log(response)
-
-    response.ITEMS.forEach((item) => {
-      const fromParts = item.ACTIVE_FROM.split(' ')[0].split('.')
-      const toParts = item.ACTIVE_TO.split(' ')[0].split('.')
-
-      this.promotions.push({
-        raw: item,
-        id: item.ID,
-        title: item.NAME,
-        image: item.PREVIEW_PICTURE.SRC,
-        text: item.PREVIEW_TEXT,
-        //        annotation: item,
-        from: new Date(
-          `${fromParts[2]}-${fromParts[1]}-${fromParts[0]}`
-        ).toLocaleDateString('RU'),
-        to: new Date(
-          `${toParts[2]}-${toParts[1]}-${toParts[0]}`
-        ).toLocaleDateString('RU')
-      })
-    })
+    await promotions.fetch()
   }
 }
 </script>
@@ -80,8 +90,19 @@ export default class PromoPage extends Vue {
   padding-bottom: 1rem;
   background-color: $white;
 
+  &__select-type {
+    display: flex;
+    justify-content: flex-end;
+    padding: 3.125rem 0;
+
+    a.disabled {
+      color: $gray-600;
+      text-decoration: none;
+      pointer-events: none;
+    }
+  }
+
   &__item {
-    margin-top: 8.4375rem;
     margin-bottom: 8.4375rem;
 
     small {

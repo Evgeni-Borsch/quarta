@@ -1,6 +1,7 @@
 export interface PromotionsResponse {
   ITEMS: Array<{
     ID: string
+    CODE: string
     NAME: string
     ACTIVE_FROM: string
     ACTIVE_TO: string
