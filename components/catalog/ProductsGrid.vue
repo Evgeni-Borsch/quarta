@@ -90,10 +90,10 @@ export default class ProductsGridVue extends Vue {
   @Watch('filtersAsString')
   @Watch('priceRange')
   refetch() {
-    this.$fetch()
+    this.fetchData()
   }
 
-  async fetch() {
+  async fetchData() {
     if (!this.category) return
 
     this.isFetched = false
@@ -129,10 +129,9 @@ export default class ProductsGridVue extends Vue {
     this.categoryContext.page = value
   }
 
-  mounted() {
-    if (!this.isFetched) {
-      this.$fetch()
-    }
+  // HACK: по другому не фетчит на клиенте
+  fetch() {
+    return this.fetchData()
   }
 }
 </script>
