@@ -108,8 +108,6 @@ export default class ProductsGridVue extends Vue {
       priceRange: this.priceRange
     })
 
-    console.log(categoryResponse)
-
     this.itemsTotal = parseInt(categoryResponse.ELEMENT_COUNT)
 
     if (categoryResponse.ITEMS === undefined) {
@@ -129,6 +127,12 @@ export default class ProductsGridVue extends Vue {
 
   setPage(value: number) {
     this.categoryContext.page = value
+  }
+
+  mounted() {
+    if (!this.isFetched) {
+      this.$fetch()
+    }
   }
 }
 </script>
