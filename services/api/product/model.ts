@@ -43,8 +43,8 @@ export interface ProductResponse {
   DEFAULT_PICTURE: {
     SRC: string
   }
-  DETAIL_TEXT: string
-  PREVIEW_TEXT: string
+  '~DETAIL_TEXT': string
+  '~PREVIEW_TEXT': string
   PROPERTIES: {
     KOMPLEKTY_DLYA_SAYTA: ProductProperty
     CML2_ARTICLE: ProductProperty

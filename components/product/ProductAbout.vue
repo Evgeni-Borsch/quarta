@@ -63,7 +63,10 @@
         <div class="col-6 pe-5">
           <h3>Описание</h3>
 
-          <div v-html="product.description"></div>
+          <div
+            class="product-about__description"
+            v-html="product.description"
+          ></div>
 
           <!--h3>Комплектация:</!--h3>
 
@@ -198,6 +201,25 @@ export default class ProductAboutVue extends Vue {
       &::after {
         right: 0 !important;
       }
+    }
+  }
+
+  &__description::v-deep {
+    * {
+      font-size: 1rem !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: 1.25rem !important;
+    }
+
+    ul li {
+      margin-bottom: 0.75rem;
     }
   }
 }

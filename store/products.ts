@@ -58,7 +58,7 @@ export class ProductItem extends BaseStoredEntity {
     this.slug = response.CODE
     this.article = response.PROPERTIES.CML2_ARTICLE.VALUE
     this.title = response.NAME
-    this.description = response.DETAIL_TEXT || response.PREVIEW_TEXT
+    this.description = response['~DETAIL_TEXT'] || response['~PREVIEW_TEXT']
     this.configuration = '' // response.PROPERTIES.EQUIPMENT['~VALUE'].TEXT
     this.breadcrumbs = response?.SECTION?.PATH?.map((item) => {
       return {
