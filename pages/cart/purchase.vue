@@ -15,9 +15,9 @@
         </div>
 
         <div class="col-4 d-flex">
-          <router-link to="/cart" class="purchase__back"
-            >Вернуться в корзину</router-link
-          >
+          <router-link to="/cart" class="purchase__back">
+            Вернуться в корзину
+          </router-link>
         </div>
       </div>
 
@@ -36,18 +36,19 @@
           <section class="purchase__section">
             <h3>1. Где и как вы хотите получить заказ?</h3>
 
-            <InputVue
+            <!-- <InputVue
               v-if="selectedDeliveryOption !== DeliveryOptions.pickup"
-              v-model="locality"
+              v-model="address"
               class="my-4"
               placeholder="Выберите регион, город"
               size="large"
-            />
+            /> -->
 
             <RadioCardsVue
               label="Выбор способа доставки"
               :options="deliveryOptions"
               class="mt-4"
+              :value="selectedDeliveryOption"
               @change="(value) => (selectedDeliveryOption = value)"
             />
 
@@ -55,10 +56,10 @@
               ~~ Доставка ~~
             -->
 
-            <RadioGroupVue
+            <!-- <RadioGroupVue
               v-if="selectedDeliveryOption === DeliveryOptions.delivery"
               :options="deliveryProvider"
-            />
+            /> -->
 
             <!--
               ~~ Самовывоз ~~
@@ -73,7 +74,33 @@
               ~~ НЕ Самовывоз ~~
             -->
 
-            <div v-if="selectedDeliveryOption !== DeliveryOptions.pickup">
+            <div v-if="sdekError" class="alert alert-danger" role="alert">
+              {{ sdekError }}
+            </div>
+
+            <SDEKMap
+              v-if="
+                selectedDeliveryOption === DeliveryOptions.delivery &&
+                sdekType === null
+              "
+              @choose="onSdekChoose"
+              @chooseAddress="onSdekAddress"
+            />
+
+            <p v-if="sdekType === DeliverySDEKType.pvz" class="my-4">
+              <span class="text-dark">Выбран пункт доставки СДЭК:</span><br />
+              {{ address }} <br /><br />
+              <span class="text-dark">Время работы: </span><br />
+              {{ sdekData.PVZ.WorkTime }}
+            </p>
+
+            <p v-if="sdekType === DeliverySDEKType.courier" class="my-4">
+              <span class="text-dark">Выбрана доставка курьером СДЭК:</span
+              ><br />
+              {{ address }}
+            </p>
+
+            <div v-if="selectedDeliveryOption === DeliveryOptions.post">
               <h6 class="my-4">Укажите адрес доставки</h6>
 
               <InputVue label="Город" class="mb-4" :required="true" />
@@ -496,16 +523,21 @@ import {
   OnlinePaymentType,
   PaymentOptions,
   BankPaymentType,
-  PayOnRecive
+  PayOnRecive,
+  DeliverySDEKType
 } from '~/models/purchase'
 import { FormErrors } from '~/services/errors'
 import { getPurchaseData, makeOrder } from '~/services/api/product'
 import { checkPromoCode } from '~/services/api/personal'
 import { cart, ProductItem, user } from '~/store'
 import storage from '~/services/storage'
+import SDEKMap, {
+  SDEKChoose,
+  SDEKChooseAddress
+} from '~/components/SDEKMap.vue'
 
 const OPTIONS_TO_STORE: Array<string> = [
-  'locality',
+  'address',
   'fio',
   'email',
   'phone',
@@ -530,7 +562,7 @@ const OPTIONS_TO_STORE: Array<string> = [
 ]
 
 const SUBMIT_MAP = {
-  locality: '',
+  address: '',
   fio: 'ORDER_PROP_1',
   email: 'ORDER_PROP_2',
   phone: 'ORDER_PROP_3',
@@ -567,7 +599,8 @@ const SUBMIT_CONSTS = {
     RadioGroupVue,
     CheckboxVue,
     SelectVue,
-    BreadcrumbsVue
+    BreadcrumbsVue,
+    SDEKMap
   },
   fetchOnServer: false,
   validations: {
@@ -640,9 +673,9 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   bonusError: string | null = null
   promoCodeError: string | null = null
 
-  deliveryPrice = 500
+  deliveryPrice = 0
 
-  locality = ''
+  address = ''
   fio = ''
   email = ''
   phone = ''
@@ -658,6 +691,10 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   onlinePaymentType = OnlinePaymentType.card
   bankPaymentType = BankPaymentType.receipt
   paymentOnRecive = PayOnRecive.cash
+
+  sdekType: string | null = null
+  sdekData: any | null = null
+  sdekError: string | null = null
 
   // Bank Account
 
@@ -736,7 +773,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     return plainObject
   }
 
-  @Watch('locality')
+  @Watch('address')
   @Watch('fio')
   @Watch('email')
   @Watch('phone')
@@ -766,7 +803,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
 
     this.storeStateTimeout = setTimeout(() => {
       storage.set('purchaseState', this.toPlainObject())
-    }, 1000)
+    }, 500)
   }
 
   getProductCount(id: string) {
@@ -781,6 +818,22 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
         this[option] = restored[option]
       }
     })
+  }
+
+  onSdekChoose(data: SDEKChoose) {
+    this.sdekError = null
+    this.sdekType = DeliverySDEKType.pvz
+    this.sdekData = data
+    this.address = `${data.cityName}, ${data.PVZ.Address}`
+    this.deliveryPrice = parseInt(data.price)
+  }
+
+  onSdekAddress(data: SDEKChooseAddress) {
+    this.sdekError = null
+    this.sdekType = DeliverySDEKType.courier
+    this.sdekData = data
+    this.address = `${data.cityName}, ${data.address}`
+    this.deliveryPrice = parseInt(data.price)
   }
 
   applyBonus() {
@@ -845,6 +898,13 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
     if (this.$v.email.$error) return false
     if (this.$v.phone.$error) return false
 
+    if (this.selectedDeliveryOption === DeliveryOptions.delivery) {
+      if (this.sdekType === null) {
+        this.sdekError = 'Не выбран адрес доставки'
+        return false
+      }
+    }
+
     if (
       this.selectedPaymentOption === PaymentOptions.bankAccount &&
       this.bankPaymentType === BankPaymentType.account
@@ -892,6 +952,7 @@ export default class PurchasePage extends mixins(CartMixin, validationMixin) {
   PaymentOptions = PaymentOptions
   BankPaymentType = BankPaymentType
   PayOnRecive = PayOnRecive
+  DeliverySDEKType = DeliverySDEKType
 
   // ~~ Option lists ~~
 

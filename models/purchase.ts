@@ -9,6 +9,11 @@ export enum DeliveryProvider {
   sdek = 'sdek',
 }
 
+export enum DeliverySDEKType {
+  courier = 'courier',
+  pvz = 'pvz',
+}
+
 export enum DiscountTypes {
   points = 'points',
   code = 'code',
