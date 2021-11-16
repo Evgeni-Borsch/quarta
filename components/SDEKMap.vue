@@ -43,6 +43,13 @@ export interface SDEKChooseAddress {
   address: string
 }
 
+declare global {
+  interface Window {
+    ISDEKWidjet?: any
+  }
+}
+
+
 @Component({
   setup() {
     const { proxy } = getCurrentInstance() as SDEKMapInternalInstance
@@ -80,7 +87,7 @@ export default class SDEKMap extends mixins(HasUid) {
   }
 
   init() {
-    this.sdekInstance = new ISDEKWidjet({
+    this.sdekInstance = new window.ISDEKWidjet({
       defaultCity: location.currentItem?.name ?? 'Санкт-Петербург', // какой город отображается по умолчанию
       cityFrom: 'Санкт-Петербург', // из какого города будет идти доставка
       country: 'Россия', // можно выбрать страну, для которой отображать список ПВЗ
