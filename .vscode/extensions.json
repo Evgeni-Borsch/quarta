@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "octref.vetur",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "mhutchie.git-graph",
+    "zignd.html-css-class-completion",
+    "rvest.vs-code-prettier-eslint",
+    "dharmendra14.vue-ts-decorator",
+    "sdras.vue-vscode-snippets"
+  ]
+}
